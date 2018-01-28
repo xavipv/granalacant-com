@@ -162,10 +162,12 @@ class Propietarios extends Personas {
      * @param int $apa Codigo de apartamento.
      * @return array del tipo array('codapar'=>array('apartamento','orden')...)
      */
-    public function getMisPropiedades($apa) {
+    public function getMisPropiedades($apa, $fecha='') {
         $aProps = array();
         if ($apa) {
-            $res = parent::ejecutarSQL("SELECT P.CODAPAR,CONCAT('Portal ',A.PORTAL,'-',PISO,LETRA) AS APARTAMENTO,P.ORDEN FROM PROPIETARIOS P LEFT JOIN APARTAMENTOS A ON P.CODAPAR=A.CODAPAR WHERE BAJA IS NULL AND P.CODPERS=(SELECT CODPERS FROM PROPIETARIOS WHERE CODAPAR='$apa' AND BAJA IS NULL ORDER BY ORDEN LIMIT 1) ORDER BY P.CODAPAR");
+            $date = ($fecha) ? $this->fechaIso_Base($fecha) : date('Y-m-d');
+            $per = $this->getPropietarioEnFecha($apa, $date);
+            $res = parent::ejecutarSQL("SELECT P.CODAPAR,CONCAT('Portal ',A.PORTAL,'-',A.PISO,A.LETRA) AS APARTAMENTO,P.ORDEN FROM PROPIETARIOS P LEFT JOIN APARTAMENTOS A ON P.CODAPAR=A.CODAPAR WHERE P.CODPERS='$per' AND P.CODPERS=(SELECT CODPERS FROM PROPIETARIOS WHERE IFNULL(BAJA,'9999-99-99') >= '$date' AND CODAPAR=P.CODAPAR ORDER BY IFNULL(BAJA,'9999-99-99') ASC,ORDEN LIMIT 1) ORDER BY P.CODAPAR");
             while($aRow = $res->fetch(PDO::FETCH_ASSOC)) {
                 $aProps[$aRow['CODAPAR']] = array($aRow['APARTAMENTO'], $aRow['ORDEN']);
             }
@@ -252,6 +254,24 @@ class Propietarios extends Personas {
         }
         $res->closeCursor();
         return $aProp;
+    }
+
+    /**
+     * Obtiene el propietario principal de un apartamento en una fecha determinada.
+     * 
+     * @param int $apa Codigo de apartamento.
+     * @param date $fecha Fecha a buscar enc ualquier formato.
+     * @return int Codigo de persona.
+     */
+    public function getPropietarioEnFecha($apa, $fecha) {
+        $iPro = 0;
+        $date = $this->fechaIso_Base($fecha);
+        $res = parent::ejecutarSQL("SELECT CODPERS FROM PROPIETARIOS WHERE IFNULL(BAJA,'9999-99-99') >= '$date' AND CODAPAR='$apa' ORDER BY IFNULL(BAJA,'9999-99-99') ASC,ORDEN LIMIT 1");
+        while($aRow = $res->fetch(PDO::FETCH_ASSOC)) {
+            $iPro = $aRow['CODPERS'];
+        }
+        $res->closeCursor();
+        return $iPro;
     }
     
     /**

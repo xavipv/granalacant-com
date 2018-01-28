@@ -755,7 +755,7 @@ function setAsistenteMulti($fecha, $apar, $per, $vot, $rep, $mul) {
     
     if ($mul) {
         // Esta activado el multiple, puede tener mas apartamentos.
-        $aProps = $oPers->getMisPropiedades($apar); // Propiedades del dueño del apartamento array('codapar'=>array('apartamento','orden')...)
+        $aProps = $oPers->getMisPropiedades($apar, $fecha); // Propiedades del dueño del apartamento array('codapar'=>array('apartamento','orden')...)
         foreach ($aProps as $codapar => $aDatos) {
             if ($codapar != $apar) {
                 $tool .= (!$tool) ? "Sincronizado con " . $aDatos[0] : ", " . $aDatos[0];
@@ -788,7 +788,7 @@ function setAsistenteMulti($fecha, $apar, $per, $vot, $rep, $mul) {
 function grabarAsistenteMulti($fecha, $apar, $per, $rep, $vot, $mul) {
     global $oPers;
     $response = new xajaxResponse();
-    $aProps = ($mul) ? array_keys($oPers->getMisPropiedades($apar)) : array($apar);
+    $aProps = ($mul) ? array_keys($oPers->getMisPropiedades($apar, $fecha)) : array($apar);
     foreach ($aProps as $codapar) {
         $response->call("xajax_grabarAsistente", $fecha, $codapar, $per, $rep, $vot);
     }
