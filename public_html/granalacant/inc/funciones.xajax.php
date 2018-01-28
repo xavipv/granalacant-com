@@ -12,6 +12,7 @@ $oPers = new Propietarios(); //new Personas();
 $oApars = new Apartamentos();
 $oAdmins = new Administraciones();
 $oJuntas = new Juntas();
+$oInfo = new Info();
 
 
 /**

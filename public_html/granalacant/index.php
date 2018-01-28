@@ -13,16 +13,27 @@ $aIncludes = array('config.inc.php', 'funciones.inc.php', 'funciones.xajax.php')
         <?php echo f_getCabeceraHTML("Inicio"); ?>
     </head>
     <body>
-        <!-- Barra de navegacion -->
-        <?php include 'menu.php'; ?>
-        
-        <!-- Contenido de la pagina -->
+        <div id="cabecera">
+            <!-- Barra de navegacion -->
+            <?php include 'menu.php'; ?>
+        </div>
+        <!-- Contenido -->
         <div class="container">
-            <div class="row">
-                <div class="text-center col-sm-12" style="padding: 50px">
-                    <h1>Gran Alacant</h1>
-                    <h3>Gestión de datos</h3>
-                </div>
+            <div id="contenedor" class="container">
+                    <div id="divcabeceraasis" class="text-center col-sm-12" style="padding: 50px">
+                        <h1>Gestión de datos de Gran Alacant</h1>
+                        <hr>
+                    </div>
+                    <div id="divformularioasis" class="text-center col-sm-12 listado">
+                        <ul class="list-group col-sm-4" style="margin:auto">
+                            <li class="list-group-item active"><b><?php echo $oInfo->getNombreBD(); ?></b></li>
+                            <?php
+                                foreach ($oInfo->getNombreTablasBD() as $tabla) {
+                                    echo "<li class=\"list-group-item\">$tabla</li>";
+                                }
+                            ?>
+                        </ul>
+                    </div>
             </div>    
         </div>
         
