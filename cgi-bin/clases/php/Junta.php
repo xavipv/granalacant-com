@@ -17,7 +17,7 @@ class Junta {
     /**
      * Tipos posibles de las Juntas Generales.
      */
-    const TIPOS = array('O'=>'Ordinaria','E'=>'Extraordinaria','I'=>'Informativa');
+    const TIPOS = array('O'=>'Ordinaria','E'=>'Extraordinaria','I'=>'Informativa', 'G'=>'Garajes');
     
     /**
      * Convocatoria primera o segunda.
@@ -39,6 +39,7 @@ class Junta {
      * <li>O - Ordinaria.</li>
      * <li>E - Extraordinaria.</li>
      * <li>I - Informativa.</li>
+     * <li>G - Garajes.</li>
      * </ul>
      * 
      * @var string Tipo de Junta O/E/I. 
@@ -305,6 +306,7 @@ class Junta {
      * <li>O - Ordinaria.</li>
      * <li>E - Extraordinaria.</li>
      * <li>I - Informativa.</li>
+     * <li>G - Garajes.</li>
      * </ul>
      * 
      * @param string $tip Tipo de Junta O/E/I. 
@@ -321,6 +323,7 @@ class Junta {
      * <li>O - Ordinaria.</li>
      * <li>E - Extraordinaria.</li>
      * <li>I - Informativa.</li>
+     * <li>G - Garajes.</li>
      * </ul>
      * 
      * @param boolean $bTxt Si es TRUE devuelve el texto (Ordinaria) y si es FALSE la inicial (O).
@@ -333,7 +336,7 @@ class Junta {
     /**
      * Obtiene los tipos de Juntas Generales que hay.
      * 
-     * @return array del tipo array('O'=>'Ordinaria','E'=>'Extraordinaria','I'=>'Informativa')
+     * @return array del tipo array('O'=>'Ordinaria','E'=>'Extraordinaria','I'=>'Informativa','G'=>'Garajes')
      */
     public function getTipos() {
         return self::TIPOS;
