@@ -91,7 +91,7 @@ class Asistente {
     private function cargarAsistente($fecha, $apar) { 
         $this->cargarAsistenteOmision($fecha, $apar);
         if($fecha && $apar) {
-            $rRes = $this->ejecutarSQL("SELECT CODPERS,REPRESENTADO,VOTO FROM JUNTAS_ASISTENTES WHERE FECHA='$fecha' AND CODAPAR='$apar'");
+            $rRes = $this->ejecutarSQL("SELECT CODPERS,REPRESENTADO,VOTO FROM ASISTENTES WHERE FECHA='$fecha' AND CODAPAR='$apar'");
             while($aRow = $rRes->fetch(PDO::FETCH_ASSOC)) {
                 $this->fecha = $fecha;
                 $this->apartamento = $apar;
@@ -150,7 +150,7 @@ class Asistente {
         $num = 0;
         if($fecha && $apar) {
             $date = $this->fechaIso_Base($fecha);
-            $rRes = $this->ejecutarSQL("SELECT COUNT(*) AS NUM FROM JUNTAS_ASISTENTES WHERE FECHA='$date' AND CODAPAR='$apar' AND CODPERS='$per'");
+            $rRes = $this->ejecutarSQL("SELECT COUNT(*) AS NUM FROM ASISTENTES WHERE FECHA='$date' AND CODAPAR='$apar' AND CODPERS='$per'");
             while($aRow = $rRes->fetch(PDO::FETCH_ASSOC)) {
                 $num = $aRow['NUM'];
             }
@@ -245,10 +245,10 @@ class Asistente {
         
         if (!$per) {
             // Eliminar asistencia.
-            return $this->ejecutarSQL("DELETE FROM JUNTAS_ASISTENTES WHERE FECHA='$fec' AND CODAPAR='$apa'");
+            return $this->ejecutarSQL("DELETE FROM ASISTENTES WHERE FECHA='$fec' AND CODAPAR='$apa'");
         } else {
             // Modificar asistencia.
-            return $this->ejecutarSQL("REPLACE INTO JUNTAS_ASISTENTES (FECHA,CODAPAR,CODPERS,REPRESENTADO,VOTO) VALUES ('$fec','$apa','$per','$rep','$vot')");
+            return $this->ejecutarSQL("REPLACE INTO ASISTENTES (FECHA,CODAPAR,CODPERS,REPRESENTADO,VOTO) VALUES ('$fec','$apa','$per','$rep','$vot')");
         }
         return FALSE;
     }

@@ -282,7 +282,7 @@ class Propietarios extends Personas {
     public function getUltimoRepresentante($apa, $fecha) {
         $repr = "";
         $date = $this->fechaIso_Base($fecha);
-        $res = parent::ejecutarSQL("SELECT CODPERS FROM JUNTAS_ASISTENTES WHERE REPRESENTADO='S' AND FECHA<='$date' AND CODAPAR='$apa' ORDER BY FECHA DESC LIMIT 1");
+        $res = parent::ejecutarSQL("SELECT CODPERS FROM ASISTENTES WHERE REPRESENTADO='S' AND FECHA<='$date' AND CODAPAR='$apa' ORDER BY FECHA DESC LIMIT 1");
         while($aRow = $res->fetch(PDO::FETCH_ASSOC)) {
             $repr = $aRow['CODPERS'];
         }
