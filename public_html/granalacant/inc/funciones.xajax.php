@@ -35,7 +35,7 @@ $xajax->register(XAJAX_FUNCTION, 'buscar');
 $xajax->register(XAJAX_FUNCTION, 'busquedaActas');
 $xajax->register(XAJAX_FUNCTION, 'busquedaAyuda');
 $xajax->register(XAJAX_FUNCTION, 'confirmarVotacionCambios');
-$xajax->register(XAJAX_FUNCTION, 'crearToolTipMulti');
+//$xajax->register(XAJAX_FUNCTION, 'crearToolTipMulti');
 $xajax->register(XAJAX_FUNCTION, 'eliminarActa');
 $xajax->register(XAJAX_FUNCTION, 'eliminarPropiedad');
 $xajax->register(XAJAX_FUNCTION, 'eliminarPropiedadPregunta');

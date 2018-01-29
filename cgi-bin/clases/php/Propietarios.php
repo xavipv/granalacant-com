@@ -166,7 +166,7 @@ class Propietarios extends Personas {
         $aProps = array();
         if ($apa) {
             $date = ($fecha) ? $this->fechaIso_Base($fecha) : date('Y-m-d');
-            $per = $this->getPropietarioEnFecha($apa, $date);
+            $per = $this->getPropietarioEnFechaCodigo($apa, $date);
             $res = parent::ejecutarSQL("SELECT P.CODAPAR,CONCAT('Portal ',A.PORTAL,'-',A.PISO,A.LETRA) AS APARTAMENTO,P.ORDEN FROM PROPIETARIOS P LEFT JOIN APARTAMENTOS A ON P.CODAPAR=A.CODAPAR WHERE P.CODPERS='$per' AND P.CODPERS=(SELECT CODPERS FROM PROPIETARIOS WHERE IFNULL(BAJA,'9999-99-99') >= '$date' AND CODAPAR=P.CODAPAR ORDER BY IFNULL(BAJA,'9999-99-99') ASC,ORDEN LIMIT 1) ORDER BY P.CODAPAR");
             while($aRow = $res->fetch(PDO::FETCH_ASSOC)) {
                 $aProps[$aRow['CODAPAR']] = array($aRow['APARTAMENTO'], $aRow['ORDEN']);
@@ -241,7 +241,7 @@ class Propietarios extends Personas {
      * Obtiene los propietarios de un apartamento en una fecha determinada.
      * 
      * @param int $apa Codigo de apartamento.
-     * @param date $fecha Fecha a buscar enc ualquier formato.
+     * @param date $fecha Fecha a buscar en cualquier formato.
      * @param boolean $bBaja Si es true tambien obtiene la fecha de baja.
      * @return array de tipo array('codpers'=>array('nombre','baja')...) o array('codpers'=>'nombre'...)
      */
@@ -255,15 +255,34 @@ class Propietarios extends Personas {
         $res->closeCursor();
         return $aProp;
     }
-
+    
     /**
      * Obtiene el propietario principal de un apartamento en una fecha determinada.
+     * 
+     * @param int $apa Codigo de apartamento.
+     * @param date $fecha Fecha a buscar en cualquier formato.
+     * @param boolean $bBaja Si es true tambien obtiene la fecha de baja.
+     * @return array de tipo array('codpers'=>array('nombre','baja')) o array('codpers'=>'nombre')
+     */
+    public function getPropietarioEnFecha($apa, $fecha, $bBaja=TRUE) {
+        $aProp = array();
+        $date = $this->fechaIso_Base($fecha);
+        $res = parent::ejecutarSQL("SELECT PR.CODPERS, CONCAT(P.APELLIDOS,' ',P.NOMBRE) AS NOM,PR.BAJA FROM PROPIETARIOS PR LEFT JOIN PERSONAS P ON P.CODPERS=PR.CODPERS WHERE IFNULL(PR.BAJA,'9999-99-99') >= '$date' AND PR.CODAPAR='$apa' ORDER BY IFNULL(PR.BAJA,'9999-99-99') ASC,PR.ORDEN LIMIT 1;");
+        while($aRow = $res->fetch(PDO::FETCH_ASSOC)) {
+            $aProp[$aRow['CODPERS']] = ($bBaja) ? array($aRow['NOM'], $aRow['BAJA']) : $aRow['NOM'];
+        }
+        $res->closeCursor();
+        return $aProp;
+    }
+
+    /**
+     * Obtiene el codigo del propietario principal de un apartamento en una fecha determinada.
      * 
      * @param int $apa Codigo de apartamento.
      * @param date $fecha Fecha a buscar enc ualquier formato.
      * @return int Codigo de persona.
      */
-    public function getPropietarioEnFecha($apa, $fecha) {
+    public function getPropietarioEnFechaCodigo($apa, $fecha) {
         $iPro = 0;
         $date = $this->fechaIso_Base($fecha);
         $res = parent::ejecutarSQL("SELECT CODPERS FROM PROPIETARIOS WHERE IFNULL(BAJA,'9999-99-99') >= '$date' AND CODAPAR='$apa' ORDER BY IFNULL(BAJA,'9999-99-99') ASC,ORDEN LIMIT 1");

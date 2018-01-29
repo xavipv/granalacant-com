@@ -1015,11 +1015,17 @@ function f_getAsistentesVotacion($fecha, $num=1) {
         }
         
         // Datos del propietario.
-        $oProp = new Propiedad($apa);
-        $aProp = $oProp->getPrimerPropietarioAlta();        //array('codpers'=>array('nombre','date','fecha','orden))
-        $iProp = $oProp->getPrimerPropietarioAltaCodigo();  // codpers
-        $aApPr = $oPers->getPropiedadesAltaCodigos($iProp); // Propiedades de la persona.
-        $sApPr = "[" . implode(",", $aApPr) . "]";          // Codigos en formato [1,2,3]
+        $aProp = $oPers->getPropietarioEnFecha($apa, $fecha, FALSE);    // array('codpers'=>'nombre')
+        $iProp = $oPers->getPropietarioEnFechaCodigo($apa, $fecha);     // codpers
+        $aApPr = array_keys($oPers->getMisPropiedades($apa, $fecha));   // array(apa1,apa2...)
+        $sApPr = "[" . implode(",", $aApPr) . "]";                      // Codigos en formato [1,2,3]
+        
+        // Datos del propietario.
+        //$oProp = new Propiedad($apa);
+        //$aProp = $oProp->getPrimerPropietarioAlta();        //array('codpers'=>array('nombre','date','fecha','orden))
+        //$iProp = $oProp->getPrimerPropietarioAltaCodigo();  // codpers
+        //$aApPr = $oPers->getPropiedadesAltaCodigos($iProp); // Propiedades de la persona.
+        //$sApPr = "[" . implode(",", $aApPr) . "]";          // Codigos en formato [1,2,3]
         
         // Datos de la votacion.
         $aVoto = $oVota->getVoto($apa);         // array('asis','vota','pres','res1','res2','res3','res4')
@@ -1039,7 +1045,7 @@ function f_getAsistentesVotacion($fecha, $num=1) {
         $onc = "js_marcarOpc(this.id, $apa, $sApPr, this.checked);";
 
         $tabla .= "<tr id=\"fila$apa\"><td class=\"align-middle\">" . $aApartamento[0] . "-" . $aApartamento[1] . $aApartamento[2] . "</td>
-                   <td class=\"align-middle\">" . $aProp[0] . "</td>
+                   <td class=\"align-middle\">" . $aProp[$iProp] . "</td>
                    <td class=\"align-middle text-center\"><input type=\"checkbox\" id=\"asis$apa\" name=\"asis[$apa]\" onclick=\"$onc\" $ch1></td>
                    <td class=\"align-middle text-center\"><input type=\"checkbox\" id=\"vota$apa\" name=\"vota[$apa]\" onclick=\"$onc\" $ch2 $bch></td>    
                    <td class=\"align-middle text-center\"><input type=\"checkbox\" id=\"pres$apa\" name=\"pres[$apa]\" onclick=\"$onc\" $ch3 $bch></td>
