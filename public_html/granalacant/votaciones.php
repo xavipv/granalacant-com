@@ -34,7 +34,7 @@ if(!$fec) {
             </ul>
         </div>
         <!-- Contenido -->
-        <div id="contenedor" class="container">
+        <div id="contenedor" class="container" style="width: 80%">
             <div class="row">
                 <div id="divlistado" class="col-sm-2 hidden-ms hidden-xs listado"><?php echo f_getVotacionesListado(); ?></div>
                 <div id="divcontenido" class="col-sm-10">
