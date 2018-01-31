@@ -950,6 +950,11 @@ function f_getPropietariosRepresentantes($apa, $fecha, $sel='', $repr='N', $onCh
 
 //--- VOTACIONES -------------------------------------------------------------//
 
+/**
+ * Obtiene una lista con los años en los que ha habido votaciones.
+ * 
+ * @return string Lista con los años de las votaciones.
+ */
 function f_getVotacionesAnyos() {
     $oVots = new Votaciones();
     $aAnys = $oVots->getVotacionesAnyos();
@@ -960,6 +965,12 @@ function f_getVotacionesAnyos() {
     return $sAnys;
 }
 
+/**
+ * Obtiene un listado con las fechas de todas las botaciones que ha habido.
+ * 
+ * @global string $pagina Nombre de pagina.
+ * @return string Codigo HTML con las fechas de la votaciones.
+ */
 function f_getVotacionesListado() {
     global $pagina;
     $oVots = new Votaciones();
@@ -976,11 +987,19 @@ function f_getVotacionesListado() {
             $dFec = $date;
         }
         $sAny = $any;
-        
     } 
     return $sVots;
 }
 
+/**
+ * Obtiene una lista de propietarios para realizar una votacion.
+ * 
+ * @global \Apartamentos $oApars Instancia de Apartamentos.
+ * @global \Personas $oPers Instancia de Personas.
+ * @param date $fecha Fecha de la votacion.
+ * @param int $num Numero de votacion.
+ * @return string Codigo HTML de la votacion.
+ */
 function f_getAsistentesVotacion($fecha, $num=1) {
     global $oApars, $oPers;
     
@@ -997,21 +1016,13 @@ function f_getAsistentesVotacion($fecha, $num=1) {
     $portal = "";
     $tabla  = "<table id=\"tablavot\" class=\"table table-sm\">";
     
+    // Recorre los apartamentos de la urbanizacion.
     foreach ($aApars as $apa => $aApartamento) {
         
+        // Cabecera para un nuevo portal.
         if ($portal != $aApartamento[0]) {
-            // Cambio de portal.
             $portal = $aApartamento[0];
-            $tabla .= "<tr id=\"portal$portal\" style=\"background-color:#F5F5F5\">
-                       <th class=\"align-middle col-sm-1\">&nbsp;<a name=\"ini$portal\" href=\"#ini1\">Portal $portal</a></th>
-                       <th class=\"align-middle col-sm-4\">Propietario</th>
-                       <th class=\"align-middle text-center col-sm-1\">Asi.</th>
-                       <th class=\"align-middle text-center col-sm-1\">Vot</th>
-                       <th class=\"align-middle text-center col-sm-1\">Pre</th>
-                       <th id=\"titop1$portal\" class=\"align-middle text-center col-sm-1\" title=\"$opc1\">" . substr($opc1, 0, 8) . "</th>
-                       <th id=\"titop2$portal\" class=\"align-middle text-center col-sm-1\" title=\"$opc2\">" . substr($opc2, 0, 8) . "</th>
-                       <th id=\"titop3$portal\" class=\"align-middle text-center col-sm-1\" title=\"$opc3\">" . substr($opc3, 0, 8) . "</th>
-                       <th id=\"titop4$portal\" class=\"align-middle text-center col-sm-1\" title=\"$opc4\">" . substr($opc4, 0, 8) . "</th></tr>";
+            $tabla .= f_cabeceraTablaAsistentes($portal, $opc1, $opc2, $opc3, $opc4);
         }
         
         // Datos del propietario.
@@ -1020,43 +1031,120 @@ function f_getAsistentesVotacion($fecha, $num=1) {
         $aApPr = array_keys($oPers->getMisPropiedades($apa, $fecha));   // array(apa1,apa2...)
         $sApPr = "[" . implode(",", $aApPr) . "]";                      // Codigos en formato [1,2,3]
         
-        // Datos del propietario.
-        //$oProp = new Propiedad($apa);
-        //$aProp = $oProp->getPrimerPropietarioAlta();        //array('codpers'=>array('nombre','date','fecha','orden))
-        //$iProp = $oProp->getPrimerPropietarioAltaCodigo();  // codpers
-        //$aApPr = $oPers->getPropiedadesAltaCodigos($iProp); // Propiedades de la persona.
-        //$sApPr = "[" . implode(",", $aApPr) . "]";          // Codigos en formato [1,2,3]
-        
         // Datos de la votacion.
-        $aVoto = $oVota->getVoto($apa);         // array('asis','vota','pres','res1','res2','res3','res4')
+        $aVoto = $oVota->getVoto($apa); // array('asis','vota','pres','res1','res2','res3','res4')
         
-        $ch1 = ($aVoto[0] == 'S') ? "checked=\"checked\"" : "";
-        $ch2 = ($aVoto[1] == 'S') ? "checked=\"checked\"" : "";
-        $ch3 = ($aVoto[2] == 'S') ? "checked=\"checked\"" : "";
+        $ch1 = ($aVoto[0] == 'S') ? "checked=\"checked\"" : ""; // Asiste.
+        $ch2 = ($aVoto[1] == 'S') ? "checked=\"checked\"" : ""; // Tiene voto.
+        $ch3 = ($aVoto[2] == 'S') ? "checked=\"checked\"" : ""; // Presente.
         
-        $op1 = ($aVoto[3] == 'S') ? "checked=\"checked\"" : "";
-        $op2 = ($aVoto[4] == 'S') ? "checked=\"checked\"" : "";
-        $op3 = ($aVoto[5] == 'S') ? "checked=\"checked\"" : "";
-        $op4 = ($aVoto[6] == 'S') ? "checked=\"checked\"" : "";
+        $op1 = ($aVoto[3] == 'S') ? "checked=\"checked\"" : ""; // Resultado 1.
+        $op2 = ($aVoto[4] == 'S') ? "checked=\"checked\"" : ""; // Resultado 2.
+        $op3 = ($aVoto[5] == 'S') ? "checked=\"checked\"" : ""; // Resultado 3.
+        $op4 = ($aVoto[6] == 'S') ? "checked=\"checked\"" : ""; // Resultado 4.
         
         $bch = ($aVoto[0] != 'S') ? "disabled=\"disabled\"" : "";
         $bop = ($aVoto[0] != 'S' || $aVoto[1] != 'S' || $aVoto[2] != 'S') ? "disabled=\"disabled\"" : "";
         
+        $nom = $aProp[$iProp];
         $onc = "js_marcarOpc(this.id, $apa, $sApPr, this.checked);";
-
-        $tabla .= "<tr id=\"fila$apa\"><td class=\"align-middle\">" . $aApartamento[0] . "-" . $aApartamento[1] . $aApartamento[2] . "</td>
-                   <td class=\"align-middle\">" . $aProp[$iProp] . "</td>
-                   <td class=\"align-middle text-center\"><input type=\"checkbox\" id=\"asis$apa\" name=\"asis[$apa]\" onclick=\"$onc\" $ch1></td>
-                   <td class=\"align-middle text-center\"><input type=\"checkbox\" id=\"vota$apa\" name=\"vota[$apa]\" onclick=\"$onc\" $ch2 $bch></td>    
-                   <td class=\"align-middle text-center\"><input type=\"checkbox\" id=\"pres$apa\" name=\"pres[$apa]\" onclick=\"$onc\" $ch3 $bch></td>
-                   <td class=\"align-middle text-center\"><input type=\"radio\" id=\"res1$apa\" name=\"opciones[$apa]\" onclick=\"js_sincronizar($sApPr,1)\" value=\"1\" $op1 $bop></td>
-                   <td class=\"align-middle text-center\"><input type=\"radio\" id=\"res2$apa\" name=\"opciones[$apa]\" onclick=\"js_sincronizar($sApPr,2)\" value=\"2\" $op2 $bop></td>
-                   <td class=\"align-middle text-center\"><input type=\"radio\" id=\"res3$apa\" name=\"opciones[$apa]\" onclick=\"js_sincronizar($sApPr,3)\" value=\"3\" $op3 $bop></td>
-                   <td class=\"align-middle text-center\"><input type=\"radio\" id=\"res4$apa\" name=\"opciones[$apa]\" onclick=\"js_sincronizar($sApPr,4)\" value=\"4\" $op4 $bop></td></tr>";
+        $onk = f_nombresApartamentosMultiples($apa, $aApPr);
+        
+        // Fila con los datos de la votacion de un apartamento.
+        $tabla .= f_datosTablaAsistentes($apa, $aApartamento, $nom, $onc, $onk, $ch1, $ch2, $ch3, $bch, $sApPr, $op1, $op2, $op3, $op4, $bop);
     }
     return "$tabla</table>";
 }
 
+/**
+ * Crea una llamada a JavaScript para mostrar un tool-tip con los nombres de los apartamentos de un propietario.
+ * Se muestran los nombres de sus apartamentos, menos el actual.
+ * 
+ * @global \Apartamentos $oApars Instancia de Apartamentos.
+ * @param int $apa Codigo del apartamento actual.
+ * @param array $aCods Codigos de apartamentos.
+ * @return string Llamada a la funcion que muestra los tool-tip.
+ */
+function f_nombresApartamentosMultiples($apa, $aCods) {
+    global $oApars;
+    $aNombres = array();
+    if(count($aCods) > 1) {
+        // Tiene varios apartamentos.
+        foreach ($aCods as $codigo) {
+            if ($codigo != $apa) {
+                // No incluye el apartamento actual.
+                $aNombres[] = $oApars->getNombreCompleto($codigo);
+            }
+        }
+        $sNombres = implode(", ", $aNombres);
+        $onk = "if($('#sincro').prop('checked') == true) { js_existeTooltip($apa, 'Sincronizado con $sNombres'); }";
+    } else {
+        $onk = "";
+    }
+    return $onk;
+}
+
+/**
+ * Obtiene la cabecera de portal en la lista de una votacion.
+ * 
+ * @param int $portal Numero de portal.
+ * @param string $opc1 Texto de la opcion 1.
+ * @param string $opc2 Texto de la opcion 2.
+ * @param string $opc3 Texto de la opcion 3.
+ * @param string $opc4 Texto de la opcion 4.
+ * @return string Codigo HTML de la cabecera.
+ */
+function f_cabeceraTablaAsistentes($portal, $opc1, $opc2, $opc3, $opc4) {
+    return "<tr id=\"portal$portal\" style=\"background-color:#F5F5F5\">
+                <th class=\"align-middle col-sm-1\">&nbsp;<a name=\"ini$portal\" href=\"#ini1\">Portal $portal</a></th>
+                <th class=\"align-middle col-sm-4\">Propietario</th>
+                <th class=\"align-middle text-center col-sm-1\">Asi.</th>
+                <th class=\"align-middle text-center col-sm-1\">Vot</th>
+                <th class=\"align-middle text-center col-sm-1\">Pre</th>
+                <th id=\"titop1$portal\" class=\"align-middle text-center col-sm-1\" title=\"$opc1\">" . substr($opc1, 0, 8) . "</th>
+                <th id=\"titop2$portal\" class=\"align-middle text-center col-sm-1\" title=\"$opc2\">" . substr($opc2, 0, 8) . "</th>
+                <th id=\"titop3$portal\" class=\"align-middle text-center col-sm-1\" title=\"$opc3\">" . substr($opc3, 0, 8) . "</th>
+                <th id=\"titop4$portal\" class=\"align-middle text-center col-sm-1\" title=\"$opc4\">" . substr($opc4, 0, 8) . "</th></tr>";
+}
+
+/**
+ * Obtiene el contenido de lo que ha votado un apartamento en la lista de una votacion.
+ * 
+ * @param int $apa Codigo del apartamento.
+ * @param array $aApartamento Datos del apartamento.
+ * @param string $nom Nombre del propietario.
+ * @param string $onc Llamada a la funcion que se ejecuta al hacer clic.
+ * @param string $onk Llamada a la funcion de sincronizacion.
+ * @param string $ch1 Estado de la seleccion de la casilla de asistencia.
+ * @param string $ch2 Estado de la seleccion de la casilla de puede votar.
+ * @param string $ch3 Estado de la seleccion de la casilla de presencia.
+ * @param string $bch Estado de activacion de las casillas.
+ * @param string $sApPr Lista de los codigos de todos los apartamentos de los cuales es propietario.
+ * @param string $op1 Estado de seleccion de la opcion 1.
+ * @param string $op2 Estado de seleccion de la opcion 2.
+ * @param string $op3 Estado de seleccion de la opcion 3.
+ * @param string $op4 Estado de seleccion de la opcion 4.
+ * @param boolean $bop Estado de activacion de las opciones.
+ * @return string Codigo HTML de la informacion sobre la votacion del apartamento.
+ */
+function f_datosTablaAsistentes($apa, $aApartamento, $nom, $onc, $onk, $ch1, $ch2, $ch3, $bch, $sApPr, $op1, $op2, $op3, $op4, $bop) {
+    return "<tr id=\"fila$apa\"><td id=\"apartamento$apa\" class=\"align-middle\">" . $aApartamento[0] . "-" . $aApartamento[1] . $aApartamento[2] . "</td>
+                <td class=\"align-middle\">$nom</td>
+                <td class=\"align-middle text-center\"><input type=\"checkbox\" id=\"asis$apa\" name=\"asis[$apa]\" onclick=\"$onc $onk\" $ch1></td>
+                <td class=\"align-middle text-center\"><input type=\"checkbox\" id=\"vota$apa\" name=\"vota[$apa]\" onclick=\"$onc\" $ch2 $bch></td>    
+                <td class=\"align-middle text-center\"><input type=\"checkbox\" id=\"pres$apa\" name=\"pres[$apa]\" onclick=\"$onc\" $ch3 $bch></td>
+                <td class=\"align-middle text-center\"><input type=\"radio\" id=\"res1$apa\" name=\"opciones[$apa]\" onclick=\"js_sincronizar($sApPr,1)\" value=\"1\" $op1 $bop></td>
+                <td class=\"align-middle text-center\"><input type=\"radio\" id=\"res2$apa\" name=\"opciones[$apa]\" onclick=\"js_sincronizar($sApPr,2)\" value=\"2\" $op2 $bop></td>
+                <td class=\"align-middle text-center\"><input type=\"radio\" id=\"res3$apa\" name=\"opciones[$apa]\" onclick=\"js_sincronizar($sApPr,3)\" value=\"3\" $op3 $bop></td>
+                <td class=\"align-middle text-center\"><input type=\"radio\" id=\"res4$apa\" name=\"opciones[$apa]\" onclick=\"js_sincronizar($sApPr,4)\" value=\"4\" $op4 $bop></td></tr>";
+}
+
+/**
+ * Carga los votos de los asistentes a una votacion.
+ * 
+ * @param \Votacion $oVota Instancia de Votacion.
+ * @return \Votacion Instancia con los votos cargados.
+ */
 function f_cargarAsistentesJunta($oVota) {
     $fecha = $oVota->getFecha();
     $oAsis = new Asistentes($fecha);
@@ -1083,6 +1171,13 @@ function f_convertirArrayJS($aDatos) {
     return $sDatos;
 }
 
+/**
+ * Obtiene el Select para elegir el numero de la votacion.
+ * 
+ * @param date $fecha Fecha de la votacion.
+ * @param int $vot Numero de votacion seleccionada.
+ * @return Codigo HTML para el Select del numero de votacion.
+ */
 function f_getSelectNumVotaciones($fecha, $vot=1) {
     $oVots = new Votaciones();
     $num   = $oVots->getUltimaVotacion($fecha) + 1;
@@ -1093,6 +1188,12 @@ function f_getSelectNumVotaciones($fecha, $vot=1) {
     return f_getSelectSimple($aNum, "votacion", $vot, "form-control form-control-sm", "js_cambiarNumeroVotacion($('#votacion').val(), $('#votacioninicial').val())");
 }
 
+/**
+ * Graba los datos de una votacion.
+ * 
+ * @param array $frm Datos del formulario de la votacion.
+ * @return boolean Devuelve TRUE si todo ha ido bien o FALSE en caso contrario.
+ */
 function f_grabarVotacion($frm) {
     $fec = $frm['fecha'];
     $num = $frm['votacion'];

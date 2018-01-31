@@ -357,6 +357,13 @@ class Apartamentos {
         return $aDat;
     }
     
+    public function getNombreCompleto($apa, $bPortal=TRUE) {
+        $aApa = $this->aDatosApartamentos;
+        $sPor = ($bPortal) ? "Portal " : "";
+        $aDat = $aApa[$apa];
+        return $sPor . $aDat[0] . "-" . $aDat[1] . $aDat[2];
+    }
+    
     /**
      * Obtiene una lista con los portales.
      * 
