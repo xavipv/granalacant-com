@@ -10,7 +10,7 @@ $aIncludes = array('config.inc.php', 'funciones.inc.php', 'funciones.xajax.php')
 $fec = ( filter_input(INPUT_POST, 'fecha') ) ? filter_input(INPUT_POST, 'fecha') : filter_input(INPUT_GET, 'fecha');
 
 if(!$fec) {
-    $fec = $oJuntas->getUltimaJunta();
+    $fec = $oJuntas->convertirFechaBDaISO($oJuntas->getUltimaJunta());
 }
 // Junta vacia.
 $oJ = new Junta();
@@ -20,7 +20,7 @@ $oJ = new Junta();
     <head>
         <?php echo f_getCabeceraHTML("Juntas"); ?>
     </head>
-    <body onload="xajax_setJuntaDatosForm('<?php echo $fec; ?>')">
+    <body onload="xajax_setJuntaDatosForm('<?php echo $fec; ?>', '<?php echo $fec; ?>')">
         <div id="cabecera">
             <!-- Barra de navegacion -->
             <?php include 'menu.php'; ?>
@@ -30,7 +30,7 @@ $oJ = new Junta();
                     <div id="submenu1" class="nav-link"><?php echo f_getJuntasAnyos(); ?></div>
                 </li>
                 <li class="nav-item text-right col-sm-2">
-                    <div id="submenu3"><button type="button" onclick="xajax_setJuntaDatosForm(); xajax_setCalendario()" class="btn btn-outline-success">Nueva junta</button></div>
+                    <div id="submenu3"><button type="button" onclick="xajax_setJuntaDatosForm('<?php echo date('d-m-Y'); ?>'); xajax_setCalendario(false, true);" class="btn btn-outline-success">Nueva junta</button></div>
                 </li>
             </ul>
         </div>
@@ -45,7 +45,8 @@ $oJ = new Junta();
                             <div class="row">
                                 <div class="form-group col-sm-3">
                                     <label for="fecha">Fecha</label>
-                                    <input type="text" class="form-control calendario" style="background-color: transparent" id="fecha" name="fecha" value="" title="" placeholder="Fecha" readonly="readonly">
+                                    <input type="text" class="form-control calendario" style="background-color: transparent" id="fecha" name="fecha" value="<?php echo $fec; ?>" title="" placeholder="Fecha" readonly="readonly">
+                                    <input type="hidden" id="fechaoriginal" name="fechaoriginal" value="<?php echo $fec; ?>">
                                 </div>
                                 <div class="form-group col-sm-3">
                                     <label for="tipo">Tipo</label>
@@ -113,9 +114,9 @@ $oJ = new Junta();
                                     <textarea id="notas" name="notas" rows="3" value="" class="form-control"></textarea>
                                 </div>
                             </div> 
-                            <button class="btn btn-success col-sm-2" type="button" onclick="xajax_grabarJunta(xajax.getFormValues('frmjunta'))">Guardar</button>
+                            <button class="btn btn-success col-sm-2" type="button" id="botongrabar" onclick="xajax_grabarJunta(xajax.getFormValues('frmjunta'))">Guardar</button>
                             <button class="btn btn-primary col-sm-2 offset-3" type="button" id="boasistentes" onclick="$(location).attr('href', 'asistentes.php?fecha=' + $('#fecha').val())">Asistentes</button>
-                            <button class="btn btn-warning col-sm-2 float-right" type="button" onclick="xajax_setJuntaDatosForm($('#fecha').val());">Restaurar</button>
+                            <button class="btn btn-warning col-sm-2 float-right" type="button" onclick="xajax_setJuntaDatosForm($('#fechaoriginal').val(), $('#fechaoriginal').val());">Restaurar</button>
                         </form>
                     </div>
                 </div>

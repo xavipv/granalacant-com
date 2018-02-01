@@ -51,12 +51,26 @@ class Juntas {
     
     /**
      * Carga los datos de las juntas.
+     * Los datos se cargan en un array que tiene como claves las <b>fechas</b> de las Juntas y como valores:
+     * <ul>
+     * <li>0 - Fecha en formato ISO.</li>
+     * <li>1 - Tipo de junta.</li>
+     * <li>2 - Presidente.</li>
+     * <li>3 - Vicepresidente 1.</li>
+     * <li>4 - Vicepresidente 2.</li>
+     * <li>5 - Vocal 1.</li>
+     * <li>6 - Vocal 2.</li>
+     * <li>7 - Vocal 3.</li>
+     * <li>8 - Vocal 4.</li>
+     * <li>9 - Secretario.</li>
+     * <li>10 - Administracion.</li>
+     * </ul>
      */
     private function cargarJuntas() {
         $this->aJuntas = array();
-        $res = $this->ejecutarSQL("SELECT FECHA,DATE_FORMAT(FECHA,'%d-%m-%Y') AS FECHAISO,TIPO FROM JUNTAS ORDER BY FECHA DESC");
+        $res = $this->ejecutarSQL("SELECT FECHA,DATE_FORMAT(FECHA,'%d-%m-%Y') AS FECHAISO,TIPO,PRESIDENTE,VICEPRESIDENTE1,VICEPRESIDENTE2,VOCAL1,VOCAL2,VOCAL3,VOCAL4,SECRETARIO,ADMINISTRACION FROM JUNTAS ORDER BY FECHA DESC");
         while($aRow = $res->fetch(PDO::FETCH_ASSOC)) {
-            $this->aJuntas[$aRow['FECHA']] = array($aRow['FECHAISO'], $aRow['TIPO']);
+            $this->aJuntas[$aRow['FECHA']] = array($aRow['FECHAISO'], $aRow['TIPO'], $aRow['PRESIDENTE'], $aRow['VICEPRESIDENTE1'], $aRow['VICEPRESIDENTE2'], $aRow['VOCAL1'], $aRow['VOCAL2'], $aRow['VOCAL3'], $aRow['VOCAL4'], $aRow['SECRETARIO'], $aRow['ADMINISTRACION']);
         }
         $res->closeCursor(); 
     }
@@ -110,6 +124,20 @@ class Juntas {
 
     /**
      * Obtiene los datos de todas las juntas.
+     * Se devuelven en un array que tiene como claves las <b>fechas</b> de las Juntas y como valores:
+     * <ul>
+     * <li>0 - Fecha en formato ISO.</li>
+     * <li>1 - Tipo de junta.</li>
+     * <li>2 - Presidente.</li>
+     * <li>3 - Vicepresidente 1.</li>
+     * <li>4 - Vicepresidente 2.</li>
+     * <li>5 - Vocal 1.</li>
+     * <li>6 - Vocal 2.</li>
+     * <li>7 - Vocal 3.</li>
+     * <li>8 - Vocal 4.</li>
+     * <li>9 - Secretario.</li>
+     * <li>10 - Administracion.</li>
+     * </ul>
      * 
      * @return array del tipo array('fecha'=>array('fechaISO','tipo')...) 
      */
@@ -162,6 +190,39 @@ class Juntas {
             }
         }
         return $sTip;
+    }
+    
+    /**
+     * Obtiene los datos de la junta anterior a una fecha dada.
+     * Los datos se cargan en un array que tiene como clave la <b>fecha</b> de la ultima Junta y como valores:
+     * <ul>
+     * <li>0 - Fecha en formato ISO.</li>
+     * <li>1 - Tipo de junta.</li>
+     * <li>2 - Presidente.</li>
+     * <li>3 - Vicepresidente 1.</li>
+     * <li>4 - Vicepresidente 2.</li>
+     * <li>5 - Vocal 1.</li>
+     * <li>6 - Vocal 2.</li>
+     * <li>7 - Vocal 3.</li>
+     * <li>8 - Vocal 4.</li>
+     * <li>9 - Secretario.</li>
+     * <li>10 - Administracion.</li>
+     * </ul>
+     * 
+     * @param date $fecha Fecha en cualquier formato.
+     * @return array con los datos de la Junta.
+     */
+    public function getJuntaAnterior($fecha) {
+        $aUlt = array();
+        $date = $this->convertirFechaISOaBD($fecha);
+        $aJun = $this->aJuntas;
+        foreach ($aJun as $fec => $aJun) {
+            $aUlt = $aJun;
+            if ($date > $fec) {
+                return $aUlt;
+            }
+        }
+        return $aUlt;
     }
     
     /**

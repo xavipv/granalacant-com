@@ -79,7 +79,14 @@ function js_onCalendario(pag, id) {
                 $("#boton"+num).prop("disabled",true);
             }
             break;
-        case "votaciones.php" : js_cambiarFechaVotacion($('#fecha').val(), $('#fechainicial').val()); break;
+        case "votaciones.php" : 
+            js_cambiarFechaVotacion($('#fecha').val(), $('#fechainicial').val()); 
+            break;
+        case "juntas.php" : 
+            if(!$('#boasistentes').is(':visible')) { 
+                xajax_setJuntaDatosForm($('#fecha').val()); 
+            } 
+            break;    
     }
 }
 
