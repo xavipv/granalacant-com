@@ -37,6 +37,8 @@ $xajax->register(XAJAX_FUNCTION, 'busquedaAyuda');
 $xajax->register(XAJAX_FUNCTION, 'confirmarVotacionCambios');
 //$xajax->register(XAJAX_FUNCTION, 'crearToolTipMulti');
 $xajax->register(XAJAX_FUNCTION, 'eliminarActa');
+$xajax->register(XAJAX_FUNCTION, 'eliminarAsistentes');
+$xajax->register(XAJAX_FUNCTION, 'eliminarJunta');
 $xajax->register(XAJAX_FUNCTION, 'eliminarPropiedad');
 $xajax->register(XAJAX_FUNCTION, 'eliminarPropiedadPregunta');
 $xajax->register(XAJAX_FUNCTION, 'eliminarPropietario');
@@ -46,7 +48,7 @@ $xajax->register(XAJAX_FUNCTION, 'getActaDatos');
 $xajax->register(XAJAX_FUNCTION, 'getActaDatosForm');
 $xajax->register(XAJAX_FUNCTION, 'getAsistentes');
 $xajax->register(XAJAX_FUNCTION, 'getAsistentesJuntaSumas');
-$xajax->register(XAJAX_FUNCTION, 'getAsistentesSumas');
+//$xajax->register(XAJAX_FUNCTION, 'getAsistentesSumas');
 $xajax->register(XAJAX_FUNCTION, 'getDatosCoeficientes');
 $xajax->register(XAJAX_FUNCTION, 'getJuntasAnyos');
 $xajax->register(XAJAX_FUNCTION, 'getJuntasListado');
@@ -70,7 +72,7 @@ $xajax->register(XAJAX_FUNCTION, 'setAsistenteMulti');
 $xajax->register(XAJAX_FUNCTION, 'setCalendario');
 $xajax->register(XAJAX_FUNCTION, 'setDatosCoeficientes');
 $xajax->register(XAJAX_FUNCTION, 'setJuntaDatosForm');
-$xajax->register(XAJAX_FUNCTION, 'setJuntaDatosOmision');
+//$xajax->register(XAJAX_FUNCTION, 'setJuntaDatosOmision');
 $xajax->register(XAJAX_FUNCTION, 'setPersonasDatosForm');
 $xajax->register(XAJAX_FUNCTION, 'setPropiedadesPersonaDatosForm');
 $xajax->register(XAJAX_FUNCTION, 'setPropietariosApartamentoDatosForm');
@@ -506,55 +508,13 @@ function getJuntasListado($id) {
 }
 
 /**
- * Pone los datos de la Junta de la fecha indicada.
+ * Pone los datos de una Junta.
  * 
- * @global Juntas $oJuntas Instancia de Juntas.
- * @param date $dat Fecha de la Junta.
+ * @global Juntas $oJuntas Intancia de Juntas.
+ * @param date $fecha Fecha de la Junta.
+ * @param date $original Fecha original (vacio si es una Junta nueva).
  * @return \xajaxResponse
- *
-function setJuntaDatosForm($dat='') {
-    global $oJuntas;
-    $response = new xajaxResponse();
-    
-    $date = ($oJuntas->existeJunta($dat)) ? $dat : "";  // Mira si existe la fecha.
-    $fecha = (!$date) ? f_getUltimaJunta() : $date;     // Saca los datos de la fecha o de la ultima junta.
-    
-    // Obtiene los datos de la Junta.
-    $oJunta = new Junta($fecha);
-    $fec = ($date) ? $oJunta->getFechaISO() : date("d-m-Y");
-    $tip = ($date) ? $oJunta->getTipo() : "E";
-    $not = ($date) ? $oJunta->getNotas() : "";
-    $tit = ($date) ? "Junta del $fec" : "Nueva junta";
-    $scr = ($date) ? "$('.calendario').datepicker('destroy');$('#fecha').css('backgroundColor','transparent');$('#boasistentes').show();" : "$('#boasistentes').hide(); $('#fecha').css('backgroundColor','#dff9df'); $('#fecha').focus(); $('.calendario').datepicker({format: 'dd-mm-yyyy', todayBtn: true, language: 'es', autoclose: true, todayHighlight: true }).on('changeDate',function(e){ js_onCalendario(location.pathname.substr(location.pathname.lastIndexOf('/')+1), this.id); }); $('.calendario').datepicker('show');";
-    
-    // Suma los asistentes a la Junta.
-    if($date) {
-        $response->call("xajax_getAsistentesSumas", $fecha);
-    } else {
-        $response->call("xajax_getAsistentesSumas");
-    }
-    
-    // Pone los datos obtenidos en el formulario.
-    $response->assign("titulo1", "innerHTML", $tit);    //TODO: VER PORQUE NO PONE BIEN LA FECHA DESPUES DE NUEVA JUNTA.
-    $response->assign("fecha", "value", $fec);
-    $response->assign("tipo", "value", $tip);
-    $response->assign("convo", "value", $oJunta->getConvocatoria());
-    $response->assign("hora", "value", $oJunta->getHora());
-    $response->assign("presi", "value", $oJunta->getPresidente());
-    $response->assign("vice1", "value", $oJunta->getVicepresidente1());
-    $response->assign("vice2", "value", $oJunta->getVicepresidente2());
-    $response->assign("vocal1", "value", $oJunta->getVocal1());
-    $response->assign("vocal2", "value", $oJunta->getVocal2());
-    $response->assign("vocal3", "value", $oJunta->getVocal3());
-    $response->assign("vocal4", "value", $oJunta->getVocal4());
-    $response->assign("secre", "value", $oJunta->getSecretario());
-    $response->assign("admi", "value", $oJunta->getAdministracion());
-    $response->assign("notas", "value", $not);
-    $response->script($scr . "$('#botongrabar').show();");
-    
-    return $response;
-} */
-
+ */
 function setJuntaDatosForm($fecha='', $original='') {
     global $oJuntas;
     
@@ -599,164 +559,6 @@ function setJuntaDatosForm($fecha='', $original='') {
     return $response;
 }
 
-function f_setJuntaDatosExistente($fecha) {
-    // Obtiene los datos de la Junta.
-    $oJunta = new Junta($fecha);
-    $fec = $fecha;
-    $ori = $oJunta->getFecha();
-    $tip = $oJunta->getTipo();
-    $con = $oJunta->getConvocatoria();
-    $hor = $oJunta->getHora();
-    $pre = $oJunta->getPresidente();
-    $vi1 = $oJunta->getVicepresidente1();
-    $vi2 = $oJunta->getVicepresidente2();
-    $vo1 = $oJunta->getVocal1();
-    $vo2 = $oJunta->getVocal2();
-    $vo3 = $oJunta->getVocal3();
-    $vo4 = $oJunta->getVocal4();
-    $sec = $oJunta->getSecretario();
-    $adm = $oJunta->getAdministracion();
-    $not = $oJunta->getNotas();
-    $tit = "Junta del $fec";
-    $src = "$('.calendario').datepicker('destroy');$('#fecha').css('backgroundColor','transparent');$('#boasistentes').show(); $('#botongrabar').show();";
-    $iok = 1;
-    return array($fec, $ori, $tip, $con, $hor, $pre, $vi1, $vi2, $vo1, $vo2, $vo3, $vo4, $sec, $adm, $not, $tit, $src, $iok);
-}
-
-function f_setJuntaDatosNueva($fecha) {
-    global $oJuntas;
-    
-    if ($oJuntas->existeJunta($fecha)) {
-        // En la nueva fecha ya existe una Junta.
-        $fec = "";
-        $ori = "";
-        $tip = "";
-        $con = "";
-        $hor = "";
-        $pre = "";
-        $vi1 = "";
-        $vi2 = "";
-        $vo1 = "";
-        $vo2 = "";
-        $vo3 = "";
-        $vo4 = "";
-        $sec = "";
-        $adm = "";
-        $not = "";
-        $tit = "";
-        $src = "$('#fecha').css('backgroundColor','#F8D7DA'); $('#botongrabar').hide(); $('#boasistentes').hide();";
-        $iok = 0;
-    } else {
-        // En la nueva fecha no existe ninguna otra Junta. Busca los datos de la Junta anterior.
-        $aDatos = $oJuntas->getJuntaAnterior($fecha);
-        $fec = $fecha;
-        $ori = "";
-        $tip = "E";
-        $con = "2";
-        $hor = "10:00";
-        $pre = $aDatos[2];
-        $vi1 = $aDatos[3];
-        $vi2 = $aDatos[4];
-        $vo1 = $aDatos[5];
-        $vo2 = $aDatos[6];
-        $vo3 = $aDatos[7];
-        $vo4 = $aDatos[8];
-        $sec = $aDatos[9];
-        $adm = $aDatos[10];
-        $not = "";
-        $tit = "Nueva Junta";
-        $src = "$('#fecha').css('backgroundColor','#dff9df'); $('#botongrabar').show(); $('#boasistentes').hide();";
-        $iok = 1;
-    }
-    return array($fec, $ori, $tip, $con, $hor, $pre, $vi1, $vi2, $vo1, $vo2, $vo3, $vo4, $sec, $adm, $not, $tit, $src, $iok);
-}
-
-function f_getAsistentesSumas($fecha='') {
-    $aSumas = array(0, 0, 0);
-    if ($fecha) {
-        // Se trata de una Junta.
-        $oAsis = new Asistentes($fecha);
-        $aSumas = $oAsis->getSumas();   // array('prop' => array('propietarios', 'distintos', 'con voto', 'sin voto'), 'repr' => array('representados', 'distintos', 'con voto', 'sin voto'))
-        $aProps = $aSumas['prop'];
-        $aReprs = $aSumas['repr'];
-        $aSumas[0] = $aProps[0] + $aReprs[0];
-        $aSumas[1] = $aReprs[0];
-        $aSumas[2] = $aProps[2] + $aReprs[2];
-    } 
-    
-    return $aSumas;
-}
-
-/**
- * Pone los datos por omision en una Junta nueva. Coge los datos de la Junta anterior.
- * 
- * @global Juntas $oJuntas Instancia de Juntas.
- * @param date $fecha Fecha de la nueva Junta.
- * @param boolean $vieja Si es TRUE indica que se trata de una Junta existente, si es FALSE es una Junta nueva.
- * @return \xajaxResponse
- *
-function setJuntaDatosOmision($fecha, $vieja=FALSE) {
-    global $oJuntas;
-    $response = new xajaxResponse();
-    
-    if (!$vieja) {
-        if(!$oJuntas->existeJunta($fecha)) {
-            // La Junta no existe.
-            $aDatos = $oJuntas->getJuntaAnterior($fecha);
-
-            // Pone los datos de la Junta Directiva anterior.
-            $src = "$('#botongrabar').show();";
-            $response->script("$('#fecha').css('backgroundColor','#dff9df');");
-            //$response->assign("fecha", "value", $fecha);
-            $response->assign("presi", "value", $aDatos[2]);
-            $response->assign("vice1", "value", $aDatos[3]);
-            $response->assign("vice2", "value", $aDatos[4]);
-            $response->assign("vocal1", "value", $aDatos[5]);
-            $response->assign("vocal2", "value", $aDatos[6]);
-            $response->assign("vocal3", "value", $aDatos[7]);
-            $response->assign("vocal4", "value", $aDatos[8]);
-            $response->assign("secre", "value", $aDatos[9]);
-            $response->assign("admi", "value", $aDatos[10]);
-
-        } else {
-            // La Junta ya existe.
-            $response->script("$('#fecha').css('backgroundColor','#F8D7DA');");
-            $src = "$('#botongrabar').hide();";
-        }
-        $response->script($src);
-    }
-    return $response;
-} */
-
-/**
- * Pone las sumas de los asistentes a la Junta.
- * 
- * @param date $fecha Fecha de la Junta.
- * @return \xajaxResponse
- *
-function getAsistentesSumas($fecha='') {
-    $response = new xajaxResponse();
-    if ($fecha) {
-        // Se trata de una Junta.
-        $oAsis = new Asistentes($fecha);
-        $aSumas = $oAsis->getSumas();   // array('prop' => array('propietarios', 'distintos', 'con voto', 'sin voto'), 'repr' => array('representados', 'distintos', 'con voto', 'sin voto'))
-        $aProps = $aSumas['prop'];
-        $aReprs = $aSumas['repr'];
-        $sumA = $aProps[0] + $aReprs[0];
-        $sumR = $aReprs[0];
-        $sumV = $aProps[2] + $aReprs[2];
-    } else {
-        // Se trata de una Junta nueva.
-        $sumA = 0;
-        $sumR = 0;
-        $sumV = 0;
-    }
-    $response->assign("asist", "value", $sumA);
-    $response->assign("repre", "value", $sumR);
-    $response->assign("votos", "value", $sumV);
-    return $response;
-} */
-
 /**
  * Dando el codigo de una administracion selecciona su secretario.
  * 
@@ -782,46 +584,36 @@ function getSecretario($adm) {
  * @return \xajaxResponse
  */
 function grabarJunta($frm) {
+    $response = new xajaxResponse();
+    $fec = $frm['fecha'];     
+    if (f_grabarJunta($frm)) {
+        $response->call("xajax_getJuntasAnyos", "submenu1");
+        $response->call("xajax_getJuntasListado", "divlistado");
+        $response->call("xajax_setJuntaDatosForm", $fec, $fec);
+    } else {
+        $response->alert("No se han podido grabar los datos de la Junta.");
+    } 
+    return $response;
+}
+
+/**
+ * Elimina los datos de una Junta.
+ * 
+ * @global Juntas $oJuntas Instancia de Juntas.
+ * @param date $fecha Fecha de la Junta a eliminar.
+ * @return \xajaxResponse
+ */
+function eliminarJunta($fecha) {
     global $oJuntas;
     $response = new xajaxResponse();
-    $fec = $frm['fecha'];
-    $tip = $frm['tipo'];
-    $con = $frm['convo'];
-    $hor = $frm['hora'];
-    $pre = $frm['presi'];
-    $vi1 = $frm['vice1'];
-    $vi2 = $frm['vice2'];
-    $vo1 = $frm['vocal1'];
-    $vo2 = $frm['vocal2'];
-    $vo3 = $frm['vocal3'];
-    $vo4 = $frm['vocal4'];
-    $sec = $frm['secre'];
-    $adm = $frm['admi'];
-    $not = $frm['notas'];
-    
-    if ($fec) {
-        $oJunta = new Junta($fec);
-        $oJunta->setTipo($tip);
-        $oJunta->setConvocatoria($con);
-        $oJunta->setHora($hor);
-        $oJunta->setPresidente($pre);
-        $oJunta->setVicepresidente1($vi1);
-        $oJunta->setVicepresidente2($vi2);
-        $oJunta->setVocal1($vo1);
-        $oJunta->setVocal2($vo2);
-        $oJunta->setVocal3($vo3);
-        $oJunta->setVocal4($vo4);
-        $oJunta->setSecretario($sec);
-        $oJunta->setAdministracion($adm);
-        $oJunta->setNotas($not);      
-        if ($oJunta->grabar()) {
-            $oJuntas->recargar();   // Recarga las Juntas.
-            $response->call("xajax_getJuntasAnyos", "submenu1");
-            $response->call("xajax_getJuntasListado", "divlistado");
-            $response->call("xajax_setJuntaDatosForm", $fec, $fec);
-        } else {
-            $response->alert("No se han podido grabar los datos de la Junta.");
-        } 
+    $oJunta = new Junta($fecha);
+    if ($oJunta->eliminar()) {
+        $oJuntas->recargar();   // Recarga las Juntas.
+        $fec = $oJuntas->getUltimaJunta();
+        $response->call("xajax_getJuntasAnyos", "submenu1");
+        $response->call("xajax_getJuntasListado", "divlistado");
+        $response->call("xajax_setJuntaDatosForm", $fec, $fec);
+        $response->script("js_eliminarAsistentes('$fecha')");
     }
     return $response;
 }
@@ -1049,6 +841,26 @@ function grabarAsistente($fecha, $apar, $per, $rep, $vot) {
         } else {
             $response->alert("Error al grabar el asistente a la Junta General.");
         } 
+    }
+    return $response;
+}
+
+/**
+ * Elimina los datos de todos los asistentes a una Junta.
+ * 
+ * @param date $fecha Fecha de la Junta.
+ * @return \xajaxResponse
+ */
+function eliminarAsistentes($fecha) {
+    $response = new xajaxResponse();
+    if ($fecha) {
+        $oAsis = new Asistentes($fecha);
+        $fec = $oAsis->getFechaISO();
+        if ($oAsis->eliminar()) {
+            $response->alert("Se han eliminado los asistentes a la Junta del día $fec.");
+        } else {
+            $response->alert("Error al eliminar los asistentes a la Junta del día $fec..");
+        }
     }
     return $response;
 }

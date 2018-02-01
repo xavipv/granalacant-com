@@ -15,6 +15,13 @@ class Asistentes {
     //--- VARIABLES ----------------------------------------------------------//
     
     /**
+     * Fecha de la Junta a la que se ha asistido.
+     * 
+     * @var date Fecha en formato YYYY-MM-DD. 
+     */
+    private $fecha;
+    
+    /**
      * Array cuyo codigo es el codigo de apartamento y los datos un array del siguiente tipo:
      * <ul>
      * <li>0 - Apartamento.</li>
@@ -81,6 +88,7 @@ class Asistentes {
             }
             $rRes->closeCursor(); 
         }
+        $this->fecha = $fecha;
         $this->aAsistentes = $aDatos;
     }
     
@@ -124,6 +132,39 @@ class Asistentes {
     
     //--- METODOS PUBLICOS ---------------------------------------------------//
     
+    /**
+     * Obtiene la fecha de la Junta a la que se asiste.
+     * 
+     * @return date Fecha en formato YYYY-MM-DD.
+     */
+    public function getFecha() {
+        return $this->fecha;
+    }
+    
+    /**
+     * Obtiene la fecha de la Junta a la que se asiste, en formato ISO.
+     * 
+     * @return date Fecha en formato DD-MM-YYYY.
+     */
+    public function getFechaISO() {
+        return $this->fechaBase_Iso($this->fecha);
+    }
+    
+    /**
+     * Obtiene los datos de los asistentes a una Junta.
+     * Array cuyo codigo es el codigo de apartamento y los datos un array del siguiente tipo:
+     * <ul>
+     * <li>0 - Apartamento.</li>
+     * <li>1 - Codigo de persona.</li>
+     * <li>2 - Nombre de persona.</li>
+     * <li>3 - Representado, S/N.</li>
+     * <li>4 - Voto, S/N.</li>
+     * <li>5 - Coeficiente urbanizacion.</li>
+     * <li>6 - Coeficiente fase 200%.</li>
+     * <li>7 - Coeficiente bloque.</li>
+     * </ul>
+     * @return array
+     */
     public function getAsistentes() {
         return $this->aAsistentes;
     }
@@ -196,5 +237,15 @@ class Asistentes {
      */
     public function convertirFechaISOaBD($fecha) {
         return $this->fechaIso_Base($fecha);
+    }
+    
+    /**
+     * Elimina los datos de todos los asistentes a una Junta.
+     * 
+     * @return boolean Devuelve TRUE si todo ha ido bien o FALSE si ha fallado algo.
+     */
+    public function eliminar() {
+        $fecha = $this->fecha;
+        return ($fecha) ? $this->ejecutarSQL("DELETE FROM ASISTENTES WHERE FECHA='$fecha'") : FALSE;
     }
 }

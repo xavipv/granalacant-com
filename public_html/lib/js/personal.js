@@ -626,6 +626,18 @@ function js_eliminarActa(fecha) {
     }
 }
 
+function js_eliminarJunta(fecha) {
+    if (confirm("Se van a eliminar todos los datos de la Junta actual, los datos no se podrán recuperar.\n¿Seguro que quieres continuar?")) {
+        xajax_eliminarJunta(fecha);
+    }
+}
+
+function js_eliminarAsistentes(fecha) {
+    if (confirm("¿Quieres eliminar también los datos de los asistentes a la Junta?\nLos datos no se podrán recuperar.")) {
+        xajax_eliminarAsistentes(fecha);
+    }
+}
+
 /**
  * Marca o desmarca las casillas para transformar segun la eleccion de la tabla.
  * 

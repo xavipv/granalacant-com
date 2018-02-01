@@ -884,6 +884,155 @@ function f_getUltimaJunta() {
     return $oJuntas->getUltimaJunta();
 }
 
+/**
+ * Obtiene los datos de una Junta existente.
+ * 
+ * @param date $fecha Fecha de la Junta.
+ * @return array Datos obtenidos del tipo array($fec, $ori, $tip, $con, $hor, $pre, $vi1, $vi2, $vo1, $vo2, $vo3, $vo4, $sec, $adm, $not, $tit, $src, $iok)
+ */
+function f_setJuntaDatosExistente($fecha) {
+    // Obtiene los datos de la Junta.
+    $oJunta = new Junta($fecha);
+    $fec = $fecha;
+    $ori = $oJunta->getFecha();
+    $tip = $oJunta->getTipo();
+    $con = $oJunta->getConvocatoria();
+    $hor = $oJunta->getHora();
+    $pre = $oJunta->getPresidente();
+    $vi1 = $oJunta->getVicepresidente1();
+    $vi2 = $oJunta->getVicepresidente2();
+    $vo1 = $oJunta->getVocal1();
+    $vo2 = $oJunta->getVocal2();
+    $vo3 = $oJunta->getVocal3();
+    $vo4 = $oJunta->getVocal4();
+    $sec = $oJunta->getSecretario();
+    $adm = $oJunta->getAdministracion();
+    $not = $oJunta->getNotas();
+    $tit = "Junta del $fec";
+    $src = "$('.calendario').datepicker('destroy');$('#fecha').css('backgroundColor','transparent');$('#boasistentes').show(); $('#botongrabar').show(); $('#boeliminar').show();";
+    $iok = 1;
+    return array($fec, $ori, $tip, $con, $hor, $pre, $vi1, $vi2, $vo1, $vo2, $vo3, $vo4, $sec, $adm, $not, $tit, $src, $iok);
+}
+
+/**
+ * Obtiene los datos para una Junta nueva.
+ * Si la fecha de la nueva junta no existe, obtiene los datos principales de la junta anterior.
+ * 
+ * @global Juntas $oJuntas Instancia de Juntas.
+ * @param date $fecha Fecha para la nueva Junta.
+ * @return array Datos por omision del tipo array($fec, $ori, $tip, $con, $hor, $pre, $vi1, $vi2, $vo1, $vo2, $vo3, $vo4, $sec, $adm, $not, $tit, $src, $iok)
+ */
+function f_setJuntaDatosNueva($fecha) {
+    global $oJuntas;
+    
+    if ($oJuntas->existeJunta($fecha)) {
+        // En la nueva fecha ya existe una Junta.
+        $fec = "";
+        $ori = "";
+        $tip = "";
+        $con = "";
+        $hor = "";
+        $pre = "";
+        $vi1 = "";
+        $vi2 = "";
+        $vo1 = "";
+        $vo2 = "";
+        $vo3 = "";
+        $vo4 = "";
+        $sec = "";
+        $adm = "";
+        $not = "";
+        $tit = "";
+        $src = "$('#fecha').css('backgroundColor','#F8D7DA'); $('#botongrabar').hide(); $('#boasistentes').hide(); $('#boeliminar').hide();";
+        $iok = 0;
+    } else {
+        // En la nueva fecha no existe ninguna otra Junta. Busca los datos de la Junta anterior.
+        $aDatos = $oJuntas->getJuntaAnterior($fecha);
+        $fec = $fecha;
+        $ori = "";
+        $tip = "E";
+        $con = "2";
+        $hor = "10:00";
+        $pre = $aDatos[2];
+        $vi1 = $aDatos[3];
+        $vi2 = $aDatos[4];
+        $vo1 = $aDatos[5];
+        $vo2 = $aDatos[6];
+        $vo3 = $aDatos[7];
+        $vo4 = $aDatos[8];
+        $sec = $aDatos[9];
+        $adm = $aDatos[10];
+        $not = "";
+        $tit = "Nueva Junta";
+        $src = "$('#fecha').css('backgroundColor','#dff9df'); $('#botongrabar').show(); $('#boasistentes').hide(); $('#boeliminar').hide();";
+        $iok = 1;
+    }
+    return array($fec, $ori, $tip, $con, $hor, $pre, $vi1, $vi2, $vo1, $vo2, $vo3, $vo4, $sec, $adm, $not, $tit, $src, $iok);
+}
+
+/**
+ * Obtiene el numero de asistentes, representados y votos de una Junta.
+ * 
+ * @param date $fecha Fecha de la Junta.
+ * @return array Sumas del tipo array(sumasis, sumrepr, sumvotos)
+ */
+function f_getAsistentesSumas($fecha='') {
+    $aSumas = array(0, 0, 0);
+    if ($fecha) {
+        // Se trata de una Junta.
+        $oAsis = new Asistentes($fecha);
+        $aSumas = $oAsis->getSumas();   // array('prop' => array('propietarios', 'distintos', 'con voto', 'sin voto'), 'repr' => array('representados', 'distintos', 'con voto', 'sin voto'))
+        $aProps = $aSumas['prop'];
+        $aReprs = $aSumas['repr'];
+        $aSumas[0] = $aProps[0] + $aReprs[0];
+        $aSumas[1] = $aReprs[0];
+        $aSumas[2] = $aProps[2] + $aReprs[2];
+    } 
+    return $aSumas;
+}
+
+function f_grabarJunta($frm) {
+    global $oJuntas;
+    
+    $bok = FALSE;
+    $fec = $frm['fecha'];
+    $tip = $frm['tipo'];
+    $con = $frm['convo'];
+    $hor = $frm['hora'];
+    $pre = $frm['presi'];
+    $vi1 = $frm['vice1'];
+    $vi2 = $frm['vice2'];
+    $vo1 = $frm['vocal1'];
+    $vo2 = $frm['vocal2'];
+    $vo3 = $frm['vocal3'];
+    $vo4 = $frm['vocal4'];
+    $sec = $frm['secre'];
+    $adm = $frm['admi'];
+    $not = $frm['notas'];
+    
+    if ($fec) {
+        $oJunta = new Junta($fec);
+        $oJunta->setTipo($tip);
+        $oJunta->setConvocatoria($con);
+        $oJunta->setHora($hor);
+        $oJunta->setPresidente($pre);
+        $oJunta->setVicepresidente1($vi1);
+        $oJunta->setVicepresidente2($vi2);
+        $oJunta->setVocal1($vo1);
+        $oJunta->setVocal2($vo2);
+        $oJunta->setVocal3($vo3);
+        $oJunta->setVocal4($vo4);
+        $oJunta->setSecretario($sec);
+        $oJunta->setAdministracion($adm);
+        $oJunta->setNotas($not);      
+        if ($oJunta->grabar()) {
+            $oJuntas->recargar();   // Recarga las Juntas.
+            $bok = TRUE;
+        }
+    }
+    return $bok;
+}
+
 //--- JUNTA - ASISTENTES -----------------------------------------------------//
 
 function f_getAsistentes($fecha) {

@@ -38,9 +38,10 @@ $oJ = new Junta();
         <div id="contenedor" class="container">
             <div class="row">
                 <div id="divlistado" class="col-sm-2 hidden-ms hidden-xs listado" style=""><?php echo f_getJuntasListado(); ?></div>
-                <div id="divcontenido" class="col-sm-10">  
+                <div id="divcontenido" class="col-sm-10">
                     <div id="divformulario">
                         <h2 id="titulo1">Juntas</h2>
+                        <hr />
                         <form id="frmjunta">
                             <div class="row">
                                 <div class="form-group col-sm-3">
@@ -115,8 +116,9 @@ $oJ = new Junta();
                                 </div>
                             </div> 
                             <button class="btn btn-success col-sm-2" type="button" id="botongrabar" onclick="xajax_grabarJunta(xajax.getFormValues('frmjunta'))">Guardar</button>
-                            <button class="btn btn-primary col-sm-2 offset-3" type="button" id="boasistentes" onclick="$(location).attr('href', 'asistentes.php?fecha=' + $('#fecha').val())">Asistentes</button>
-                            <button class="btn btn-warning col-sm-2 float-right" type="button" onclick="xajax_setJuntaDatosForm($('#fechaoriginal').val(), $('#fechaoriginal').val());">Restaurar</button>
+                            <button class="btn btn-primary col-sm-2 offset-1" type="button" id="boasistentes" onclick="$(location).attr('href', 'asistentes.php?fecha=' + $('#fecha').val())">Asistentes</button>
+                            <button class="btn btn-warning col-sm-2 offset-1" type="button" onclick="xajax_setJuntaDatosForm($('#fechaoriginal').val(), $('#fechaoriginal').val());">Restaurar</button>
+                            <button class="btn btn-danger col-sm-2 float-right" type="button" id="boeliminar" onclick="js_eliminarJunta($('#fecha').val())">Eliminar</button>
                         </form>
                     </div>
                 </div>

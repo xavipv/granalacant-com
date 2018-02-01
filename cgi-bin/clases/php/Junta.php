@@ -609,4 +609,14 @@ class Junta {
         
         return $this->ejecutarSQL("REPLACE INTO JUNTAS (FECHA,TIPO,CONVOCATORIA,HORA,PRESIDENTE,VICEPRESIDENTE1,VICEPRESIDENTE2,VOCAL1,VOCAL2,VOCAL3,VOCAL4,SECRETARIO,ADMINISTRACION,NOTAS) VALUES ('$fec','$tip','$con','$hor','$pre','$vi1','$vi2','$vo1','$vo2','$vo3','$vo4','$sec','$adm','$not')");
     }
+    
+    /**
+     * Elimina los datos de la Junta General.
+     * 
+     * @return boolean Devuelve TRUE si todo ha ido bien o FALSE si ha fallado algo.
+     */
+    public function eliminar() {
+        $fec = $this->fecha;
+        return ($fec) ? $this->ejecutarSQL("DELETE FROM JUNTAS WHERE FECHA='$fec'") : FALSE;
+    }
 }
