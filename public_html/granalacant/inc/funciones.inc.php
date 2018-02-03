@@ -246,67 +246,30 @@ function f_getMenuAcciones($pagina) {
     $activo = array('','','','','','','');
     switch ($pagina) {
         // Personas.
-        case "personas.php":
-            $activo[1] = "active";
-            $busqueda = TRUE;
-            break;
-        case "listpers.php":
-            $activo[1] = "active";
-            break;
+        case "personas.php": $activo[1] = "active"; $busqueda = TRUE; break;
+        case "listpers.php": $activo[1] = "active"; break;
         // Apartamentos.
-        case "apartamentos.php":
-            $activo[2] = "active";
-            $busqueda = TRUE;
-            break;
-        case "coeficientes.php":
-            $activo[2] = "active";
-            break;
-        case "listapar.php":
-            $activo[2] = "active";
-            break;
+        case "apartamentos.php": $activo[2] = "active"; $busqueda = TRUE; break;
+        case "coeficientes.php": $activo[2] = "active"; break;
+        case "listapar.php": $activo[2] = "active"; break;
         // Propietarios.
-        case "propietarios.php":
-            $activo[3] = "active";
-            $busqueda = TRUE;
-            break;
-        case "propper.php":
-            $activo[3] = "active";
-            $busqueda = TRUE;
-            break;
-        case "listprop.php":
-            $activo[3] = "active";
-            break;
+        case "propietarios.php": $activo[3] = "active"; $busqueda = TRUE; break;
+        case "propper.php": $activo[3] = "active"; $busqueda = TRUE; break;
+        case "listprop.php": $activo[3] = "active"; break;
         // Juntas.
-        case "juntas.php":
-            $activo[4] = "active";
-            break;
-        case "asistentes.php":
-            $activo[4] = "active";
-            break;
-        case "votaciones.php":
-            $activo[4] = "active";
-            break;
-        case "listjunt.php":
-            $activo[4] = "active";
-            break;
+        case "juntas.php": $activo[4] = "active"; break;
+        case "asistentes.php": $activo[4] = "active"; break;
+        case "votaciones.php": $activo[4] = "active"; break;
+        case "listjunt.php": $activo[4] = "active"; break;
         // Actas.
-        case "actas.php":
-            $activo[5] = "active";
-            break;
-        case "actasbuscar.php":
-            $activo[5] = "active";
-            break;
-        case "actasedit.php":
-            $activo[5] = "active";
-            break;
+        case "actas.php": $activo[5] = "active"; break;
+        case "actasbuscar.php": $activo[5] = "active"; break;
+        case "actasedit.php": $activo[5] = "active"; break;
         // Otros.
-        case "listcalc.php":
-            $activo[6] = "active";
-            break;
+        case "listcalc.php": $activo[6] = "active"; break;
+        case "transformar.php": $activo[6] = "active"; break;
         // Inicio.
-        default:
-            $activo[0] = "active";
-            break;
+        default: $activo[0] = "active"; break;
     }
     return $activo;
 }
