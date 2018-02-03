@@ -30,7 +30,7 @@ $oJ = new Junta();
                     <div id="submenu1" class="nav-link"><?php echo f_getJuntasAnyos(); ?></div>
                 </li>
                 <li class="nav-item text-right col-sm-2">
-                    <div id="submenu3"><button type="button" onclick="xajax_setJuntaDatosForm('<?php echo date('d-m-Y'); ?>'); xajax_setCalendario(false, true);" class="btn btn-outline-success">Nueva junta</button></div>
+                    <div id="submenu3"><button type="button" onclick="xajax_setJuntaDatosForm('<?php echo date('d-m-Y'); ?>'); js_calendario(false, true);" class="btn btn-outline-success">Nueva junta</button></div>
                 </li>
             </ul>
         </div>

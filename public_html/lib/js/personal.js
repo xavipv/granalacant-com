@@ -1,41 +1,8 @@
 //--- EDITOR Y CALENDARIO ----------------------------------------------------//
 
 /**
- * Crea un editor de texto.
- *
-function js_editor() {
-    $(".editor").jqte({
-        color: false,
-        format: false,
-        fsize: false,
-        link: false,
-        unlink: false,
-        titletext:[
-            {title:"Formato"},
-            {title:"Tamaño de fuente"},
-            {title:"Color"},
-            {title:"Negrita",hotkey:"B"},
-            {title:"Cursiva",hotkey:"I"},
-            {title:"Subrayado",hotkey:"U"},
-            {title:"Lista ordenada",hotkey:"."},
-            {title:"Lista desordenada",hotkey:","},
-            {title:"Subíndice",hotkey:"flecha abajo"},
-            {title:"Superíndice",hotkey:"flecha arriba"},
-            {title:"Aumentar sangrado",hotkey:"flecha izquierda"},
-            {title:"Disminuir sangrado",hotkey:"flecha derecha"},
-            {title:"Justificado izquierda"},
-            {title:"Justificado centro"},
-            {title:"Justificado derecha"},
-            {title:"Tachado",hotkey:"K"},
-            {title:"Añadir enlace",hotkey:"L"},
-            {title:"Quitar enlace",hotkey:""},
-            {title:"Eliminar estilos",hotkey:"Suprimir"},
-            {title:"Línea horizontal",hotkey:"H"},
-            {title:"Código",hotkey:""}
-        ]
-    });
-} */
-
+ * Crea un editor de texto con los botones basicos.
+ */
 function js_editor() {
     $('.editor').trumbowyg({
         lang: 'es',
@@ -58,6 +25,29 @@ function js_editor() {
         ['removeformat'],
         ['fullscreen']
     ]
+    });
+}
+
+/**
+ * Crea un calendario que permite seleccionar fechas.
+ * 
+ * @param {boolean} bBor Si es true se mostrara el boton de Borrar, si es false se ocultara.
+ * @param {boolean} bHoy Si es true se mostrara el boton de Hoy, si es false se ocultara.
+ */
+function js_calendario(bBor=true, bHoy=true) {
+    var bor = (bBor) ? true : false;
+    var hoy = (bHoy) ? true : false;
+    $( function() { 
+        $('.calendario').datepicker({
+            format: 'dd-mm-yyyy', 
+            language: 'es', 
+            autoclose: true, 
+            todayHighlight: true,
+            clearBtn: bor,
+            todayBtn: hoy
+        }).on('changeDate',function(e){ 
+            js_onCalendario(location.pathname.substr(location.pathname.lastIndexOf('/')+1), this.id); 
+        }); 
     });
 }
 /**

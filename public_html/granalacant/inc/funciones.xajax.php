@@ -35,7 +35,6 @@ $xajax->register(XAJAX_FUNCTION, 'buscar');
 $xajax->register(XAJAX_FUNCTION, 'busquedaActas');
 $xajax->register(XAJAX_FUNCTION, 'busquedaAyuda');
 $xajax->register(XAJAX_FUNCTION, 'confirmarVotacionCambios');
-//$xajax->register(XAJAX_FUNCTION, 'crearToolTipMulti');
 $xajax->register(XAJAX_FUNCTION, 'eliminarActa');
 $xajax->register(XAJAX_FUNCTION, 'eliminarAsistentes');
 $xajax->register(XAJAX_FUNCTION, 'eliminarJunta');
@@ -48,7 +47,6 @@ $xajax->register(XAJAX_FUNCTION, 'getActaDatos');
 $xajax->register(XAJAX_FUNCTION, 'getActaDatosForm');
 $xajax->register(XAJAX_FUNCTION, 'getAsistentes');
 $xajax->register(XAJAX_FUNCTION, 'getAsistentesJuntaSumas');
-//$xajax->register(XAJAX_FUNCTION, 'getAsistentesSumas');
 $xajax->register(XAJAX_FUNCTION, 'getDatosCoeficientes');
 $xajax->register(XAJAX_FUNCTION, 'getJuntasAnyos');
 $xajax->register(XAJAX_FUNCTION, 'getJuntasListado');
@@ -69,10 +67,8 @@ $xajax->register(XAJAX_FUNCTION, 'reenviarFuncion');
 $xajax->register(XAJAX_FUNCTION, 'setApartamentosDatosForm');
 $xajax->register(XAJAX_FUNCTION, 'setAsistente');
 $xajax->register(XAJAX_FUNCTION, 'setAsistenteMulti');
-$xajax->register(XAJAX_FUNCTION, 'setCalendario');
 $xajax->register(XAJAX_FUNCTION, 'setDatosCoeficientes');
 $xajax->register(XAJAX_FUNCTION, 'setJuntaDatosForm');
-//$xajax->register(XAJAX_FUNCTION, 'setJuntaDatosOmision');
 $xajax->register(XAJAX_FUNCTION, 'setPersonasDatosForm');
 $xajax->register(XAJAX_FUNCTION, 'setPropiedadesPersonaDatosForm');
 $xajax->register(XAJAX_FUNCTION, 'setPropietariosApartamentoDatosForm');
@@ -86,31 +82,6 @@ $xajax->register(XAJAX_FUNCTION, 'setVotacionDatosForm');
 $xajax->processRequest();
 
 //--- GENERALES --------------------------------------------------------------//
-
-/**
- * Carga el calendario para asociarlo a la clase CSS 'calendario'.
- * 
- * @return \xajaxResponse
- */
-
-
-/**
- * Carga el calendario para asociarlo a la clase CSS 'calendario'.
- * 
- * @param boolean $bBor Si es TRUE se muestra el boton de borrar.
- * @param boolean $bHoy Si es TRUE se muestra el boton de hoy.
- * @return \xajaxResponse
- */
-function setCalendario($bBor=true, $bHoy=false) {
-    $response = new xajaxResponse();
-    $bor = ($bBor) ? "clearBtn: true," : "";
-    $hoy = ($bHoy) ? "todayBtn: true," : "";
-    $script = "$( function() { $('.calendario').datepicker({format: 'dd-mm-yyyy', $bor language: 'es', autoclose: true, $hoy todayHighlight: true }).on('changeDate',function(e){ js_onCalendario(location.pathname.substr(location.pathname.lastIndexOf('/')+1), this.id); }); } );";
-    //$script = '$( function() { $(".calendario").datepicker({format: "dd-mm-yyyy", clearBtn: true, language: "es", autoclose: true, todayHighlight: true }); } );';    alert(this.id + ' ' + location.pathname.substr(location.pathname.lastIndexOf('/')+1));
-    //$script = '$( function() { $(".calendario").datepicker({dateFormat: "dd-mm-yy",changeMonth: true, changeYear: true, yearRange: "1984:'.date("Y").'"}); } );';
-    $response->script($script);
-    return $response;
-}
 
 /**
  * Realiza una busqueda segun la pagina en la que estemos.
@@ -351,7 +322,7 @@ function setPropietariosApartamentoDatosForm($apa) {
     $oApar = new Apartamento($apa);
     $response->assign("submenu2", "innerHTML", $oApar->getApartamento());
     $response->assign("frmpropietarios", "innerHTML", f_getPropietarios($apa));
-    $response->call("xajax_setCalendario");
+    $response->script("js_calendario(true, false)");
     return $response;
 }
 
@@ -423,7 +394,7 @@ function setPropiedadesPersonaDatosForm($per) {
     $oPer = new Persona($per);
     $response->assign("submenu2", "innerHTML", $oPer->getNombreCompleto());
     $response->assign("frmpropiedades", "innerHTML", f_getPropiedades($per));
-    $response->call("xajax_setCalendario");
+    $response->script("js_calendario(true, false)");
     return $response;
 }
 
@@ -952,7 +923,7 @@ function setVotacionCabecera($fecha, $num=1) {
     $response->assign("sumcof", "value", number_format($aSum['fase'][0]+$aSum['fase'][1]+$aSum['fase'][2]+$aSum['fase'][3],4));
     $response->assign("sumcor", "value", number_format(($aSum['fase'][0]/2)+($aSum['fase'][1]/2)+($aSum['fase'][2]/2)+($aSum['fase'][3]/2),5));
     
-    $response->call("xajax_setCalendario", FALSE, TRUE);
+    $response->script("js_calendario(false, true)");
     
     return $response;
 }
@@ -1082,7 +1053,7 @@ function getActaDatosForm($fecha='') {
     $response->assign("aver", "href", "actas.php?fecha=$fecha");
     $response->assign("divformularioasis", "innerHTML", f_getActa($fecha));
     $response->script("$('.calendario').datepicker('destroy');");
-    $response->call("xajax_setCalendario", FALSE, TRUE);
+    $response->script("js_calendario(false, true)");
     $response->script("js_editor()");
     return $response;
 }
