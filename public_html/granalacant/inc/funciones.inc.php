@@ -266,7 +266,7 @@ function f_getMenuAcciones($pagina) {
         case "actasbuscar.php": $activo[5] = "active"; break;
         case "actasedit.php": $activo[5] = "active"; break;
         // Otros.
-        case "listcalc.php": $activo[6] = "active"; break;
+        case "calculos.php": $activo[6] = "active"; break;
         case "transformar.php": $activo[6] = "active"; break;
         // Inicio.
         default: $activo[0] = "active"; break;
@@ -1565,6 +1565,195 @@ function f_grabarActa($frm) {
         }
     }
     return $oActa->grabar();
+}
+
+//--- CALCULOS ---------------------------------------------------------------//
+
+/**
+ * Calcula la cuota mensual para pagar una cantidad determinada en los meses indicados.
+ * 
+ * @global \Apartamentos $oApars Instancia de Apartamentos.
+ * @param array $frm Datos del formulario.
+ * @return string Codigo HTML del resultado de los calculos.
+ */
+function f_getCalculos($frm) {
+    global $oApars;
+    $can = $frm['cantidad'];
+    $mes = $frm['meses'];
+    $meses = ($mes == 1) ? "$mes mes" : "$mes meses";
+    $fTit = f_getCalculosTitulo($frm);
+    
+    // Inicializa las sumas.
+    $bloApa = 0; $bloMe2 = 0; $bloCoe = 0; $bloEue = 0; $bloCof = 0; $bloCor = 0; $bloEuf = 0; $bloRes = 0; $bloCob = 0; $bloEub = 0; $bloCog = 0; $bloEug = 0;
+    $fasApa = 0; $fasMe2 = 0; $fasCoe = 0; $fasEue = 0; $fasCof = 0; $fasCor = 0; $fasEuf = 0; $fasRes = 0; $fasCob = 0; $fasEub = 0; $fasCog = 0; $fasEug = 0;
+    $sumApa = 0; $sumMe2 = 0; $sumCoe = 0; $sumEue = 0; $sumCof = 0; $sumCor = 0; $sumEuf = 0; $sumRes = 0; $sumCob = 0; $sumEub = 0; $sumCog = 0; $sumEug = 0;
+    
+    $portal = "";
+    $fase = "";
+    $fApa = "";
+    $aAp = $oApars->getApartamentos();
+    foreach ($aAp as $apa => $aApar) {
+        //array('0 portal','1 piso','2 letra','3 fase','4 tipo','5 finca','6 metros','7 terraza','8 coef.urb','9 coef.fase','10 coef.blo')
+        
+        // Mira si hay cambio de portal.
+        if($portal != $aApar[0] && $frm['sumas']) {
+            // Pone las sumas.
+            $fSumb = f_getCalculosSumas($frm, "Portal $portal: ", $bloApa, $bloMe2, $bloCoe, $bloEue, $bloCof, $bloCor, $bloEuf, $bloRes, $bloCob, $bloEub, $bloCog, $bloEug);
+            $bloApa = 0; $bloMe2 = 0; $bloCoe = 0; $bloEue = 0; $bloCof = 0; $bloCor = 0; $bloEuf = 0; $bloRes = 0; $bloCob = 0; $bloEub = 0; $bloCog = 0; $bloEug = 0;
+            $fApa .= ($portal) ? $fSumb : "";
+            $portal = $aApar[0];
+        }
+        
+        // Mira si hay cambio de fase.
+        if ($fase != $aApar[3] && $frm['sumas']) {
+            // Pone las sumas.
+            $fSumf = f_getCalculosSumas($frm, "Fase $fase: ", $fasApa, $fasMe2, $fasCoe, $fasEue, $fasCof, $fasCor, $fasEuf, $fasRes, $fasCob, $fasEub, $fasCog, $fasEug);
+            $fasApa = 0; $fasMe2 = 0; $fasCoe = 0; $fasEue = 0; $fasCof = 0; $fasCor = 0; $fasEuf = 0; $fasRes = 0; $fasCob = 0; $fasEub = 0; $fasCog = 0; $fasEug = 0;
+            $fApa .= ($fase) ? $fSumf : "";
+            $fase = $aApar[3];
+        }
+        
+        // Inicia la fila del apartamento.
+        $fApa .= "<tr>";
+        
+        // Codigo del apartamento.
+        if(isset($frm['codigo'])) {
+            $fApa .= "<td>$apa</td>";
+        }
+        
+        // Nombre del apartamento. Se muestra siempre.
+        $fApa .= "<td>" . $aApar[0] . "-" .$aApar[1] . $aApar[2] . "</td>";
+        $bloApa++; $fasApa++; $sumApa++;
+        
+        // Fase.
+        if(isset($frm['fase'])) {
+            $fApa .= "<td>$aApar[3]</td>";
+        }
+        
+        // Metros cuadrados.
+        if(isset($frm['metros'])) {
+            $fApa .= "<td class=\"text-right\">" . number_format($aApar[6],2,',','.') . "</td>";
+            $bloMe2 += $aApar[6]; $fasMe2 += $aApar[6]; $sumMe2 += $aApar[6];
+        }
+        
+        // Coeficiente urbanizacion 100% + Cuota urbanizacion.
+        if(isset($frm['coeur'])) {
+            $cuotau = ($aApar[8] * $can) / ($mes * 100);
+            $fApa .= "<td class=\"text-right\">" . number_format($aApar[8],4,',','.') . "</td><td class=\"text-right successcolor\">" . number_format($cuotau,2,',','.') . "</td>";
+            $bloCoe += $aApar[8]; $bloEue += $cuotau; $fasCoe += $aApar[8]; $fasEue += $cuotau; $sumCoe += $aApar[8]; $sumEue += $cuotau;
+        }
+        
+        // Coeficiente fase 200%
+        if(isset($frm['coef200'])) {
+            $fApa .= "<td class=\"text-right\">" . number_format($aApar[9],4,',','.') . "</td>";
+            $bloCof += $aApar[9]; $fasCof += $aApar[9]; $sumCof += $aApar[9];
+        }
+        
+        // Coeficiente fase 100%
+        if(isset($frm['coef100'])) {
+            $fApa .= "<td class=\"text-right\">" . number_format($aApar[9]/2,5,',','.') . "</td>";
+            $bloCor += $aApar[9] / 2; $fasCor += $aApar[9] / 2; $sumCor += $aApar[9] / 2;
+        }
+        
+        // Cuota fase.
+        if(isset($frm['coef200']) || isset($frm['coef100'])) {
+            $cuotaf = ($aApar[9] * $can) / ($mes * 200);
+            $fApa .= "<td class=\"text-right successcolor\">" . number_format($cuotaf,2,',','.') . "</td>";
+            $bloEuf += $cuotaf; $fasEuf += $cuotaf; $sumEuf += $cuotaf;
+        }
+        
+        // Diferencias.
+        if (isset($frm['dife'])) {
+            $resta = $cuotau - $cuotaf;
+            $fApa .= "<td class=\"text-right dangercolor\">" . number_format($resta,2,',','.') . "</td>";
+            $bloRes += $resta; $fasRes += $resta; $sumRes += $resta;
+        }
+        
+        // Coeficiente escalera 100%
+        if(isset($frm['coeblo'])) {
+            $cuotab = ($aApar[10] * $can) / ($mes * 100);
+            $fApa .= "<td class=\"text-right\">" . number_format($aApar[10],4,',','.') . "</td><td class=\"text-right successcolor\">" . number_format($cuotab,2,',','.') . "</td>";
+            $bloCob += $aApar[10]; $bloEub += $cuotab; $fasCob += $aApar[10]; $fasEub += $cuotab; $sumCob += $aApar[10]; $sumEub += $cuotab;
+        }
+        
+        // Coeficiente garajes 100%
+        if(isset($frm['coegar'])) {
+            $oApar = new Apartamento($apa);
+            $coega = $oApar->getGarajesCoeficiente();
+            $cuotag = ($coega) ? ($coega * $can) / ($mes * 100) : 0;
+            $fApa .= ($cuotag) ? "<td class=\"text-right\">" . number_format($coega,4,',','.') . "</td><td class=\"text-right successcolor\">" . number_format($cuotag,2,',','.') . "</td>" : "<td>&nbsp;</td><td>&nbsp;</td>";
+            $bloCog += $coega; $bloEug += $cuotag; $fasCog += $coega; $fasEug += $cuotag; $sumCog += $coega; $sumEug += $cuotag;
+        }
+        
+        // Cierra las filas.
+        $fApa .= "</tr>";
+    }
+    // Sumas del ultimo portal, ultima fase y totales.
+    $fApa .= ($frm['sumas']) ? f_getCalculosSumas($frm, "Portal $portal: ", $bloApa, $bloMe2, $bloCoe, $bloEue, $bloCof, $bloCor, $bloEuf, $bloRes, $bloCob, $bloEub, $bloCog, $bloEug) : "";
+    $fApa .= ($frm['sumas']) ? f_getCalculosSumas($frm, "Fase $fase: ", $fasApa, $fasMe2, $fasCoe, $fasEue, $fasCof, $fasCor, $fasEuf, $fasRes, $fasCob, $fasEub, $fasCog, $fasEug) : "";
+    $fApa .= ($frm['sumas']) ? f_getCalculosSumas($frm, "Total: ", $sumApa, $sumMe2, $sumCoe, $sumEue, $sumCof, $sumCor, $sumEuf, $sumRes, $sumCob, $sumEub, $sumCog, $sumEug) : "";
+    return "<h4>Cuotas mensuales para pagar la cantidad de " . number_format($can,2,',','.') . " € en un plazo de $meses.</h4><table class=\"table table-condensed table-ultra\">$fTit$fApa</table>";
+}
+
+/**
+ * Obtiene el titulo para los calculos seleccionados.
+ * 
+ * @param array $frm Datos del formulario.
+ * @return string Codigo HTML del titulo.
+ */
+function f_getCalculosTitulo($frm) {
+    $fTit = "<tr>";
+    $fTit .= (isset($frm['codigo'])) ? "<th>C&oacute;digo</th>" : "";
+    $fTit .= "<th>Apart.</th>";
+    $fTit .= (isset($frm['fase'])) ? "<th>Fase</th>" : "";
+    $fTit .= (isset($frm['metros'])) ? "<th class=\"text-right\">Metros</th>" : "";
+    $fTit .= (isset($frm['coeur'])) ? "<th class=\"text-right\">% Urbanizaci&oacute;n</th><th class=\"text-right\">Cuota</th>" : "";
+    $fTit .= (isset($frm['coef200'])) ? "<th class=\"text-right\">Fase 200%</th>" : "";
+    $fTit .= (isset($frm['coef100'])) ? "<th class=\"text-right\">Fase 100%</th>" : "";
+    $fTit .= (isset($frm['coef200']) || isset($frm['coef100'])) ? "<th class=\"text-right\">Cuota</th>" : "";
+    $fTit .= (isset($frm['dife'])) ? "<th class=\"text-right\">Resta</th>" : "";
+    $fTit .= (isset($frm['coeblo'])) ? "<th class=\"text-right\">% Bloque</th><th class=\"text-right\">Cuota</th>" : "";
+    $fTit .= (isset($frm['coegar'])) ? "<th class=\"text-right\">% Garaje</th><th class=\"text-right\">Cuota</th>" : "";
+    return "$fTit</tr>";    
+}
+
+/**
+ * Realiza las sumas de los calculos seleccionados.
+ * 
+ * @param array $frm Datos del formulario.
+ * @param string $txt Texto de las sumas.
+ * @param int $apa Numero de apartamentos.
+ * @param int $me2 Metros cuadrados.
+ * @param int $coe Coeficiente urbanizacion.
+ * @param int $eue Cuota urbanizacion.
+ * @param int $cof Coeficiente fase.
+ * @param int $cor Coeficiente fase regularizado.
+ * @param int $euf Cuota fase.
+ * @param int $res Diferencia.
+ * @param int $cob Coeficiente bloque.
+ * @param int $eub Cuota bloque.
+ * @param int $cog Coeficiente garajes.
+ * @param int $eug Cuota garajes.
+ * @return string Codigo HTML de las sumas.
+ */
+function f_getCalculosSumas($frm, $txt, $apa, $me2, $coe, $eue, $cof, $cor, $euf, $res, $cob, $eub, $cog, $eug) {
+    $fTit = "<tr>";
+    $fTit .= (isset($frm['codigo'])) ? "<th colspan=\"2\">$txt$apa</th>" : "<th>$txt$apa</th>";
+    $fTit .= (isset($frm['fase'])) ? "<th>&nbsp;</th>" : "";
+    $fTit .= (isset($frm['metros'])) ? "<th class=\"text-right\">" . number_format($me2,2,',','.') . "</th>" : "";
+    $fTit .= (isset($frm['coeur'])) ? "<th class=\"text-right\">" . number_format($coe,4,',','.') . "</th><th class=\"text-right successcolor\">" . number_format($eue,2,',','.') . "</th>" : "";
+    $fTit .= (isset($frm['coef200'])) ? "<th class=\"text-right\">" . number_format($cof,4,',','.') . "</th>" : "";
+    $fTit .= (isset($frm['coef100'])) ? "<th class=\"text-right\">" . number_format($cor,4,',','.') . "</th>" : "";
+    $fTit .= (isset($frm['coef200']) || isset($frm['coef100'])) ? "<th class=\"text-right successcolor\">" . number_format($euf,2,',','.') . "</th>" : "";
+    $fTit .= (isset($frm['dife'])) ? "<th class=\"text-right dangercolor\">" . number_format($res,2,',','.') . "</th>" : "";
+    // La suma de coeficientes y cuotas de portales solo se pone en la suma de portales.
+    if (substr($txt, 0, 1) == "P") {
+        $fTit .= (isset($frm['coeblo'])) ? "<th class=\"text-right\">" . number_format($cob,4,',','.') . "</th><th class=\"text-right successcolor\">" . number_format($eub,2,',','.') . "</th>" : "";
+    } else {
+        $fTit .= (isset($frm['coeblo'])) ? "<th>&nbsp;</th><th>&nbsp;</th>" : "";
+    }
+    $fTit .= (isset($frm['coegar'])) ? "<th class=\"text-right\">" . number_format($cog,4,',','.') . "</th><th class=\"text-right successcolor\">" . number_format($eug,2,',','.') . "</th>" : "";
+    return "$fTit</tr>";
 }
 
 //--- TRANSFORMAR TEXTOS -----------------------------------------------------//
