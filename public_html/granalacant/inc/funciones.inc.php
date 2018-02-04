@@ -1567,7 +1567,108 @@ function f_grabarActa($frm) {
     return $oActa->grabar();
 }
 
-//--- CALCULOS ---------------------------------------------------------------//
+//--- CALCULOS Y LISTADOS ----------------------------------------------------//
+
+//--- LISTADO DE PERSONAS ---//
+
+function f_getListadoPersonas($frm) {
+    global $oPers;
+     
+    $aEnv = array('S'=>'S&iacute;', 'N'=>'No');
+    $aSexo = array('H'=>'Hombre', 'M'=>'Mujer');
+    $fTit = f_getListadoPersonasTitulo($frm);
+    // Asigna el orden.
+    $ord = $frm['orden'];
+    $oPers->setOrden($ord);
+    $sOrd = strtolower($oPers->getOrden(TRUE));
+    // Asigna los filtros.
+    $filPr = (isset($frm['propietarios'])) ? 'S' : 'N';
+    $filCo = (isset($frm['concorreo'])) ? 'S' : 'N';
+    $filTe = (isset($frm['contelefono'])) ? 'S' : 'N';
+    $filHo = (isset($frm['hombres'])) ? 'S' : 'N';
+    $filMu = (isset($frm['mujeres'])) ? 'S' : 'N';
+    $filOt = (isset($frm['otros'])) ? 'S' : 'N';
+    $oPers->setFiltroPropietario($filPr);
+    $oPers->setFiltroCorreo($filCo);
+    $oPers->setFiltroTelefono($filTe);
+    $oPers->setFiltroSexoHombre($filHo);
+    $oPers->setFiltroSexoMujer($filMu);
+    $oPers->setFiltroSexoOtro($filOt);
+    $aPers = $oPers->getFiltradas();
+    $fPer = "";
+    $num = 0;
+    foreach ($aPers as $per => $aPersona) {
+        // array('cod'=>array(0 apellidos, 1 nombre, 2 sexo, 3 codusu, 4 correo, 5 envios, 6 telefono, 7 notas)...)
+        $fPer .= "<tr>";
+        $fPer .= (isset($frm['codigo'])) ? "<td>$per</td>" : "";
+        $fPer .= "<td>" . $oPers->getNombreCompleto($per) . "</td>";
+        $fPer .= (isset($frm['correo'])) ? "<td>" . $aPersona[4] . "</td>" : "";
+        $fPer .= (isset($frm['enviar'])) ? "<td>" . $aEnv[$aPersona[5]] . "</td>" : "";
+        $fPer .= (isset($frm['telefono'])) ? "<td>" . $aPersona[6] . "</td>" : "";
+        $fPer .= (isset($frm['sexo'])) ? "<td>" . $aSexo[$aPersona[2]] . "</td>" : "";
+        $fPer .= "</tr>";
+        $fPer .= (isset($frm['notas']) && $aPersona[7]) ? f_getListadoPersonasNotas($frm, $aPersona[7]) : "";
+        $num++;
+    }
+    return "<h4>Listado de $num personas ordenado por $sOrd. <span style=\"font-size:0.8em\"><em>Filtro: " . f_getListadoPersonasFiltros($frm) . "</em>.</span></h4><table class=\"table table-condensed table-ultra\">$fTit$fPer</table>";
+}
+
+function f_getListadoPersonasTitulo($frm) {
+    $fila = "<tr>";
+    $fila .= (isset($frm['codigo'])) ? "<th>C&oacute;digo</th>" : "";
+    $fila .= "<th>Nombre</th>";
+    $fila .= (isset($frm['correo'])) ? "<th>Correo</th>" : "";
+    $fila .= (isset($frm['enviar'])) ? "<th>Enviar</th>" : "";
+    $fila .= (isset($frm['telefono'])) ? "<th>Tel&eacute;fono</th>" : "";
+    $fila .= (isset($frm['sexo'])) ? "<th>Sexo</th>" : "";
+    $fila .= "</tr>";
+    return $fila;
+}
+
+function f_getListadoPersonasNotas($frm, $nota) {
+    $col = 1;
+    $col += (isset($frm['correo'])) ? 1 : 0;
+    $col += (isset($frm['enviar'])) ? 1 : 0;
+    $col += (isset($frm['telefono'])) ? 1 : 0;
+    $col += (isset($frm['sexo'])) ? 1 : 0;
+    if (isset($frm['codigo'])) {
+        $fila = "<tr><td>&nbsp;</td><td colspan=\"$col\">$nota</td></tr>";
+    } else {
+        $fila = "<tr><td colspan=\"$col\" style=\"padding-left:50px;\">$nota</td></tr>";
+    }
+    return $fila;
+}
+
+function f_getListadoPersonasFiltros($frm) {
+    $aF = array();
+    $filtros = "";
+    if (isset($frm['propietarios'])) {
+        $aF[] = 'propietarios';
+    }
+    if (isset($frm['concorreo'])) {
+        $aF[] = 'correo';
+    }
+    if (isset($frm['contelefono'])) {
+        $aF[] = 'tel&eacute;fono';
+    }
+    if (isset($frm['hombres'])) {
+        $aF[] = 'hombres';
+    }
+    if (isset($frm['mujeres'])) {
+        $aF[] = 'mujeres';
+    }
+    if (isset($frm['otros'])) {
+        $aF[] = 'otros';
+    }
+    if (count($aF)) {
+        $filtros = implode(', ', $aF);
+    } else {
+        $filtros = "ninguno";
+    }
+    return $filtros;
+}
+
+//--- CALCULO DE CUOTA MENSUAL ---//
 
 /**
  * Calcula la cuota mensual para pagar una cantidad determinada en los meses indicados.
@@ -1617,7 +1718,7 @@ function f_getCalculos($frm) {
         $fApa .= "<tr>";
         
         // Codigo del apartamento.
-        if(isset($frm['codigo'])) {
+        if (isset($frm['codigo'])) {
             $fApa .= "<td>$apa</td>";
         }
         

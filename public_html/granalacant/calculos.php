@@ -23,9 +23,14 @@ $aIncludes = array('config.inc.php', 'funciones.inc.php', 'funciones.xajax.php')
             <div class="row">
                 <div id="divcontenido" class="col-sm-12">
                     <div id="divformulario">
-                        <h2>C&aacute;lculo de cuotas mensuales</h2>
-                        <form id="frmdatos" onsubmit="return false;">
-                            <!-- Formulario para los datos -->
+                        <!-- Formulario para los datos -->
+                        <form id="frmdatos" onsubmit="return false;"> 
+                            <div class="form-group row">
+                            <h2 class="col-sm-11">C&aacute;lculo de cuotas mensuales</h2>
+                            <div class="col-sm-1 text-right">
+                                    <button class="btn btn-outline-success" id="imprimir" onclick="" disabled="disabled"><span class="oi oi-print"></span></button>
+                                </div>
+                            </div>
                             <div class="form-group row">
                                 <div class="col-sm-2"><b>Cantidades</b></div>
                                 <label for="cantidad" class="col-sm-1 col-form-label">A pagar</label>
@@ -38,9 +43,6 @@ $aIncludes = array('config.inc.php', 'funciones.inc.php', 'funciones.xajax.php')
                                 <label for="meses" class="col-sm-1 col-form-label text-right">Meses</label>
                                 <div class="col-sm-1">
                                     <input type="text" class="form-control solonumeros" id="meses" name="meses" value="1" placeholder="Meses" onclick="$(this).select();" onkeyup="js_cuotasMensuales()">
-                                </div>
-                                <div class="col-sm-1 offset-4 text-right">
-                                    <button class="btn btn-outline-success" id="imprimir" onclick="xajax_getCalculos(xajax.getFormValues('frmdatos'))" disabled="disabled"><span class="oi oi-print"></span></button>
                                 </div>
                             </div>
                             <hr />

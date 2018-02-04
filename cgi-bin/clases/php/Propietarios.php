@@ -33,9 +33,11 @@ class Propietarios extends Personas {
     
     /**
      * Constructor de la clase.
+     * 
+     * @param int $ord Tipo de orden 0|1|2.
      */
-    public function __construct() {
-        parent::__construct();
+    public function __construct($ord=0) {
+        parent::__construct($ord);
         $this->cargarPropietarios();
     }
     

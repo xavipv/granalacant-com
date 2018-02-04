@@ -51,6 +51,7 @@ $xajax->register(XAJAX_FUNCTION, 'getCalculos');
 $xajax->register(XAJAX_FUNCTION, 'getDatosCoeficientes');
 $xajax->register(XAJAX_FUNCTION, 'getJuntasAnyos');
 $xajax->register(XAJAX_FUNCTION, 'getJuntasListado');
+$xajax->register(XAJAX_FUNCTION, 'getListadoPersonas');
 $xajax->register(XAJAX_FUNCTION, 'getPersonasIniciales');
 $xajax->register(XAJAX_FUNCTION, 'getPropietarios');
 $xajax->register(XAJAX_FUNCTION, 'getRepresentantes');
@@ -1106,8 +1107,26 @@ function eliminarActa($fecha) {
     return $response;
 }
 
-//--- CALCULOS ---------------------------------------------------------------//
+//--- CALCULOS Y LISTADOS ----------------------------------------------------//
 
+/**
+ * Obtiene un listado de personas con los datos seleccionados.
+ * 
+ * @param array $frm Datos del formulario.
+ * @return \xajaxResponse
+ */
+function getListadoPersonas($frm) {
+    $response = new xajaxResponse();
+    $response->assign("divbusqueda", "innerHTML", f_getListadoPersonas($frm));
+    return $response;
+}
+
+/**
+ * Calcula las cuotas a pagar cada mes.
+ * 
+ * @param array $frm Datos del formulario.
+ * @return \xajaxResponse
+ */
 function getCalculos($frm) {
     $response = new xajaxResponse();
     $response->assign("divbusqueda", "innerHTML", f_getCalculos($frm));

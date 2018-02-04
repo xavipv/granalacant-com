@@ -32,14 +32,44 @@ class Personas {
      */
     private $aDatosPersonas;
     
+    /**
+     * Contiene el orden que se usara para ordenar las personas.
+     * <ul>
+     * <li>0 - Apellidos.</li>
+     * <li>1 - Nombre.</li>
+     * <li>2 - Codigo.</li>
+     * </ul>
+     * 
+     * @var int Tipo de orden. 
+     */
+    private $orden;
+    
+    private $filtroHombre;
+    private $filtroMujer;
+    private $filtroOtro;
+    private $filtroCorreo;
+    private $filtroEnvios;
+    private $filtroTelefono;
+    private $filtroNotas;
+    private $filtroPropietario;
+    
+    private $aFiltradas;
+    
     //--- INSTANCIACION ------------------------------------------------------//
     
     /**
      * Constructor de la clase Personas.
-     * Carga los datos de todas las personas.
+     * El orden de las personas puede ser:
+     * <ul>
+     * <li>0 - Apellidos.</li>
+     * <li>1 - Nombre.</li>
+     * <li>2 - Codigo.</li>
+     * </ul>
+     * 
+     * @param int $ord Tipo de orden 0|1|2.
      */
-    function __construct() {
-        $this->cargarPersonas();
+    function __construct($ord=0) {
+        $this->cargarPersonas($ord);
     }
     
     //--- METODOS PRIVADOS Y PROTEGIDOS --------------------------------------//
@@ -64,13 +94,105 @@ class Personas {
     /**
      * Carga los datos de las personas guardadas en la base de datos.
      * Se guardan en el array 'aDatosPersonas' de la clase.
+     * Los tipos de orden permitidos son:
+     * <ul>
+     * <li>0 - Apellidos.</li>
+     * <li>1 - Nombre.</li>
+     * <li>2 - Codigo.</li>
+     * </ul>
+     * 
+     * @param int $ord Tipo de orden 0|1|2.
      */
-    private function cargarPersonas() { 
-        $rRes = $this->ejecutarSQL("SELECT CODPERS,APELLIDOS,NOMBRE,SEXO,CODUSU,CORREO,ENVIOS,TELEFONO,NOTAS FROM PERSONAS ORDER BY APELLIDOS,NOMBRE,CODPERS");
+    private function cargarPersonas($ord) {
+        switch ($ord) {
+            case 1  : $sOrd = "NOMBRE,APELLIDOS,CODPERS"; break;
+            case 2  : $sOrd = "CODPERS"; break;
+            default : $sOrd = "APELLIDOS,NOMBRE,CODPERS"; $ord = 0; break;
+        }
+        $this->cargarPersonasOmision($ord);
+        $rRes = $this->ejecutarSQL("SELECT CODPERS,APELLIDOS,NOMBRE,SEXO,CODUSU,CORREO,ENVIOS,TELEFONO,NOTAS FROM PERSONAS ORDER BY $sOrd");
         while($aRow = $rRes->fetch(PDO::FETCH_ASSOC)) {
             $this->aDatosPersonas[$aRow['CODPERS']] = array($aRow['APELLIDOS'],$aRow['NOMBRE'],$aRow['SEXO'],$aRow['CODUSU'],$aRow['CORREO'],$aRow['ENVIOS'],$aRow['TELEFONO'],$aRow['NOTAS']);
         }
-        $rRes->closeCursor(); 
+        $rRes->closeCursor();
+        $this->aFiltradas = $this->aDatosPersonas;
+    }
+    
+    /**
+     * Carga los datos por omision.
+     * 
+     * @param int $ord Tipo de orden 0|1|2.
+     */
+    private function cargarPersonasOmision($ord) {
+        $this->aDatosPersonas = array();
+        $this->orden = $ord;
+        $this->filtroHombre = '';
+        $this->filtroMujer = '';
+        $this->filtroOtro = '';
+        $this->filtroCorreo = '';
+        $this->filtroEnvios = '';
+        $this->filtroTelefono = '';
+        $this->filtroNotas = '';
+        $this->filtroPropietario = '';
+    }
+    
+    /**
+     * Obtiene el numero de propiedades que tiene una persona.
+     * 
+     * @param int $per Codigo de persona.
+     * @return int Numero de propiedades.
+     */
+    private function numeroPropiedades($per) {
+        $num = 0;
+        $res = $this->ejecutarSQL("SELECT COUNT(*) AS TOT FROM PROPIETARIOS WHERE CODPERS='$per' AND BAJA IS NULL");
+        while($aRow = $res->fetch(PDO::FETCH_ASSOC)) {
+            $num = $aRow['TOT'];
+        }
+        $res->closeCursor();
+        return $num;
+    }
+    
+    /**
+     * Filtra las personas por los filtros indicados.
+     */
+    private function filtrarPersonas() {
+        $aFil = array();
+        $aPer = $this->aDatosPersonas;
+        $fHom = $this->filtroHombre;
+        $fMuj = $this->filtroMujer;
+        $fOtr = $this->filtroOtro;        
+        $fCor = $this->filtroCorreo;        
+        $fEnv = $this->filtroEnvios;
+        $fTel = $this->filtroTelefono;
+        $fNot = $this->filtroNotas;
+        $fPro = $this->filtroPropietario;
+        
+        // array('cod'=>array(0 apellidos, 1 nombre, 2 sexo, 3 codusu, 4 correo, 5 envios, 6 telefono, 7 notas)...)
+        foreach ($aPer as $per => $aPersona) {
+            $bOK = TRUE;
+            if ($fHom == 'S' || $fMuj == 'S' || $fOtr == 'S') {
+                $bOK = (($fHom == 'S' && $aPersona[2] == 'H') || ($fMuj == 'S' && $aPersona[2] == 'M') || ($fOtr == 'S' && $aPersona[2] == '')) ? TRUE : FALSE;
+            }
+            if ($fCor == 'S') {
+                $bOK = ($fCor == 'S' && !$aPersona[4]) ? FALSE : $bOK;
+            }
+            if ($fEnv == 'S') {
+                $bOK = ($fEnv == 'S' && !$aPersona[5]) ? FALSE : $bOK;
+            }
+            if ($fTel == 'S') {
+                $bOK = ($fTel == 'S' && !$aPersona[6]) ? FALSE : $bOK;
+            }
+            if ($fNot == 'S') {
+                $bOK = ($fNot == 'S' && !$aPersona[7]) ? FALSE : $bOK;
+            }
+            if ($fPro == 'S') {
+                $bOK = (!$this->esPropietario($per)) ? FALSE : $bOK;
+            }
+            if ($bOK) {
+                $aFil[$per] = $aPersona;
+            }
+        }
+        $this->aFiltradas = $aFil;
     }
     
     /**
@@ -166,6 +288,23 @@ class Personas {
         return htmlspecialchars(trim($txt), ENT_QUOTES, 'UTF-8', FALSE);
     }
     
+    /**
+     * Arregla el valor para un filtro permitiendo solo S, N o vacio.
+     * 
+     * @param string $fil Cadena a filtrar.
+     * @return string Cadena filtrada.
+     */
+    private function arreglarFiltro($fil) {
+        if ($fil == 'S' || $fil == 's') {
+            $fil = 'S';
+        } elseif ($fil == 'N' || $fil == 'n') {
+            $fil = 'N';
+        } else {
+            $fil = '';
+        }
+        return $fil;
+    }
+    
     //--- METODOS PUBLICOS ---------------------------------------------------//
     
     /**
@@ -233,6 +372,7 @@ class Personas {
     
     /**
      * Obtiene los apellidos y nombres de las personas.
+     * Segun el orden asignado se obtendran los apellidos y nombres o los nombres y apellidos.
      * 
      * @param string $sep Separador entre los apellidos y el nombre.
      * @return array del tipo array('cod'=>'apellidos nombre'...)
@@ -240,10 +380,26 @@ class Personas {
     public function getNombresCompletos($sep='') {
         $aDat = array();
         $aPer = $this->aDatosPersonas;
+        $orden = $this->orden;
         foreach ($aPer as $cod => $aDatos) {
-            $aDat[$cod]=$aDatos[0] . "$sep " . $aDatos[1];
+            $aDat[$cod]= ($orden == 1) ? $aDatos[1] . "$sep " . $aDatos[0] : $aDatos[0] . "$sep " . $aDatos[1];
         }
         return $aDat;
+    }
+    
+    /**
+     * Obtiene los apellidos y nombre de una persona.
+     * Segun el orden asignado se obtendran los apellidos y nombre o el nombre y apellidos.
+     * 
+     * @param int $per Codigo de persona.
+     * @param string $sep Separador entre los apellidos y el nombre.
+     * @return string Apellidos y nombre o nombre y apellidos.
+     */
+    public function getNombreCompleto($per, $sep='') {
+        $aPer = $this->aDatosPersonas;
+        $orden = $this->orden;
+        $aDatos = $aPer[$per];
+        return ($orden == 1) ? $aDatos[1] . "$sep " . $aDatos[0] : $aDatos[0] . "$sep " . $aDatos[1];
     }
     
     /**
@@ -266,6 +422,41 @@ class Personas {
     }
     
     /**
+     * Asigna el orden para el listado de personas.
+     * Si el tipo de orden no es el mismo que habia, se reordenara la lista para ajustarla al nuevo orden.
+     * Los tipos de orden permitidos son:
+     * <ul>
+     * <li>0 - Apellidos.</li>
+     * <li>1 - Nombre.</li>
+     * <li>2 - Codigo.</li>
+     * </ul>
+     * 
+     * @param int $ord Tipo de orden 0|1|2.
+     */
+    public function setOrden($ord) {
+        $orden = ($ord != 1 && $ord != 2) ? 0 : $ord;
+        if ($orden != $this->orden) {
+            $this->cargarPersonas($orden);
+        }
+    }
+    
+    /**
+     * Obtiene el tipo de orden que se esta usando.
+     * <ul>
+     * <li>0 - Apellidos.</li>
+     * <li>1 - Nombre.</li>
+     * <li>2 - Codigo.</li>
+     * </ul>
+     * 
+     * @param boolean $bNom Si es TRUE obtiene el texto y si es FALSE el numero.
+     * @return @return mixed Tipo de orden 0|1|2 o con texto Apellidos|Nombre|Codigo.
+     */
+    public function getOrden($bNom=FALSE) {
+        $aOrden = array('Apellidos', 'Nombre', 'C&oacute;digo');
+        return ($bNom) ? $aOrden[$this->orden] : $this->orden;
+    }
+    
+    /**
      * Obtiene los nombres de las personas que coinciden con el criterio de busqueda.
      * Se devuelve un array cuyas claves son los <b>codigos de personas</b> encontradas y como contenido:
      * <ul>
@@ -278,5 +469,45 @@ class Personas {
      */
     public function buscar($busqueda) {
         return $this->buscarPersonas($busqueda);
+    }
+    
+    public function setFiltroSexoHombre($fil='') {
+        $this->filtroHombre = $this->arreglarFiltro($fil);
+        $this->filtrarPersonas();
+    }
+    public function setFiltroSexoMujer($fil='') {
+        $this->filtroMujer = $this->arreglarFiltro($fil);
+        $this->filtrarPersonas();
+    }
+    public function setFiltroSexoOtro($fil='') {
+        $this->filtroOtro = $this->arreglarFiltro($fil);
+        $this->filtrarPersonas();
+    }
+    public function setFiltroCorreo($fil='') {
+        $this->filtroCorreo = $this->arreglarFiltro($fil);
+        $this->filtrarPersonas();
+    }
+    public function setFiltroEnvios($fil='') {
+        $this->filtroEnvios = $this->arreglarFiltro($fil);
+        $this->filtrarPersonas();
+    }
+    public function setFiltroTelefono($fil='') {
+        $this->filtroTelefono = $this->arreglarFiltro($fil);
+        $this->filtrarPersonas();
+    }
+    public function setFiltroNotas($fil='') {
+        $this->filtroNotas = $this->arreglarFiltro($fil);
+        $this->filtrarPersonas();
+    }
+    public function setFiltroPropietario($fil='') {
+        $this->filtroPropietario = $this->arreglarFiltro($fil);
+        $this->filtrarPersonas();
+    }
+    public function getFiltradas() {
+        return $this->aFiltradas;
+    }
+    
+    public function esPropietario($per) {
+        return ($this->numeroPropiedades($per) > 0) ? TRUE : FALSE;
     }
 }

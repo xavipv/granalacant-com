@@ -14,7 +14,7 @@ $activo = f_getMenuAcciones($pagina);
                 <div class="dropdown-menu">
                     <a class="dropdown-item" href="personas.php">Editar</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Listado</a>
+                    <a class="dropdown-item" href="personaslis.php">Listado</a>
                 </div>
             </li>
             <li class="nav-item dropdown">
