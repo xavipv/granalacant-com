@@ -1,2 +1,4 @@
-Gestión de datos para la urbanización Gran Alacant.
+# Granalacant-com
+
+Gestión de datos para una comunidad de vecinos.
 
