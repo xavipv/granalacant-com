@@ -56,7 +56,7 @@ $activo = f_getMenuAcciones($pagina);
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle <?php echo $activo[6]; ?>" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Otros</a>
                 <div class="dropdown-menu">
-                    <a class="dropdown-item" href="#">C&aacute;lculos</a>
+                    <a class="dropdown-item" href="calculos.php">C&aacute;lculos</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="transformar.php">Trasformar textos</a>
                 </div>

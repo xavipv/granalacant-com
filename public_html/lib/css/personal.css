@@ -15,7 +15,6 @@
     height: 200px;
 }
 
-
 #divcontenidoacta {
     overflow-y: scroll;
 }
@@ -91,6 +90,10 @@
     color: #A82D24;
 }
 
+.successcolor {
+    color: #155740;
+}
+
 .card {
     margin: 2px;
 }
@@ -125,14 +128,6 @@
     right: 10px;
 }
 
-/*
-.jqte_editor, .jqte_source {
-    white-space:normal;
-    text-align: justify;
-    padding: 20px;
-    font: inherit;
-} */
-
 .trumbowyg-box,
 .trumbowyg-editor,
 .trumbowyg-textarea {
@@ -140,4 +135,14 @@
     text-align: justify;
     font: inherit;
     min-height: 100px;
+}
+
+.table-ultra th, .table-ultra td {
+    padding: 2px;
+}
+
+.table-ultra th {
+    background-color: #F8F8F8;
+    border-top: 1px solid lightgrey;
+    border-bottom: 1px solid lightgrey;
 }
