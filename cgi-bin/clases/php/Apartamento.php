@@ -218,20 +218,6 @@ class Apartamento {
         $this->garajes = $aGar;
     }
     
-    /**
-     * Obtiene el numero total de garajes que hay en la urbanizacion.
-     * 
-     * @return int Numero de garajes.
-     */
-    private function totalGarajes() {
-        $iGar =0;
-        $rRes = $this->ejecutarSQL("SELECT COUNT(*) AS TOT FROM GARAJES WHERE BAJA IS NULL");
-        while($aRow = $rRes->fetch(PDO::FETCH_ASSOC)) {
-            $iGar = $aRow['TOT'];
-        }
-        $rRes->closeCursor(); 
-        return $iGar;
-    }
     
     /**
      * Graba los datos de los garajes del apartamento.
@@ -531,18 +517,6 @@ class Apartamento {
      */
     public function getGarajesNumero() {
         return count($this->garajes);
-    }
-    
-    /**
-     * Obtiene el coeficiente de los garajes que tiene el apartamento.
-     * 
-     * @return int Coeficiente de los garajes.
-     */
-    public function getGarajesCoeficiente() {
-        $num = $this->totalGarajes();       // Numero total de garajes.
-        $nua = $this->getGarajesNumero();   // Numero de garajes del apartamento.
-        $coe = ($num) ? 100/$num : 0;
-        return $nua * $coe;
     }
     
     /**

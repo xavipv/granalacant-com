@@ -648,15 +648,3 @@ function js_transformarCheck(val) {
         $('#'+n).prop('checked', val); js_transformar(n, val);
     }
 } 
-
-//--- LISTADOS ---------------------------------------------------------------//
-
-function js_cuotasMensuales() {
-    if($('#cantidad').val() > 0 && $('#meses').val() > 0) { 
-        $('#imprimir').prop('disabled',false); 
-        xajax_getCalculos(xajax.getFormValues('frmdatos'));
-    } else { 
-        $('#imprimir').prop('disabled',true);
-        $('#divbusqueda').html('');
-    }
-}

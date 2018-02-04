@@ -232,7 +232,7 @@ class Apartamentos {
     public function getApartamentosExcluyendo($aInc, $bNom=FALSE) {
         return $this->getApartamentosIncExc($aInc, TRUE, $bNom);
     }
-     
+    
     /**
      * Obtiene los datos de un apartamento.
      * 
@@ -241,15 +241,6 @@ class Apartamentos {
      */
     public function getApartamento($cod) {
         return isset($this->aDatosApartamentos[$cod]) ? $this->aDatosApartamentos[$cod] : array(0,0,'','','',0,0,0,0,0,0);
-    }
-    
-    /**
-     * Obtiene los codigos de todos los apartamentos.
-     * 
-     * @return array del tipo array('cod1','cod2'...)
-     */
-    public function getCodigos() {
-        return array_keys($this->aDatosApartamentos);
     }
     
     /**

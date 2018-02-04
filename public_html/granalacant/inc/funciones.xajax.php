@@ -47,7 +47,6 @@ $xajax->register(XAJAX_FUNCTION, 'getActaDatos');
 $xajax->register(XAJAX_FUNCTION, 'getActaDatosForm');
 $xajax->register(XAJAX_FUNCTION, 'getAsistentes');
 $xajax->register(XAJAX_FUNCTION, 'getAsistentesJuntaSumas');
-$xajax->register(XAJAX_FUNCTION, 'getCalculos');
 $xajax->register(XAJAX_FUNCTION, 'getDatosCoeficientes');
 $xajax->register(XAJAX_FUNCTION, 'getJuntasAnyos');
 $xajax->register(XAJAX_FUNCTION, 'getJuntasListado');
@@ -1103,14 +1102,6 @@ function eliminarActa($fecha) {
     } else {
         $response->alert("ERROR: no se ha podido eliminar el acta ($fecha).");
     }
-    return $response;
-}
-
-//--- CALCULOS ---------------------------------------------------------------//
-
-function getCalculos($frm) {
-    $response = new xajaxResponse();
-    $response->assign("divbusqueda", "innerHTML", f_getCalculos($frm));
     return $response;
 }
 
