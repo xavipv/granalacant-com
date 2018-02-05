@@ -1571,6 +1571,13 @@ function f_grabarActa($frm) {
 
 //--- LISTADO DE PERSONAS ---//
 
+/**
+ * Obtiene el listado de personas.
+ * 
+ * @global \Personas $oPers Instancia de Personas.
+ * @param array $frm Datos del formulario.
+ * @return string Codigo HTML del listado.
+ */
 function f_getListadoPersonas($frm) {
     global $oPers;
      
@@ -1613,6 +1620,12 @@ function f_getListadoPersonas($frm) {
     return "<h4>Listado de $num personas ordenado por $sOrd. <span style=\"font-size:0.8em\"><em>Filtro: " . f_getListadoPersonasFiltros($frm) . "</em>.</span></h4><table class=\"table table-condensed table-ultra\">$fTit$fPer</table>";
 }
 
+/**
+ * Obtiene la fila con los titulos del listado.
+ * 
+ * @param array $frm Datos del formulario.
+ * @return string Codigo HTML de la fila.
+ */
 function f_getListadoPersonasTitulo($frm) {
     $fila = "<tr>";
     $fila .= (isset($frm['codigo'])) ? "<th>C&oacute;digo</th>" : "";
@@ -1625,6 +1638,13 @@ function f_getListadoPersonasTitulo($frm) {
     return $fila;
 }
 
+/**
+ * Obtiene la fila de notas.
+ * 
+ * @param array $frm Datos del formulario.
+ * @param string $nota Notas.
+ * @return string Codigo HTML de la fila.
+ */
 function f_getListadoPersonasNotas($frm, $nota) {
     $col = 1;
     $col += (isset($frm['correo'])) ? 1 : 0;
@@ -1639,6 +1659,12 @@ function f_getListadoPersonasNotas($frm, $nota) {
     return $fila;
 }
 
+/**
+ * Obtiene una lista con los filtros que se estan usando en el listado.
+ * 
+ * @param array $frm Datos del formulario.
+ * @return string Lista de filtros.
+ */
 function f_getListadoPersonasFiltros($frm) {
     $aF = array();
     $filtros = "";
