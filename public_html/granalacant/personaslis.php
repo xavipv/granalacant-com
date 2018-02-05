@@ -31,8 +31,7 @@ $aIncludes = array('config.inc.php', 'funciones.inc.php', 'funciones.xajax.php')
                                     <button class="btn btn-outline-success" id="imprimir" onclick=""><span class="oi oi-print"></span></button>
                                 </div>
                             </div>
-                            <div class="form-group row">
-                                <div class="col-sm-2"><b>Ordenar por:</b></div>
+                            <div class="form-group row" data-animation="false" data-toggle="tooltip" data-placement="right" data-trigger="hover" title="Orden de los datos">
                                 <div class="col-sm-2">
                                     <div class="input-group">
                                         <input type="radio" class="form-check-input" id="ordenA" name="orden" value="0" onclick="xajax_getListadoPersonas(xajax.getFormValues('frmdatos'));" checked="checked">
@@ -51,10 +50,9 @@ $aIncludes = array('config.inc.php', 'funciones.inc.php', 'funciones.xajax.php')
                                         <label for="ordenC" class="form-check-label">C&oacute;digo</label>
                                     </div>
                                 </div>
-                                
                             </div>
                             <hr />
-                            <div class="form-group row" title="Datos a filtrar">
+                            <div class="form-group row" data-animation="false" data-toggle="tooltip" data-placement="right" data-trigger="hover" title="Datos a filtrar">
                                 <div class="col-sm-2">
                                     <input type="checkbox" class="form-check-input" id="propietarios" name="propietarios" onclick="xajax_getListadoPersonas(xajax.getFormValues('frmdatos'));">
                                     <label for="propietarios" class="form-check-label">Propietarios</label>
@@ -81,7 +79,7 @@ $aIncludes = array('config.inc.php', 'funciones.inc.php', 'funciones.xajax.php')
                                 </div>
                             </div>
                             <hr />
-                            <div class="form-group row" title="Datos a mostrar">
+                            <div class="form-group row" data-animation="false" data-toggle="tooltip" data-placement="right" data-trigger="hover" title="Datos a mostrar">
                                 <div class="col-sm-2">
                                     <input type="checkbox" class="form-check-input" id="codigo" name="codigo"  onclick="xajax_getListadoPersonas(xajax.getFormValues('frmdatos'));" checked="checked">
                                     <label for="codigo" class="form-check-label">C&oacute;digo</label>
