@@ -51,6 +51,7 @@ $xajax->register(XAJAX_FUNCTION, 'getCalculos');
 $xajax->register(XAJAX_FUNCTION, 'getDatosCoeficientes');
 $xajax->register(XAJAX_FUNCTION, 'getJuntasAnyos');
 $xajax->register(XAJAX_FUNCTION, 'getJuntasListado');
+$xajax->register(XAJAX_FUNCTION, 'getListadoApartamentos');
 $xajax->register(XAJAX_FUNCTION, 'getListadoPersonas');
 $xajax->register(XAJAX_FUNCTION, 'getPersonasIniciales');
 $xajax->register(XAJAX_FUNCTION, 'getPropietarios');
@@ -1120,6 +1121,13 @@ function getListadoPersonas($frm) {
     $response->assign("divbusqueda", "innerHTML", f_getListadoPersonas($frm));
     return $response;
 }
+
+function getListadoApartamentos($frm) {
+    $response = new xajaxResponse();
+    $response->assign("divbusqueda", "innerHTML", f_getListadoApartamentos($frm));
+    return $response;
+}
+
 
 /**
  * Calcula las cuotas a pagar cada mes.

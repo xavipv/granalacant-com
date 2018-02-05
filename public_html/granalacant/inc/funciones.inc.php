@@ -415,34 +415,34 @@ function f_getApartamentosListado() {
     return $sApa;
 }
 
-function f_getSelectPortales($sel='') {
+function f_getSelectPortales($id='portal', $sel='', $clase='form-control', $onch='', $bla=FALSE) {
     global $oApars;
     $aDat = $oApars->getPortalesDistintos();
-    return f_getSelectSimple($aDat, 'portal', $sel, 'form-control');
+    return f_getSelectSimple($aDat, $id, $sel, $clase, $onch, $bla);
 } 
 
-function f_getSelectPisos($sel='') {
+function f_getSelectPisos($id='piso', $sel='', $clase='form-control', $onch='', $bla=FALSE) {
     global $oApars;
     $aDat = $oApars->getPisosDistintos();
-    return f_getSelectSimple($aDat, 'piso', $sel, 'form-control');
+    return f_getSelectSimple($aDat, $id, $sel, $clase, $onch, $bla);
 }
 
-function f_getSelectLetras($sel='') {
+function f_getSelectLetras($id='letra', $sel='', $clase='form-control', $onch='', $bla=FALSE) {
     global $oApars;
     $aDat = $oApars->getLetrasDistintas();
-    return f_getSelectSimple($aDat, 'letra', $sel, 'form-control');
+    return f_getSelectSimple($aDat, $id, $sel, $clase, $onch, $bla);
 }
 
-function f_getSelectFases($sel='') {
+function f_getSelectFases($id='fase', $sel='', $clase='form-control', $onch='', $bla=FALSE) {
     global $oApars;
     $aDat = $oApars->getFasesDistintas();
-    return f_getSelectSimple($aDat, 'fase', $sel, 'form-control');
+    return f_getSelectSimple($aDat, $id, $sel, $clase, $onch, $bla);
 }
 
-function f_getSelectTipos($sel='') {
+function f_getSelectTipos($id='tipo', $sel='', $clase='form-control', $onch='', $bla=FALSE) { 
     global $oApars;
     $aDat = $oApars->getTiposDistintos();
-    return f_getSelectSimple($aDat, 'tipo', $sel, 'form-control');
+    return f_getSelectSimple($aDat, $id, $sel, $clase, $onch, $bla);
 }
 
 function f_getGarajesPlano($oApa) {
@@ -1666,6 +1666,12 @@ function f_getListadoPersonasFiltros($frm) {
         $filtros = "ninguno";
     }
     return $filtros;
+}
+
+//--- LISTADO DE APARTAMENTOS ---//
+
+function f_getListadoApartamentos($frm) {
+    return "LISTADO DE APARTAMENTOS";
 }
 
 //--- CALCULO DE CUOTA MENSUAL ---//
