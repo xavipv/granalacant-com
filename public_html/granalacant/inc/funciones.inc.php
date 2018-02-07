@@ -415,34 +415,34 @@ function f_getApartamentosListado() {
     return $sApa;
 }
 
-function f_getSelectPortales($sel='') {
+function f_getSelectPortales($id='portal', $sel='', $clase='form-control', $onch='', $bla=FALSE) {
     global $oApars;
     $aDat = $oApars->getPortalesDistintos();
-    return f_getSelectSimple($aDat, 'portal', $sel, 'form-control');
+    return f_getSelectSimple($aDat, $id, $sel, $clase, $onch, $bla);
 } 
 
-function f_getSelectPisos($sel='') {
+function f_getSelectPisos($id='piso', $sel='', $clase='form-control', $onch='', $bla=FALSE) {
     global $oApars;
     $aDat = $oApars->getPisosDistintos();
-    return f_getSelectSimple($aDat, 'piso', $sel, 'form-control');
+    return f_getSelectSimple($aDat, $id, $sel, $clase, $onch, $bla);
 }
 
-function f_getSelectLetras($sel='') {
+function f_getSelectLetras($id='letra', $sel='', $clase='form-control', $onch='', $bla=FALSE) {
     global $oApars;
     $aDat = $oApars->getLetrasDistintas();
-    return f_getSelectSimple($aDat, 'letra', $sel, 'form-control');
+    return f_getSelectSimple($aDat, $id, $sel, $clase, $onch, $bla);
 }
 
-function f_getSelectFases($sel='') {
+function f_getSelectFases($id='fase', $sel='', $clase='form-control', $onch='', $bla=FALSE) {
     global $oApars;
     $aDat = $oApars->getFasesDistintas();
-    return f_getSelectSimple($aDat, 'fase', $sel, 'form-control');
+    return f_getSelectSimple($aDat, $id, $sel, $clase, $onch, $bla);
 }
 
-function f_getSelectTipos($sel='') {
+function f_getSelectTipos($id='tipo', $sel='', $clase='form-control', $onch='', $bla=FALSE) { 
     global $oApars;
     $aDat = $oApars->getTiposDistintos();
-    return f_getSelectSimple($aDat, 'tipo', $sel, 'form-control');
+    return f_getSelectSimple($aDat, $id, $sel, $clase, $onch, $bla);
 }
 
 function f_getGarajesPlano($oApa) {
@@ -1694,6 +1694,202 @@ function f_getListadoPersonasFiltros($frm) {
     return $filtros;
 }
 
+//--- LISTADO DE APARTAMENTOS ---//
+
+/**
+ * Obtiene el listado de apartamentos con los datos indicados.
+ * 
+ * @global \Apartamentos $oApars Instancia de Apartamentos.
+ * @param array $frm Datos del formulario.
+ * @return string Codigo HTML del listado de apartamentos.
+ */
+function f_getListadoApartamentos($frm) {
+    global $oApars;
+    
+    $fTit = f_getListadoApartamentosTitulo($frm);
+    // Asignar filtros.
+    $tipo = $frm['contipo'];
+    $por1 = $frm['portal1'];
+    $por2 = $frm['portal2'];
+    $cong = (isset($frm['congaraje'])) ? 'S' : 'N';
+    $cont = (isset($frm['conterraza'])) ? 'S' : 'N';
+    // Asignar filtros
+    $oApars->setFiltroTipo($tipo);
+    $oApars->setFiltroPortalIni($por1);
+    $oApars->setFiltroPortalFin($por2);
+    $oApars->setFiltroGarajes($cong);
+    $oApars->setFiltroTerrazas($cont);
+    
+    // Inicializa las sumas.
+    $bloApa = 0; $bloMe2 = 0; $bloTer = 0; $bloCoe = 0; $bloCof = 0; $bloCor = 0; $bloCob = 0; $bloGar = 0;
+    $fasApa = 0; $fasMe2 = 0; $fasTer = 0; $fasCoe = 0; $fasCof = 0; $fasCor = 0; $fasCob = 0; $fasGar = 0;
+    $sumApa = 0; $sumMe2 = 0; $sumTer = 0; $sumCoe = 0; $sumCof = 0; $sumCor = 0; $sumCob = 0; $sumGar = 0;
+    
+    
+    $aApars = $oApars->getFiltrados();
+    $portal = "";
+    $fApa = "";
+    $fase = "";
+    foreach ($aApars as $apa => $aApartamento) {
+        // array('0 portal','1 piso','2 letra','3 fase','4 tipo','5 finca','6 metros','7 terraza','8 coef.urb','9 coef.fase','10 coef.blo')
+        
+        // Mira si hay cambio de portal.
+        if($portal != $aApartamento[0] && $frm['sumas']) {
+            // Pone las sumas.
+            $fSumb = f_getListadoApartamentosSumas($frm, "Portal $portal: ", $bloApa, $bloMe2, $bloTer, $bloCoe, $bloCof, $bloCor, $bloCob, $bloGar);
+            $bloApa = 0; $bloMe2 = 0; $bloTer = 0; $bloCoe = 0; $bloCof = 0; $bloCor = 0; $bloCob = 0; $bloGar = 0;
+            $fApa .= ($portal) ? $fSumb : "";
+            $portal = $aApartamento[0];
+        }
+        
+        // Mira si hay cambio de fase. 
+        if ($fase != $aApartamento[3] && $frm['sumas']) {
+            // Pone las sumas.
+            $fSumf = f_getListadoApartamentosSumas($frm, "Fase $fase: ", $fasApa, $fasMe2, $fasTer, $fasCoe, $fasCof, $fasCor, $fasCob, $fasGar);
+            $fasApa = 0; $fasMe2 = 0; $fasTer = 0; $fasCoe = 0; $fasCof = 0; $fasCor = 0; $fasCob = 0; $fasGar = 0;
+            $fApa .= ($fase) ? $fSumf : "";
+            $fase = $aApartamento[3];
+        } 
+        
+        $fApa .= "<tr>";
+        $fApa .= (isset($frm['codigo'])) ? "<td>$apa</td>" : "";
+        $fApa .= (isset($frm['finca'])) ? "<td>" . $aApartamento[5] ."</td>" : "";
+        $fApa .= "<td>" . $aApartamento[0] . "-" .$aApartamento[1] . $aApartamento[2] . "</td>";
+        $bloApa++; $fasApa++; $sumApa++;
+        
+        $fApa .= (isset($frm['tipo'])) ? "<td>" . $aApartamento[4] ."</td>" : "";
+        $fApa .= (isset($frm['fase'])) ? "<td>" . $aApartamento[3] ."</td>" : "";
+        if (isset($frm['metros'])) {
+            $fApa .= "<td class=\"text-right\">" . number_format($aApartamento[6],2,',','.') ."</td>";
+            $bloMe2 += $aApartamento[6]; $fasMe2 += $aApartamento[6]; $sumMe2 += $aApartamento[6];
+        }
+        if (isset($frm['terraza'])) {
+            $fApa .= (intval($aApartamento[7])) ? "<td class=\"text-right\">" . number_format($aApartamento[7],2,',','.') ."</td>" : "<td>&nbsp;</td>";
+            $bloTer += $aApartamento[7]; $fasTer += $aApartamento[7]; $sumTer += $aApartamento[7];
+        }
+        if (isset($frm['urban'])) {
+            $fApa .= "<td class=\"text-right\">" . number_format($aApartamento[8],4,',','.') ."</td>";
+            $bloCoe += $aApartamento[8]; $fasCoe += $aApartamento[8]; $sumCoe += $aApartamento[8];
+        }
+        if (isset($frm['fase200'])) {
+            $fApa .= "<td class=\"text-right\">" . number_format($aApartamento[9],4,',','.') ."</td>";
+            $bloCof += $aApartamento[9]; $fasCof += $aApartamento[9]; $sumCof += $aApartamento[9];
+        }
+        if (isset($frm['fase100'])) {
+            $fApa .= "<td class=\"text-right\">" . number_format($aApartamento[9]/2,5,',','.') ."</td>";
+            $bloCor += $aApartamento[9]/2; $fasCor += $aApartamento[9]/2; $sumCor += $aApartamento[9]/2;
+        }
+        if (isset($frm['bloque'])) {
+            $fApa .= "<td class=\"text-right\">" . number_format($aApartamento[10],2,',','.') ."</td>";
+            $bloCob += $aApartamento[10]; $fasCob += $aApartamento[10]; $sumCob += $aApartamento[10];
+        }
+        if (isset($frm['garajes'])) {
+            $iGar = $oApars->getNumeroGarajes($apa);
+            $fApa .= ($iGar) ? "<td class=\"text-right\">$iGar&nbsp;</td>" : "<td>&nbsp;</td>";
+            $bloGar += $iGar; $fasGar += $iGar; $sumGar += $iGar;
+        }
+        $fApa .= "</tr>";
+    }
+    // Sumas del ultimo portal, ultima fase y totales.
+    $fApa .= ($frm['sumas']) ? f_getListadoApartamentosSumas($frm, "Portal $portal: ", $bloApa, $bloMe2, $bloTer, $bloCoe, $bloCof, $bloCor, $bloCob, $bloGar) : "";
+    $fApa .= ($frm['sumas']) ? f_getListadoApartamentosSumas($frm, "Fase $fase: ", $fasApa, $fasMe2, $fasTer, $fasCoe, $fasCof, $fasCor, $fasCob, $fasGar) : "";
+    $fApa .= ($frm['sumas']) ? f_getListadoApartamentosSumas($frm, "Total: ", $sumApa, $sumMe2, $sumTer, $sumCoe, $sumCof, $sumCor, $sumCob, $sumGar) : "";
+    return "<h4>Listado de $sumApa apartamentos. <span style=\"font-size:0.8em\"><em>Filtros: " . f_getListadoApartamentosFiltros($frm) . "</em>.</span></h4><table class=\"table table-condensed table-ultra\">$fTit$fApa</table>";
+}
+
+/**
+ * Obtiene las sumas de los apartamentos.
+ * 
+ * @param array $frm Datos del formulario.
+ * @param string $txt Texto para el inicio de la fila.
+ * @param int $apa Suma de apartamentos.
+ * @param int $me2 Suma de metros cuadrados de los apartamento.
+ * @param int $ter Suma de metros cuadrados de las terrazas.
+ * @param int $coe Suma de los coeficientes de urbanizacion al 100%.
+ * @param int $cof Suma de los coeficientes de la fase al 200%.
+ * @param int $cor Suma de los coeficientes de la fase al 100%.
+ * @param int $cob Suma de los coeficientes de los bloques.
+ * @param int $gar Suma del numero de garajes.
+ * @return string Codigo HTML de la fila de sumas.
+ */
+function f_getListadoApartamentosSumas($frm, $txt, $apa, $me2, $ter, $coe, $cof, $cor, $cob, $gar) {
+    $fTit = "<tr>";
+    if (isset($frm['codigo']) && isset($frm['finca'])) {
+        $fTit .= "<th colspan=\"3\">$txt$apa</th>";
+    } elseif (isset($frm['codigo']) || isset($frm['finca'])) {
+        $fTit .= "<th colspan=\"2\">$txt$apa</th>";
+    } else {
+        $fTit .= "<th>$txt$apa</th>";
+    }
+    $fTit .= (isset($frm['tipo'])) ? "<th>&nbsp;</th>" : "";
+    $fTit .= (isset($frm['fase'])) ? "<th>&nbsp;</th>" : "";
+    $fTit .= (isset($frm['metros'])) ? "<th class=\"text-right\">" . number_format($me2,2,',','.') . "</th>" : "";
+    $fTit .= (isset($frm['terraza'])) ? "<th class=\"text-right\">" . number_format($ter,2,',','.') . "</th>" : "";
+    $fTit .= (isset($frm['urban'])) ? "<th class=\"text-right\">" . number_format($coe,4,',','.') . "</th>" : "";
+    $fTit .= (isset($frm['fase200'])) ? "<th class=\"text-right\">" . number_format($cof,4,',','.') . "</th>" : "";
+    $fTit .= (isset($frm['fase100'])) ? "<th class=\"text-right\">" . number_format($cor,5,',','.') . "</th>" : "";
+    // La suma de coeficientes y cuotas de portales solo se pone en la suma de portales.
+    if (substr($txt, 0, 1) == "P") {
+        $fTit .= (isset($frm['bloque'])) ? "<th class=\"text-right\">" . number_format($cob,2,',','.') . "</th>" : "";
+    } else {
+        $fTit .= (isset($frm['bloque'])) ? "<th>&nbsp;</th>" : "";
+    }
+    $fTit .= (isset($frm['garajes'])) ? "<th class=\"text-right\">$gar&nbsp;</th>" : "";
+    return "$fTit</tr>";
+}
+
+/**
+ * Obtiene un fila con los titulos del listado de apartamentos.
+ * 
+ * @param array $frm Datos del formulario.
+ * @return string Codigo HTML de la fila de titulos.
+ */
+function f_getListadoApartamentosTitulo($frm) {
+    $fila = "<tr>";
+    $fila .= (isset($frm['codigo'])) ? "<th>C&oacute;digo</th>" : "";
+    $fila .= (isset($frm['finca'])) ? "<th>Finca</th>" : "";
+    $fila .= "<th>Apart.</th>";
+    $fila .= (isset($frm['tipo'])) ? "<th>Tipo</th>" : "";
+    $fila .= (isset($frm['fase'])) ? "<th>Fase</th>" : "";
+    $fila .= (isset($frm['metros'])) ? "<th class=\"text-right\">Metros</th>" : "";
+    $fila .= (isset($frm['terraza'])) ? "<th class=\"text-right\">Terraza</th>" : "";
+    $fila .= (isset($frm['urban'])) ? "<th class=\"text-right\">Urb. 100%</th>" : "";
+    $fila .= (isset($frm['fase200'])) ? "<th class=\"text-right\">Fase 200%</th>" : "";
+    $fila .= (isset($frm['fase100'])) ? "<th class=\"text-right\">Fase 100%</th>" : "";
+    $fila .= (isset($frm['bloque'])) ? "<th class=\"text-right\">Bloque</th>" : "";
+    $fila .= (isset($frm['garajes'])) ? "<th class=\"text-right\">Gara.</th>" : "";
+    $fila .= "</tr>";
+    return $fila;
+}
+
+/**
+ * Obtiene una cadena con los filtros aplicados al listado de apartamentos.
+ * 
+ * @param string $frm Datos del formulario.
+ * @return string Cadena con los filtros aplicados.
+ */
+function f_getListadoApartamentosFiltros($frm) {
+    $aF = array();
+    $filtros = "";
+    
+    $aF[] = "del portal " . $frm['portal1'] . " al " . $frm['portal2'];
+    if ($frm['contipo']) {
+        $aF[] = 'apartamento tipo ' . $frm['contipo'];
+    }
+    if (isset($frm['congaraje'])) {
+        $aF[] = 'con garaje';
+    }
+    if (isset($frm['conterraza'])) {
+        $aF[] = 'con terraza';
+    }
+    if (count($aF)) {
+        $filtros = implode(', ', $aF);
+    } else {
+        $filtros = "ninguno";
+    }
+    return $filtros;
+}
+
 //--- CALCULO DE CUOTA MENSUAL ---//
 
 /**
@@ -1799,7 +1995,7 @@ function f_getCalculos($frm) {
         // Coeficiente escalera 100%
         if(isset($frm['coeblo'])) {
             $cuotab = ($aApar[10] * $can) / ($mes * 100);
-            $fApa .= "<td class=\"text-right\">" . number_format($aApar[10],4,',','.') . "</td><td class=\"text-right successcolor\">" . number_format($cuotab,2,',','.') . "</td>";
+            $fApa .= "<td class=\"text-right\">" . number_format($aApar[10],5,',','.') . "</td><td class=\"text-right successcolor\">" . number_format($cuotab,2,',','.') . "</td>";
             $bloCob += $aApar[10]; $bloEub += $cuotab; $fasCob += $aApar[10]; $fasEub += $cuotab; $sumCob += $aApar[10]; $sumEub += $cuotab;
         }
         
@@ -1870,7 +2066,7 @@ function f_getCalculosSumas($frm, $txt, $apa, $me2, $coe, $eue, $cof, $cor, $euf
     $fTit .= (isset($frm['metros'])) ? "<th class=\"text-right\">" . number_format($me2,2,',','.') . "</th>" : "";
     $fTit .= (isset($frm['coeur'])) ? "<th class=\"text-right\">" . number_format($coe,4,',','.') . "</th><th class=\"text-right successcolor\">" . number_format($eue,2,',','.') . "</th>" : "";
     $fTit .= (isset($frm['coef200'])) ? "<th class=\"text-right\">" . number_format($cof,4,',','.') . "</th>" : "";
-    $fTit .= (isset($frm['coef100'])) ? "<th class=\"text-right\">" . number_format($cor,4,',','.') . "</th>" : "";
+    $fTit .= (isset($frm['coef100'])) ? "<th class=\"text-right\">" . number_format($cor,5,',','.') . "</th>" : "";
     $fTit .= (isset($frm['coef200']) || isset($frm['coef100'])) ? "<th class=\"text-right successcolor\">" . number_format($euf,2,',','.') . "</th>" : "";
     $fTit .= (isset($frm['dife'])) ? "<th class=\"text-right dangercolor\">" . number_format($res,2,',','.') . "</th>" : "";
     // La suma de coeficientes y cuotas de portales solo se pone en la suma de portales.

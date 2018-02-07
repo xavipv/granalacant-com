@@ -516,7 +516,7 @@ class Apartamento {
     }
     
     /**
-     * Obtiene los codidos de los garajes del apartamento.
+     * Obtiene los codigos de los garajes del apartamento.
      * 
      * @return array del tipo array('cod1', 'cod2'...)
      */

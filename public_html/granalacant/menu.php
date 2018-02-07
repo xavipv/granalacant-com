@@ -23,7 +23,7 @@ $activo = f_getMenuAcciones($pagina);
                     <a class="dropdown-item" href="apartamentos.php">Individuales</a>
                     <a class="dropdown-item" href="coeficientes.php">Coeficientes</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Listado</a>
+                    <a class="dropdown-item" href="apartamentoslis.php">Listado</a>
                 </div>
             </li>
             <li class="nav-item dropdown">
