@@ -1122,12 +1122,17 @@ function getListadoPersonas($frm) {
     return $response;
 }
 
+/**
+ * Obtiene un listado de apartamentos con los datos seleccionados.
+ * 
+ * @param array $frm Datos del formulario.
+ * @return \xajaxResponse
+ */
 function getListadoApartamentos($frm) {
     $response = new xajaxResponse();
     $response->assign("divbusqueda", "innerHTML", f_getListadoApartamentos($frm));
     return $response;
 }
-
 
 /**
  * Calcula las cuotas a pagar cada mes.

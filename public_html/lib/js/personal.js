@@ -660,3 +660,14 @@ function js_cuotasMensuales() {
         $('#divbusqueda').html('');
     }
 }
+
+/**
+ * Controla que el portal inicial no sea mayor que el final.
+ */
+function js_rangoPortales() {
+    var v1 = parseInt($('#portal1').val());
+    var v2 = parseInt($('#portal2').val());
+    if (v1 > v2) {
+        $('#portal2').val(v1);
+    }
+}

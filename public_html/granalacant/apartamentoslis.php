@@ -33,17 +33,17 @@ $aIncludes = array('config.inc.php', 'funciones.inc.php', 'funciones.xajax.php')
                             </div>
                             <div class="form-group row" data-animation="false" data-toggle="tooltip" data-placement="right" data-trigger="hover" title="Datos a filtrar">
                                 <label for="tipo" class="col-sm-1 col-form-label text-right">Tipo:</label>
-                                <div class="col-sm-1"><?php echo f_getSelectTipos('tipo', '', 'form-control', 'xajax_getListadoApartamentos(xajax.getFormValues(\'frmdatos\'))', TRUE); ?></div>
+                                <div class="col-sm-1"><?php echo f_getSelectTipos('contipo', '', 'form-control', 'xajax_getListadoApartamentos(xajax.getFormValues(\'frmdatos\'))', TRUE); ?></div>
                                 <label for="tipo" class="col-sm-1 col-form-label text-right">De portal:</label>
-                                <div class="col-sm-1"><?php echo f_getSelectPortales('portal1', '1', 'form-control', 'xajax_getListadoApartamentos(xajax.getFormValues(\'frmdatos\'))', FALSE); ?></div>
+                                <div class="col-sm-1"><?php echo f_getSelectPortales('portal1', '1', 'form-control', 'js_rangoPortales();xajax_getListadoApartamentos(xajax.getFormValues(\'frmdatos\'))', FALSE); ?></div>
                                 <label for="tipo" class="col-sm-1 col-form-label text-right">A portal:</label>
-                                <div class="col-sm-1"><?php echo f_getSelectPortales('portal1', '26', 'form-control', 'xajax_getListadoApartamentos(xajax.getFormValues(\'frmdatos\'))', FALSE); ?></div>
+                                <div class="col-sm-1"><?php echo f_getSelectPortales('portal2', '26', 'form-control', 'js_rangoPortales();xajax_getListadoApartamentos(xajax.getFormValues(\'frmdatos\'))', FALSE); ?></div>
                                 <div class="col-sm-2 offset-2">
-                                    <input type="checkbox" class="form-check-input" id="congaraje" name="congaraje"  onclick="xajax_getListadoApartamentos(xajax.getFormValues('frmdatos'));">
+                                    <input type="checkbox" class="form-check-input" id="congaraje" name="congaraje" onclick="xajax_getListadoApartamentos(xajax.getFormValues('frmdatos'));">
                                     <label for="congaraje" class="form-check-label">Con garaje</label>
                                 </div>
                                 <div class="col-sm-2">
-                                    <input type="checkbox" class="form-check-input" id="conterraza" name="conterraza"  onclick="xajax_getListadoApartamentos(xajax.getFormValues('frmdatos'));">
+                                    <input type="checkbox" class="form-check-input" id="conterraza" name="conterraza" onclick="xajax_getListadoApartamentos(xajax.getFormValues('frmdatos'));">
                                     <label for="conterraza" class="form-check-label">Con terraza</label>
                                 </div>
                             </div>
@@ -59,15 +59,15 @@ $aIncludes = array('config.inc.php', 'funciones.inc.php', 'funciones.xajax.php')
                                 </div>
                                 <div class="col-sm-2">
                                     <input type="checkbox" class="form-check-input" id="tipo" name="tipo"  onclick="xajax_getListadoApartamentos(xajax.getFormValues('frmdatos'));" checked="checked">
-                                    <label for="tipo" class="form-check-label">Correo</label>
+                                    <label for="tipo" class="form-check-label">Tipo</label>
                                 </div>
                                 <div class="col-sm-2">
                                     <input type="checkbox" class="form-check-input" id="fase" name="fase"  onclick="xajax_getListadoApartamentos(xajax.getFormValues('frmdatos'));" checked="checked">
                                     <label for="fase" class="form-check-label">Fase</label>
                                 </div>
                                 <div class="col-sm-2">
-                                    <input type="checkbox" class="form-check-input" id="superficie" name="superficie"  onclick="xajax_getListadoApartamentos(xajax.getFormValues('frmdatos'));" checked="checked">
-                                    <label for="superficie" class="form-check-label">Superficie</label>
+                                    <input type="checkbox" class="form-check-input" id="metros" name="metros"  onclick="xajax_getListadoApartamentos(xajax.getFormValues('frmdatos'));" checked="checked">
+                                    <label for="metros" class="form-check-label">Metros</label>
                                 </div>
                                 <div class="col-sm-2">
                                     <input type="checkbox" class="form-check-input" id="terraza" name="terraza"  onclick="xajax_getListadoApartamentos(xajax.getFormValues('frmdatos'));" checked="checked">
@@ -95,7 +95,7 @@ $aIncludes = array('config.inc.php', 'funciones.inc.php', 'funciones.xajax.php')
                                 </div>
                                 <div class="col-sm-2">
                                     <input type="checkbox" class="form-check-input" id="sumas" name="sumas"  onclick="xajax_getListadoApartamentos(xajax.getFormValues('frmdatos'));" checked="checked">
-                                    <label for="sumas" class="form-check-label">Bloque 100%</label>
+                                    <label for="sumas" class="form-check-label">Sumas</label>
                                 </div>
                             </div>
                             <hr />

@@ -30,14 +30,75 @@ class Apartamentos {
      * <li>8 - Coeficiente 100%.</li>
      * <li>9 - Coeficiente fase 200%.</li>
      * <li>10 - Coeficiente bloque.</li>
+     * <li>11 - Numero de garajes.</li>
      * </ul>
      * 
-     * @var array del tipo array('codapar'=>array('portal','piso','letra','fase','tipo','finca','metros','terraza','coef.urb','coef.fase','coef.blo')...)
+     * @var array del tipo array('codapar'=>array('portal','piso','letra','fase','tipo','finca','metros','terraza','coef.urb','coef.fase','coef.blo','numgar')...)
      */
     private $aDatosApartamentos;
     
+    /**
+     *Contiene los datos de los apartamentos tras aplicar los filtros.
+     * Es un array cuyo indice es el <b>codigo del apartamento</b> y como datos tiene:
+     * <ul>
+     * <li>0 - Portal.</li>
+     * <li>1 - Piso.</li>
+     * <li>2 - Letra.</li>
+     * <li>3 - Fase.</li>
+     * <li>4 - Tipo.</li>
+     * <li>5 - Finca.</li>
+     * <li>6 - Superficie.</li>
+     * <li>7 - Terraza.</li>
+     * <li>8 - Coeficiente 100%.</li>
+     * <li>9 - Coeficiente fase 200%.</li>
+     * <li>10 - Coeficiente bloque.</li>
+     * <li>11 - Numero de garajes.</li>
+     * </ul>
+     * 
+     * @var array del tipo array('codapar'=>array('portal','piso','letra','fase','tipo','finca','metros','terraza','coef.urb','coef.fase','coef.blo','numgar')...)
+     */
+    private $aFiltrados;
+    
+    /**
+     * Filtro para el portal inicial.
+     * 
+     * @var int Portal inicial (1). 
+     */
+    private $filtroPortalIni;
+    
+    /**
+     * Filtro para el portal final.
+     * 
+     * @var int Portal final (26). 
+     */
+    private $filtroPortalFin;
+    
+    /**
+     * Filtro para el tipo de apartamento.
+     * 
+     * @var string Tipo de apartamento. 
+     */
+    private $filtroTipo;
+    
+    /**
+     * Filtro para apartamentos con terraza.
+     * 
+     * @var string S/N. 
+     */
+    private $filtroConTerraza;
+    
+    /**
+     * Filtro para apartamentos con garaje.
+     * 
+     * @var string S/N. 
+     */
+    private $filtroConGaraje;
+    
     //--- INSTANCIACION ------------------------------------------------------//
     
+    /**
+     * Constructor de la clase.
+     */
     function __construct() {
         $this->cargarApartamentos();
     }
@@ -65,11 +126,58 @@ class Apartamentos {
      * Carga los datos de los apartamentos.
      */
     private function cargarApartamentos() {
-        $rRes = $this->ejecutarSQL("SELECT CODAPAR,PORTAL,PISO,LETRA,FASE,TIPO,FINCA,METROS,TERRAZA,COEFICIENTE,COEFICIENTEFASE,COEFICIENTEBLOQ FROM APARTAMENTOS ORDER BY CODAPAR");
+        $this->cargarApartamentosOmision();
+        $rRes = $this->ejecutarSQL("SELECT A.CODAPAR,A.PORTAL,A.PISO,A.LETRA,A.FASE,A.TIPO,A.FINCA,A.METROS,A.TERRAZA,A.COEFICIENTE,A.COEFICIENTEFASE,A.COEFICIENTEBLOQ, (SELECT COUNT(*) FROM GARAJES G WHERE G.CODAPAR=A.CODAPAR) AS GARAJES FROM APARTAMENTOS A ORDER BY A.CODAPAR");
         while($aRow = $rRes->fetch(PDO::FETCH_ASSOC)) {
-            $this->aDatosApartamentos[$aRow['CODAPAR']] = array($aRow['PORTAL'],$aRow['PISO'],$aRow['LETRA'],$aRow['FASE'],$aRow['TIPO'],$aRow['FINCA'],$aRow['METROS'],$aRow['TERRAZA'],$aRow['COEFICIENTE'],$aRow['COEFICIENTEFASE'],$aRow['COEFICIENTEBLOQ']);
+            $this->aDatosApartamentos[$aRow['CODAPAR']] = array($aRow['PORTAL'],$aRow['PISO'],$aRow['LETRA'],$aRow['FASE'],$aRow['TIPO'],$aRow['FINCA'],$aRow['METROS'],$aRow['TERRAZA'],$aRow['COEFICIENTE'],$aRow['COEFICIENTEFASE'],$aRow['COEFICIENTEBLOQ'],$aRow['GARAJES']);
         }
         $rRes->closeCursor(); 
+        $this->aFiltrados = $this->aDatosApartamentos;
+    }
+    
+    /**
+     * Carga los datos por omision de los apartamentos.
+     */
+    private function cargarApartamentosOmision() {
+        $this->aDatosApartamentos = array();
+        $this->aFiltrados = array();
+        $this->filtroPortalIni = '';
+        $this->filtroPortalFin = '';
+        $this->filtroTipo;
+        $this->filtroConTerraza = '';
+        $this->filtroConGaraje = '';
+    }
+    
+    /**
+     * Filtar los apartamentos por los filtros indicados.
+     */
+    private function filtrarApartamentos() {
+        $aFil = array();
+        $aApa = $this->getApartamentos();
+        $fIni = $this->filtroPortalIni;
+        $fFin = $this->filtroPortalFin;
+        $fTip = $this->filtroTipo;
+        $fTer = $this->filtroConTerraza;
+        $fGar = $this->filtroConGaraje;
+        
+        foreach ($aApa as $apa => $aApartamento) {
+            // array('0 portal','1 piso','2 letra','3 fase','4 tipo','5 finca','6 metros','7 terraza','8 coef.urb','9 coef.fase','10 coef.blo')
+            
+            $bOK = ($aApartamento[0] < $fIni || $aApartamento[0] > $fFin) ? FALSE : TRUE;
+            if ($fTip) {
+                $bOK = ($aApartamento[4] != $fTip) ? FALSE : $bOK;
+            }
+            if ($fTer == 'S') {
+                $bOK = (intval($aApartamento[7]) > 0) ? $bOK : FALSE;
+            }
+            if ($fGar == 'S') {
+                $bOK = ($this->getNumeroGarajes($apa) > 0) ? $bOK : FALSE;
+            }
+            if ($bOK) {
+                $aFil[$apa] = $aApartamento;
+            }
+        }
+        $this->aFiltrados = $aFil;
     }
     
     /**
@@ -92,6 +200,20 @@ class Apartamentos {
     
     /**
      * Obtiene el dato indicado de los datos del apartamento.
+     * <ul>
+     * <li>0 - Portal.</li>
+     * <li>1 - Piso.</li>
+     * <li>2 - Letra.</li>
+     * <li>3 - Fase.</li>
+     * <li>4 - Tipo.</li>
+     * <li>5 - Finca.</li>
+     * <li>6 - Superficie.</li>
+     * <li>7 - Terraza.</li>
+     * <li>8 - Coeficiente 100%.</li>
+     * <li>9 - Coeficiente fase 200%.</li>
+     * <li>10 - Coeficiente bloque.</li>
+     * <li>11 - Numero de garajes.</li>
+     * </ul>
      * 
      * @param int $num Numero de dato a recuperar.
      * @return array con los datos indicados del tipo array('codapar'=>'dato'...)
@@ -138,12 +260,13 @@ class Apartamentos {
      * <li>8 - Coeficiente 100%.</li>
      * <li>9 - Coeficiente fase 200%.</li>
      * <li>10 - Coeficiente bloque.</li>
+     * <li>11 - Numero de garajes.</li>
      * </ul>
      * 
      * @param array $aApar Apartamentos a excluir o a incluir.
      * @param boolean $bExc Si es TRUE se excluyen y si es FALSE se incluyen.
      * @param boolean $bNom Si es TRUE devuelve los nombres 'Portal 1-3A' y si es false el array con los datos de los apartamentos.
-     * @return array Con los apartamentos del tipo array('codapar'=>array('portal','piso','letra','fase','tipo','finca','metros','terraza','coef.urb','coef.fase','coef.blo')...)
+     * @return array Con los apartamentos del tipo array('codapar'=>array('portal','piso','letra','fase','tipo','finca','metros','terraza','coef.urb','coef.fase','coef.blo','numgar')...)
      */
     private function getApartamentosIncExc($aApar, $bExc=TRUE, $bNom=FALSE) {
         $aDat = array();
@@ -156,6 +279,23 @@ class Apartamentos {
             }
         }
         return $aDat;
+    }
+    
+    /**
+     * Arregla el valor para un filtro permitiendo solo S, N o vacio.
+     * 
+     * @param string $fil Cadena a filtrar.
+     * @return string Cadena filtrada.
+     */
+    private function arreglarFiltro($fil) {
+        if ($fil == 'S' || $fil == 's') {
+            $fil = 'S';
+        } elseif ($fil == 'N' || $fil == 'n') {
+            $fil = 'N';
+        } else {
+            $fil = '';
+        }
+        return $fil;
     }
     
     //--- METODOS PUBLICOS ---------------------------------------------------//
@@ -175,9 +315,10 @@ class Apartamentos {
      * <li>8 - Coeficiente 100%.</li>
      * <li>9 - Coeficiente fase 200%.</li>
      * <li>10 - Coeficiente bloque.</li>
+     * <li>11 - Numero de garajes.</li>
      * </ul>
      * 
-     * @return array del tipo array('codigo'=>array(portal,piso,letra,fase,tipo,finca,metros,terraza,coefurb,coeffase,coefbloq)...)
+     * @return array del tipo array('codigo'=>array(portal,piso,letra,fase,tipo,finca,metros,terraza,coefurb,coeffase,coefbloq,numgar)...)
      */
     public function getApartamentos() {
         return $this->aDatosApartamentos;
@@ -198,11 +339,12 @@ class Apartamentos {
      * <li>8 - Coeficiente 100%.</li>
      * <li>9 - Coeficiente fase 200%.</li>
      * <li>10 - Coeficiente bloque.</li>
+     * <li>11 - Numero de garajes.</li>
      * </ul>
      * 
      * @param array $aInc Apartamentos a incluir.
      * @param boolean $bNom Si es TRUE devuelve los nombres 'Portal 1-3A' y si es false el array con los datos de los apartamentos.
-     * @return array Con los apartamentos del tipo array('codapar'=>array('portal','piso','letra','fase','tipo','finca','metros','terraza','coef.urb','coef.fase','coef.blo')...)
+     * @return array Con los apartamentos del tipo array('codapar'=>array('portal','piso','letra','fase','tipo','finca','metros','terraza','coef.urb','coef.fase','coef.blo','numgar')...)
      */
     public function getApartamentosIncluyendo($aInc, $bNom=FALSE) {
         return $this->getApartamentosIncExc($aInc, FALSE, $bNom);
@@ -223,11 +365,12 @@ class Apartamentos {
      * <li>8 - Coeficiente 100%.</li>
      * <li>9 - Coeficiente fase 200%.</li>
      * <li>10 - Coeficiente bloque.</li>
+     * <li>11 - Numero de garajes.</li>
      * </ul>
      * 
      * @param array $aInc Apartamentos a excluir.
      * @param boolean $bNom Si es TRUE devuelve los nombres 'Portal 1-3A' y si es false el array con los datos de los apartamentos.
-     * @return array Con los apartamentos del tipo array('codapar'=>array('portal','piso','letra','fase','tipo','finca','metros','terraza','coef.urb','coef.fase','coef.blo')...)
+     * @return array Con los apartamentos del tipo array('codapar'=>array('portal','piso','letra','fase','tipo','finca','metros','terraza','coef.urb','coef.fase','coef.blo','numgar')...)
      */
     public function getApartamentosExcluyendo($aInc, $bNom=FALSE) {
         return $this->getApartamentosIncExc($aInc, TRUE, $bNom);
@@ -237,10 +380,10 @@ class Apartamentos {
      * Obtiene los datos de un apartamento.
      * 
      * @param int $cod Codigo del apartamento.
-     * @return array Con los apartamentos del tipo array('portal','piso','letra','fase','tipo','finca','metros','terraza','coef.urb','coef.fase','coef.blo')
+     * @return array Con los apartamentos del tipo array('portal','piso','letra','fase','tipo','finca','metros','terraza','coef.urb','coef.fase','coef.blo','numgar')
      */
     public function getApartamento($cod) {
-        return isset($this->aDatosApartamentos[$cod]) ? $this->aDatosApartamentos[$cod] : array(0,0,'','','',0,0,0,0,0,0);
+        return isset($this->aDatosApartamentos[$cod]) ? $this->aDatosApartamentos[$cod] : array(0,0,'','','',0,0,0,0,0,0,0);
     }
     
     /**
@@ -412,5 +555,108 @@ class Apartamentos {
             $aCoef[$apa] = array($aApar[8], $aApar[9], $aApar[10]);
         }
         return $aCoef;
+    }
+    
+    /**
+     * Obtiene el numero de garajes de todos los apartamentos.
+     * 
+     * @return array del tipo array('cod1'=>num1,'cod2'=>num2...)
+     */
+    public function getGarajes() {
+        return $this->getDatos(11);
+    }
+    
+    /**
+     * Obtiene el numero de garajes de un apartamento.
+     * 
+     * @param int $apa Codigo de apartamento.
+     * @return int Numero de garajes.
+     */
+    public function getNumeroGarajes($apa) {
+        $aGar = $this->getDatos(11);
+        return $aGar[$apa];
+    }
+    
+    /**
+     * Indica si un apartamento tiene garajes o no.
+     * 
+     * @param int $apa Codigo de apartamento.
+     * @return boolean Devuelve TRUE si tiene garajes o FALSE si no tiene.
+     */
+    public function conGarajes($apa) {
+        return ($this->getNumeroGarajes($apa) > 0) ? TRUE : FALSE;
+    }
+    
+    /**
+     * Carga el filtro del portal inicial.
+     * 
+     * @param int $num Numero de portal.
+     */
+    public function setFiltroPortalIni($num=1) {
+        $this->filtroPortalIni = $num;
+        $this->filtrarApartamentos();
+    }
+    
+    /**
+     * Carga el filtro del portal final.
+     * 
+     * @param int $num Numero de portal.
+     */
+    public function setFiltroPortalFin($num=26) {
+        $this->filtroPortalFin = $num;
+        $this->filtrarApartamentos();
+    }
+    
+    /**
+     * Carga el filtro del tipo de apartamento.
+     * 
+     * @param string $fil Tipo de apartamento.
+     */
+    public function setFiltroTipo($fil='') {
+        $this->filtroTipo = $fil;
+    }
+    
+    /**
+     * Carga el filtro de apartamentos con garajes.
+     * 
+     * @param string $fil S/N.
+     */
+    public function setFiltroGarajes($fil='') {
+        $this->filtroConGaraje = $this->arreglarFiltro($fil);
+        $this->filtrarApartamentos();
+    }
+    
+    /**
+     * Carga el filtro de apartamentos con terraza.
+     * 
+     * @param string $fil S/N.
+     */
+    public function setFiltroTerrazas($fil='') {
+        $this->filtroConTerraza = $this->arreglarFiltro($fil);
+        $this->filtrarApartamentos();
+    }
+    
+    /**
+     * Obtiene un array con los datos de los apartamentos filtrados.
+     * Es un array cuyo indice es el <b>codigo del apartamento</b> y como datos tiene:
+     * <ul>
+     * <li>0 - Portal.</li>
+     * <li>1 - Piso.</li>
+     * <li>2 - Letra.</li>
+     * <li>3 - Fase.</li>
+     * <li>4 - Tipo.</li>
+     * <li>5 - Finca.</li>
+     * <li>6 - Superficie.</li>
+     * <li>7 - Terraza.</li>
+     * <li>8 - Coeficiente 100%.</li>
+     * <li>9 - Coeficiente fase 200%.</li>
+     * <li>10 - Coeficiente bloque.</li>
+     * <li>11 - Numero de garajes.</li>
+     * </ul>
+     * 
+     * @return array del tipo array('codigo'=>array(portal,piso,letra,fase,tipo,finca,metros,terraza,coefurb,coeffase,coefbloq,numgar)...)
+     */
+    public function getFiltrados() {
+        return $this->aFiltrados;
     }
 }
