@@ -16,7 +16,7 @@ class Personas {
     
     /**
      * Contiene los datos de todas las personas guardadas en la base de datos.
-     * El array tiene como clave el codigo de la persona y como datos:
+     * El array tiene como clave el <b>codigo de la persona</b> y como datos:
      * <ul>
      * <li>0 - Apellidos.</li>
      * <li>1 - Nombre.</li>
@@ -44,15 +44,78 @@ class Personas {
      */
     private $orden;
     
+    /**
+     * Filtrar por sexo hombre.
+     * 
+     * @var string S/N. 
+     */
     private $filtroHombre;
+    
+    /**
+     * Filtrar por sexo mujer.
+     * 
+     * @var string S/N.  
+     */
     private $filtroMujer;
+    
+    /**
+     * Filtrar por sexo otro.
+     * 
+     * @var string S/N.  
+     */
     private $filtroOtro;
+    
+    /**
+     * Fitrar por los que tienen correo.
+     * 
+     * @var string S/N.  
+     */
     private $filtroCorreo;
+    
+    /**
+     * Filtrar por los que tienen activos los envios.
+     * 
+     * @var string S/N.  
+     */
     private $filtroEnvios;
+    
+    /**
+     * Filtrar por lo que tienen telefonos.
+     * 
+     * @var string S/N.  
+     */
     private $filtroTelefono;
+    
+    /**
+     * Filtrar por los que tienen notas.
+     * 
+     * @var string S/N.  
+     */
     private $filtroNotas;
+    
+    /**
+     * Filtar por los que son propietarios.
+     * 
+     * @var string S/N.  
+     */
     private $filtroPropietario;
     
+    /**
+     * Contiene los datos de las personas que han sido filtradas.
+     * El array tiene como clave el codigo de la persona y como datos:
+     * <ul>
+     * <li>0 - Apellidos.</li>
+     * <li>1 - Nombre.</li>
+     * <li>2 - Sexo.</li>
+     * <li>3 - Codigo de usuario.</li>
+     * <li>4 - Correo electronico.</li>
+     * <li>5 - Enviar correos.</li>
+     * <li>6 - Telefono.</li>
+     * <li>7 - Notas</li>
+     * </ul>
+     * 
+     * @var array del tipo array('cod'=>array(0 apellidos,1 nombre,2 sexo,3 codusu,4 correo,5 envios,6 telefono,7 notas)...)
+     */
     private $aFiltradas;
     
     //--- INSTANCIACION ------------------------------------------------------//
@@ -126,6 +189,7 @@ class Personas {
     private function cargarPersonasOmision($ord) {
         $this->aDatosPersonas = array();
         $this->orden = $ord;
+        $this->aFiltradas = array();
         $this->filtroHombre = '';
         $this->filtroMujer = '';
         $this->filtroOtro = '';
@@ -309,6 +373,17 @@ class Personas {
     
     /**
      * Obtiene los datos de todas las personas.
+     * El array tiene como clave el <b>codigo de la persona</b> y como datos:
+     * <ul>
+     * <li>0 - Apellidos.</li>
+     * <li>1 - Nombre.</li>
+     * <li>2 - Sexo.</li>
+     * <li>3 - Codigo de usuario.</li>
+     * <li>4 - Correo electronico.</li>
+     * <li>5 - Enviar correos.</li>
+     * <li>6 - Telefono.</li>
+     * <li>7 - Notas</li>
+     * </ul>
      * 
      * @return array del tipo array('cod'=>array(apellidos,nombre,sexo,codusu,correo,envios,telefono,notas)...)
      */
@@ -471,42 +546,112 @@ class Personas {
         return $this->buscarPersonas($busqueda);
     }
     
+    /**
+     * Asigna el filtro por sexo hombre.
+     * 
+     * @param string $fil Filtro S/N.
+     */
     public function setFiltroSexoHombre($fil='') {
         $this->filtroHombre = $this->arreglarFiltro($fil);
         $this->filtrarPersonas();
     }
+    
+    /**
+     * Asigna el filtro por sexo mujer.
+     * 
+     * @param string $fil Filtro S/N.
+     */
     public function setFiltroSexoMujer($fil='') {
         $this->filtroMujer = $this->arreglarFiltro($fil);
         $this->filtrarPersonas();
     }
+    
+    /**
+     * Asigna el filtro por sexo otro.
+     * 
+     * @param string $fil Filtro S/N.
+     */
     public function setFiltroSexoOtro($fil='') {
         $this->filtroOtro = $this->arreglarFiltro($fil);
         $this->filtrarPersonas();
     }
+    
+    /**
+     * Asigna el filtro de personas con correo.
+     * 
+     * @param string $fil Filtro S/N.
+     */
     public function setFiltroCorreo($fil='') {
         $this->filtroCorreo = $this->arreglarFiltro($fil);
         $this->filtrarPersonas();
     }
+    
+    /**
+     * Asigna el filtro de envios activados.
+     * 
+     * @param string $fil Filtro S/N.
+     */
     public function setFiltroEnvios($fil='') {
         $this->filtroEnvios = $this->arreglarFiltro($fil);
         $this->filtrarPersonas();
     }
+    
+    /**
+     * Asigna el filtro de personas con telefono.
+     * 
+     * @param string $fil Filtro S/N.
+     */
     public function setFiltroTelefono($fil='') {
         $this->filtroTelefono = $this->arreglarFiltro($fil);
         $this->filtrarPersonas();
     }
+    
+    /**
+     * Asigna el filtro de personas con notas.
+     * 
+     * @param string $fil Filtro S/N.
+     */
     public function setFiltroNotas($fil='') {
         $this->filtroNotas = $this->arreglarFiltro($fil);
         $this->filtrarPersonas();
     }
+    
+    /**
+     * Asigna el filtro de propietarios.
+     * 
+     * @param string $fil Filtro S/N.
+     */
     public function setFiltroPropietario($fil='') {
         $this->filtroPropietario = $this->arreglarFiltro($fil);
         $this->filtrarPersonas();
     }
+    
+    /**
+     * Obtiene los datos de las personas filtradas.
+     * El array tiene como clave el <b>codigo de la persona</b> y como datos:
+     * <ul>
+     * <li>0 - Apellidos.</li>
+     * <li>1 - Nombre.</li>
+     * <li>2 - Sexo.</li>
+     * <li>3 - Codigo de usuario.</li>
+     * <li>4 - Correo electronico.</li>
+     * <li>5 - Enviar correos.</li>
+     * <li>6 - Telefono.</li>
+     * <li>7 - Notas</li>
+     * </ul>
+     * 
+     * @return array del tipo array('cod'=>array(apellidos,nombre,sexo,codusu,correo,envios,telefono,notas)...)
+     */
     public function getFiltradas() {
         return $this->aFiltradas;
     }
     
+    /**
+     * Indica si una persona es propietaria o no.
+     * 
+     * @param int $per Codigo de persona.
+     * @return boolean Devuelve TRUE si es propietario o FALSE si no lo es.
+     */
     public function esPropietario($per) {
         return ($this->numeroPropiedades($per) > 0) ? TRUE : FALSE;
     }
