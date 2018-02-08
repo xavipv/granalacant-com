@@ -182,56 +182,6 @@ function f_getScripts() {
     return $txt . $xajax->printJavascript();
 } 
 
-
-/**
- * Obtiene los enlaces a las página CSS para la página web.
- * 
- * @return string Código HTML de los enlaces.
- *
-function f_getEstilos() {
-    $css = array(
-        'bootstrap.min.css', 
-        'open-iconic-bootstrap.min.css', 
-        'bootstrap-datepicker.min.css', 
-        'jquery-te-1.4.0.css', 
-        'personal.css'
-    );
-    $txt = "";
-    foreach ($css as $f) {
-        $fich = _ULIB_ . "/css/$f";
-        f_comprobarFichero($fich);
-        $txt .= "<link href=\"" . _ULIB_ . "/css/$f\" rel=\"stylesheet\">";
-    }
-    return $txt;
-} */
-
-/**
- * Obtiene las llamadas a los ficheros JavaScript.
- * 
- * @global /xajax $xajax Instancia de XAJAX.
- * @return string Código HTML para los scripts.
- *
-function f_getScripts() {
-    global $xajax;
-    $js = array(
-        'jquery-3.2.1.min.js', 
-        'tether.min.js', 
-        'bootstrap.min.js', 
-        'bootstrap-datepicker.min.js', 
-        'bootstrap-datepicker.es.min.js', 
-        'jquery-te-1.4.0.min.js', 
-        'personal.js'
-    );
-    $txt = "";
-    foreach ($js as $f) {
-        $fich = _ULIB_ . "/js/$f";
-        f_comprobarFichero($fich);
-        $txt .= "<script src=\"$fich\"></script>";
-    }
-    return $txt . $xajax->printJavascript();
-} */
-
-
 //--- MENU PRINCIPAL ---------------------------------------------------------//
 
 /**
@@ -247,20 +197,20 @@ function f_getMenuAcciones($pagina) {
     switch ($pagina) {
         // Personas.
         case "personas.php": $activo[1] = "active"; $busqueda = TRUE; break;
-        case "listpers.php": $activo[1] = "active"; break;
+        case "personaslis.php": $activo[1] = "active"; break;
         // Apartamentos.
         case "apartamentos.php": $activo[2] = "active"; $busqueda = TRUE; break;
         case "coeficientes.php": $activo[2] = "active"; break;
-        case "listapar.php": $activo[2] = "active"; break;
+        case "apartamentoslis.php": $activo[2] = "active"; break;
         // Propietarios.
         case "propietarios.php": $activo[3] = "active"; $busqueda = TRUE; break;
         case "propper.php": $activo[3] = "active"; $busqueda = TRUE; break;
-        case "listprop.php": $activo[3] = "active"; break;
+        case "propietarioslis.php": $activo[3] = "active"; break;
         // Juntas.
         case "juntas.php": $activo[4] = "active"; break;
         case "asistentes.php": $activo[4] = "active"; break;
         case "votaciones.php": $activo[4] = "active"; break;
-        case "listjunt.php": $activo[4] = "active"; break;
+        case "juntaslis.php": $activo[4] = "active"; break;
         // Actas.
         case "actas.php": $activo[5] = "active"; break;
         case "actasbuscar.php": $activo[5] = "active"; break;
