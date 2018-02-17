@@ -32,7 +32,7 @@ $activo = f_getMenuAcciones($pagina);
                     <a class="dropdown-item" href="propietarios.php">Por apartamentos</a>
                     <a class="dropdown-item" href="propper.php">Por personas</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Listado</a>
+                    <a class="dropdown-item" href="propietarioslis.php">Listado</a>
                 </div>
             </li>
             <li class="nav-item dropdown">

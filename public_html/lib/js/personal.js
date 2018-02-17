@@ -671,3 +671,14 @@ function js_rangoPortales() {
         $('#portal2').val(v1);
     }
 }
+
+function js_controlFechas() {
+    // Activa y desactiva.
+    $('#completo').prop('disabled', $('#actuales').prop('checked'));
+    $('#puntuales').prop('disabled', $('#actuales').prop('checked'));
+    $('#fechaini').prop('disabled', $('#actuales').prop('checked'));
+    $('#fechafin').prop('disabled', $('#actuales').prop('checked'));
+    $('#distintos').prop('disabled', $('#actuales').prop('checked'));
+    
+    $('#distintos').prop('disabled', $('#puntuales').prop('checked'));
+}

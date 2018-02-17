@@ -53,6 +53,7 @@ $xajax->register(XAJAX_FUNCTION, 'getJuntasAnyos');
 $xajax->register(XAJAX_FUNCTION, 'getJuntasListado');
 $xajax->register(XAJAX_FUNCTION, 'getListadoApartamentos');
 $xajax->register(XAJAX_FUNCTION, 'getListadoPersonas');
+$xajax->register(XAJAX_FUNCTION, 'getListadoPropietarios');
 $xajax->register(XAJAX_FUNCTION, 'getPersonasIniciales');
 $xajax->register(XAJAX_FUNCTION, 'getPropietarios');
 $xajax->register(XAJAX_FUNCTION, 'getRepresentantes');
@@ -1131,6 +1132,12 @@ function getListadoPersonas($frm) {
 function getListadoApartamentos($frm) {
     $response = new xajaxResponse();
     $response->assign("divbusqueda", "innerHTML", f_getListadoApartamentos($frm));
+    return $response;
+}
+
+function getListadoPropietarioss($frm) {
+    $response = new xajaxResponse();
+    $response->assign("divbusqueda", "innerHTML", "LISTADO");
     return $response;
 }
 
