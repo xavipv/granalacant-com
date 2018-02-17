@@ -64,7 +64,7 @@ $activo = f_getMenuAcciones($pagina);
         </ul>
         <?php if($busqueda) { ?>
         <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="text" placeholder="Buscar" onfocus="xajax_buscar('<?php echo $pagina; ?>', this.value);"  onkeyup="xajax_buscar('<?php echo $pagina; ?>', this.value);">
+            <input class="form-control mr-sm-2" type="text" placeholder="Buscar" onfocus="$(this).select(); xajax_buscar('<?php echo $pagina; ?>', this.value);"  onkeyup="xajax_buscar('<?php echo $pagina; ?>', this.value);">
         </form>
         <?php } ?>
   </div>
