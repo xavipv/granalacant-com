@@ -642,7 +642,8 @@ function f_eliminarPropietario($apa, $per) {
 function f_getPropietariosListado() {
     global $pagina, $oProps; //$oPers;
     //$aPer = $oPers->getPropietarosNumPropiedadesAltaBaja();
-    $aPer = $oProps->getPropietarosNumPropiedadesAltaBaja();
+    //$aPer = $oProps->getPropietarosNumPropiedadesAltaBaja();
+    $aPer = $oProps->getPropietariosNumeroPropiedades(TRUE);
     $sIni = "";
     $sPer = "<div><a name=\"inicio\"></a></div>";
     foreach ($aPer as $per => $aDatos) {
@@ -677,7 +678,8 @@ function f_getPropiedades($per) {
     global $oProps;
     //global $oPers;
     //$aPro = $oPers->getPropiedades($per);
-    $aPro = $oProps->getPropiedades($per);
+    //$aPro = $oProps->getPropiedades($per);
+    $aPro = $oProps->getPropiedadesPersona($per);
     $tabla = "<table class=\"table table-sm col-sm-12\"><tr><th class=\"col-sm-1\">&nbsp;</th><th class=\"col-sm-6\">Propiedad</th><th class=\"col-sm-1\">Orden</th><th class=\"col-sm-2\">Fecha baja</th><th class=\"col-sm-1\">&nbsp;</th><th class=\"col-sm-1\">&nbsp;</th></tr>";
     foreach ($aPro as $apa => $aDat) {
         $nom = $aDat[0];
@@ -951,7 +953,7 @@ function f_grabarJunta($frm) {
 
 //--- JUNTA - ASISTENTES -----------------------------------------------------//
 
-function f_getAsistentes($fecha) {
+function f_getAsistentes($fecha) { 
     global $oApars;
     $oAsist = new Asistentes($fecha);
     
@@ -991,7 +993,6 @@ function f_getAsistentes($fecha) {
         $onCh = "xajax_setAsistenteMulti('$fecha', '$apa', $('#nombre$apa').val(), $('#voto$apa').prop('checked'), $('#repr$apa').prop('checked'), $('#multiples').prop('checked'));";
         $onCl = "if(this.checked){ xajax_getRepresentantes('$fecha',$apa); } else { xajax_getPropietarios('$fecha', $apa); }";
         $sele = f_getPropietariosRepresentantes($apa, $fecha, $asis, $repr, $onCh);
-        
         $tabla .= "<tr><td class=\"align-middle col-sm-1\"><div id=\"apartamento$apa\">&nbsp;" . $aApartamento[0] . "-" . $aApartamento[1] . $aApartamento[2] . "</div></td>
                    <td class=\"align-middle col-sm-1\"><input type=\"checkbox\" id=\"voto$apa\" name=\"voto$apa\" $chk1 onchange=\"$onCh\"></td>
                    <td class=\"align-middle col-sm-1\"><input type=\"checkbox\" id=\"repr$apa\" name=\"repr$apa\" $chk2 onchange=\"$onCh $onCl\" onclick=\"\"></td>
@@ -1008,9 +1009,11 @@ function f_getPropietariosRepresentantes($apa, $fecha, $sel='', $repr='N', $onCh
     global $oProps;
     //global $oPers;
     //$aPro = ($repr == 'S') ? $oPers->getRepresentantes($apa, $fecha) : $oPers->getPropietariosEnFecha($apa, $fecha, FALSE);
-    $aPro = ($repr == 'S') ? $oProps->getRepresentantes($apa, $fecha) : $oProps->getPropietariosEnFecha($apa, $fecha, FALSE);
+    //$aPro = ($repr == 'S') ? $oProps->getRepresentantes($apa, $fecha) : $oProps->getPropietariosEnFecha($apa, $fecha, FALSE);
+    $aPro = ($repr == 'S') ? $oProps->getRepresentantes($apa, $fecha) : $oProps->getNombresPropietariosApartamentoFecha($apa, $fecha);
     $func = "$('#boton$apa').prop('disabled',false); if(!this.value){ $('#voto$apa').prop('checked',false); } else { $('#voto$apa').prop('checked',true); }; $onCh";
-    
+
+    //return f_getSelect($aPro, "nombre$apa", $sel, "form-control", $func, TRUE);
     return f_getSelect($aPro, "nombre$apa", $sel, "form-control", $func, TRUE);
 }
 
@@ -1092,9 +1095,14 @@ function f_getAsistentesVotacion($fecha, $num=1) {
         }
         
         // Datos del propietario.
-        $aProp = $oProps->getPropietarioEnFecha($apa, $fecha, FALSE);    // array('codpers'=>'nombre')
-        $iProp = $oProps->getPropietarioEnFechaCodigo($apa, $fecha);     // codpers
-        $aApPr = array_keys($oProps->getMisPropiedades($apa, $fecha));   // array(apa1,apa2...)
+        //$aProp = $oProps->getPropietarioEnFecha($apa, $fecha, FALSE);    // array('codpers'=>'nombre')
+        //$iProp = $oProps->getPropietarioEnFechaCodigo($apa, $fecha);     // codpers
+        //$aApPr = array_keys($oProps->getMisPropiedades($apa, $fecha));   // array(apa1,apa2...)
+        
+        $aProp = $oProps->getNombrePropietarioApartamentoFecha($apa, $fecha);   // array('codpers'=>array('persona','date','fecha','orden'))
+        $iProp = $oProps->getCodigoPropietarioApartamentoFecha($apa, $fecha);   // codpers
+        $aApPr = $oProps->getCodigosPropiedadesPersonaFecha($iProp, $fecha);    // array(apa1,apa2...)
+        
         $sApPr = "[" . implode(",", $aApPr) . "]";                      // Codigos en formato [1,2,3]
         
         // Datos de la votacion.
