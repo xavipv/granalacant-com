@@ -640,8 +640,9 @@ function f_eliminarPropietario($apa, $per) {
 //--- PROPIEDADES ------------------------------------------------------------//
 
 function f_getPropietariosListado() {
-    global $pagina, $oPers;
-    $aPer = $oPers->getPropietarosNumPropiedadesAltaBaja();
+    global $pagina, $oProps; //$oPers;
+    //$aPer = $oPers->getPropietarosNumPropiedadesAltaBaja();
+    $aPer = $oProps->getPropietarosNumPropiedadesAltaBaja();
     $sIni = "";
     $sPer = "<div><a name=\"inicio\"></a></div>";
     foreach ($aPer as $per => $aDatos) {
@@ -673,8 +674,10 @@ function f_getPropietariosClase($num, $alt, $baj) {
 }
 
 function f_getPropiedades($per) { 
-    global $oPers;
-    $aPro = $oPers->getPropiedades($per);
+    global $oProps;
+    //global $oPers;
+    //$aPro = $oPers->getPropiedades($per);
+    $aPro = $oProps->getPropiedades($per);
     $tabla = "<table class=\"table table-sm col-sm-12\"><tr><th class=\"col-sm-1\">&nbsp;</th><th class=\"col-sm-6\">Propiedad</th><th class=\"col-sm-1\">Orden</th><th class=\"col-sm-2\">Fecha baja</th><th class=\"col-sm-1\">&nbsp;</th><th class=\"col-sm-1\">&nbsp;</th></tr>";
     foreach ($aPro as $apa => $aDat) {
         $nom = $aDat[0];
@@ -1002,9 +1005,10 @@ function f_getAsistentes($fecha) {
 }
 
 function f_getPropietariosRepresentantes($apa, $fecha, $sel='', $repr='N', $onCh='') {
-    global $oPers;
-    
-    $aPro = ($repr == 'S') ? $oPers->getRepresentantes($apa, $fecha) : $oPers->getPropietariosEnFecha($apa, $fecha, FALSE);
+    global $oProps;
+    //global $oPers;
+    //$aPro = ($repr == 'S') ? $oPers->getRepresentantes($apa, $fecha) : $oPers->getPropietariosEnFecha($apa, $fecha, FALSE);
+    $aPro = ($repr == 'S') ? $oProps->getRepresentantes($apa, $fecha) : $oProps->getPropietariosEnFecha($apa, $fecha, FALSE);
     $func = "$('#boton$apa').prop('disabled',false); if(!this.value){ $('#voto$apa').prop('checked',false); } else { $('#voto$apa').prop('checked',true); }; $onCh";
     
     return f_getSelect($aPro, "nombre$apa", $sel, "form-control", $func, TRUE);
@@ -1063,7 +1067,7 @@ function f_getVotacionesListado() {
  * @return string Codigo HTML de la votacion.
  */
 function f_getAsistentesVotacion($fecha, $num=1) {
-    global $oApars, $oPers;
+    global $oApars, $oProps; //$oPers;
     
     $aApars = $oApars->getApartamentos();
     $oVots = new Votaciones();
@@ -1088,9 +1092,9 @@ function f_getAsistentesVotacion($fecha, $num=1) {
         }
         
         // Datos del propietario.
-        $aProp = $oPers->getPropietarioEnFecha($apa, $fecha, FALSE);    // array('codpers'=>'nombre')
-        $iProp = $oPers->getPropietarioEnFechaCodigo($apa, $fecha);     // codpers
-        $aApPr = array_keys($oPers->getMisPropiedades($apa, $fecha));   // array(apa1,apa2...)
+        $aProp = $oProps->getPropietarioEnFecha($apa, $fecha, FALSE);    // array('codpers'=>'nombre')
+        $iProp = $oProps->getPropietarioEnFechaCodigo($apa, $fecha);     // codpers
+        $aApPr = array_keys($oProps->getMisPropiedades($apa, $fecha));   // array(apa1,apa2...)
         $sApPr = "[" . implode(",", $aApPr) . "]";                      // Codigos en formato [1,2,3]
         
         // Datos de la votacion.
