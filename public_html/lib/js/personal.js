@@ -671,3 +671,17 @@ function js_rangoPortales() {
         $('#portal2').val(v1);
     }
 }
+
+function js_controlFechas() {
+    // Activa y desactiva.
+    $('#completo').prop('disabled', $('#actuales').prop('checked'));
+    $('#puntuales').prop('disabled', $('#actuales').prop('checked'));
+    $('#fechaini').prop('disabled', $('#actuales').prop('checked'));
+    $('#fechafin').prop('disabled', $('#actuales').prop('checked'));
+    
+    if ($('#actuales').prop('checked') === true || $('#puntuales').prop('disabled') === true || $('#completo').prop('checked') === true) {
+        $('#distintos').prop('disabled', true);
+    } else {
+        $('#distintos').prop('disabled', false);
+    }
+}

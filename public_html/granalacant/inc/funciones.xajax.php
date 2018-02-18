@@ -8,7 +8,8 @@
  */
 require_once _XAJX_;
 
-$oPers = new Propietarios(); //new Personas();
+$oPers = new Personas();
+$oProps = new Propietarios();
 $oApars = new Apartamentos();
 $oAdmins = new Administraciones();
 $oJuntas = new Juntas();
@@ -53,6 +54,7 @@ $xajax->register(XAJAX_FUNCTION, 'getJuntasAnyos');
 $xajax->register(XAJAX_FUNCTION, 'getJuntasListado');
 $xajax->register(XAJAX_FUNCTION, 'getListadoApartamentos');
 $xajax->register(XAJAX_FUNCTION, 'getListadoPersonas');
+$xajax->register(XAJAX_FUNCTION, 'getListadoPropietarios');
 $xajax->register(XAJAX_FUNCTION, 'getPersonasIniciales');
 $xajax->register(XAJAX_FUNCTION, 'getPropietarios');
 $xajax->register(XAJAX_FUNCTION, 'getRepresentantes');
@@ -648,12 +650,13 @@ function getPropietarios($dat, $apa, $sel='') {
  * @return \xajaxResponse
  */
 function getRepresentantes($dat, $apa, $sel='') {
-    global $oJuntas, $oPers;
+    global $oJuntas, $oProps; //$oPers;
     $response = new xajaxResponse();
     
     $date = ($oJuntas->existeJunta($dat)) ? $dat : "";  // Mira si existe la fecha.
     $fecha = (!$date) ? f_getUltimaJunta() : $date;     // Saca los datos de la fecha o de la ultima junta.
-    $ult = (!$sel) ? $oPers->getUltimoRepresentante($apa, $fecha) : $sel;
+    //$ult = (!$sel) ? $oPers->getUltimoRepresentante($apa, $fecha) : $sel;
+    $ult = (!$sel) ? $oProps->getUltimoRepresentante($apa, $fecha) : $sel;
     $onc = "xajax_setAsistenteMulti('$fecha', '$apa', $('#nombre$apa').val(), $('#voto$apa').prop('checked'), $('#repr$apa').prop('checked'), $('#multiples').prop('checked'));";
     $response->assign("selec$apa", "innerHTML", f_getPropietariosRepresentantes($apa, $fecha, $ult, 'S', $onc));
     if (!$ult) {
@@ -743,14 +746,16 @@ function setAsistente($fecha, $apar) {
  * @return \xajaxResponse
  */
 function setAsistenteMulti($fecha, $apar, $per, $vot, $rep, $mul) {
-    global $oPers;
+    //global $oPers;
+    global $oProps;
     $response = new xajaxResponse();
     $tool = "";
     $repr = ($rep) ? 'S' : 'N';
     
     if ($mul) {
         // Esta activado el multiple, puede tener mas apartamentos.
-        $aProps = $oPers->getMisPropiedades($apar, $fecha); // Propiedades del dueño del apartamento array('codapar'=>array('apartamento','orden')...)
+        //$aProps = $oPers->getMisPropiedades($apar, $fecha); // Propiedades del dueño del apartamento array('codapar'=>array('apartamento','orden')...)
+        $aProps = $oProps->getPropiedadesPersonaFecha($per, $fecha); //array('codapar'=>array('apartamento','date','fecha','orden')...)
         foreach ($aProps as $codapar => $aDatos) {
             if ($codapar != $apar) {
                 $tool .= (!$tool) ? "Sincronizado con " . $aDatos[0] : ", " . $aDatos[0];
@@ -781,9 +786,11 @@ function setAsistenteMulti($fecha, $apar, $per, $vot, $rep, $mul) {
  * @return \xajaxResponse
  */
 function grabarAsistenteMulti($fecha, $apar, $per, $rep, $vot, $mul) {
-    global $oPers;
+    //global $oPers;
+    global $oProps;
     $response = new xajaxResponse();
-    $aProps = ($mul) ? array_keys($oPers->getMisPropiedades($apar, $fecha)) : array($apar);
+    //$aProps = ($mul) ? array_keys($oPers->getMisPropiedades($apar, $fecha)) : array($apar);
+    $aProps = ($mul) ? $oProps->getCodigosPropiedadesPersonaFecha($apar, $fecha) : array($apar);
     foreach ($aProps as $codapar) {
         $response->call("xajax_grabarAsistente", $fecha, $codapar, $per, $rep, $vot);
     }
@@ -1131,6 +1138,12 @@ function getListadoPersonas($frm) {
 function getListadoApartamentos($frm) {
     $response = new xajaxResponse();
     $response->assign("divbusqueda", "innerHTML", f_getListadoApartamentos($frm));
+    return $response;
+}
+
+function getListadoPropietarios($frm) {
+    $response = new xajaxResponse();
+    $response->assign("divbusqueda", "innerHTML", f_getListadoPropietarios($frm));
     return $response;
 }
 

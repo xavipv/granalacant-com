@@ -33,7 +33,8 @@ function f_comprobarFichero($fich) {
  * @return string Frase convertida.
  */
 function f_primeraMayuscula($nom) {
-    return ucwords(strtolower($nom)," \t\r\n\f\v-.");
+    //return ucwords(strtolower($nom)," \t\r\n\f\v-.");
+    return mb_convert_case($nom, MB_CASE_TITLE, "UTF-8");
 }
 
 /**
@@ -640,8 +641,10 @@ function f_eliminarPropietario($apa, $per) {
 //--- PROPIEDADES ------------------------------------------------------------//
 
 function f_getPropietariosListado() {
-    global $pagina, $oPers;
-    $aPer = $oPers->getPropietarosNumPropiedadesAltaBaja();
+    global $pagina, $oProps; //$oPers;
+    //$aPer = $oPers->getPropietarosNumPropiedadesAltaBaja();
+    //$aPer = $oProps->getPropietarosNumPropiedadesAltaBaja();
+    $aPer = $oProps->getPropietariosNumeroPropiedades(TRUE);
     $sIni = "";
     $sPer = "<div><a name=\"inicio\"></a></div>";
     foreach ($aPer as $per => $aDatos) {
@@ -673,8 +676,11 @@ function f_getPropietariosClase($num, $alt, $baj) {
 }
 
 function f_getPropiedades($per) { 
-    global $oPers;
-    $aPro = $oPers->getPropiedades($per);
+    global $oProps;
+    //global $oPers;
+    //$aPro = $oPers->getPropiedades($per);
+    //$aPro = $oProps->getPropiedades($per);
+    $aPro = $oProps->getPropiedadesPersona($per);
     $tabla = "<table class=\"table table-sm col-sm-12\"><tr><th class=\"col-sm-1\">&nbsp;</th><th class=\"col-sm-6\">Propiedad</th><th class=\"col-sm-1\">Orden</th><th class=\"col-sm-2\">Fecha baja</th><th class=\"col-sm-1\">&nbsp;</th><th class=\"col-sm-1\">&nbsp;</th></tr>";
     foreach ($aPro as $apa => $aDat) {
         $nom = $aDat[0];
@@ -948,7 +954,7 @@ function f_grabarJunta($frm) {
 
 //--- JUNTA - ASISTENTES -----------------------------------------------------//
 
-function f_getAsistentes($fecha) {
+function f_getAsistentes($fecha) { 
     global $oApars;
     $oAsist = new Asistentes($fecha);
     
@@ -988,7 +994,6 @@ function f_getAsistentes($fecha) {
         $onCh = "xajax_setAsistenteMulti('$fecha', '$apa', $('#nombre$apa').val(), $('#voto$apa').prop('checked'), $('#repr$apa').prop('checked'), $('#multiples').prop('checked'));";
         $onCl = "if(this.checked){ xajax_getRepresentantes('$fecha',$apa); } else { xajax_getPropietarios('$fecha', $apa); }";
         $sele = f_getPropietariosRepresentantes($apa, $fecha, $asis, $repr, $onCh);
-        
         $tabla .= "<tr><td class=\"align-middle col-sm-1\"><div id=\"apartamento$apa\">&nbsp;" . $aApartamento[0] . "-" . $aApartamento[1] . $aApartamento[2] . "</div></td>
                    <td class=\"align-middle col-sm-1\"><input type=\"checkbox\" id=\"voto$apa\" name=\"voto$apa\" $chk1 onchange=\"$onCh\"></td>
                    <td class=\"align-middle col-sm-1\"><input type=\"checkbox\" id=\"repr$apa\" name=\"repr$apa\" $chk2 onchange=\"$onCh $onCl\" onclick=\"\"></td>
@@ -1002,11 +1007,14 @@ function f_getAsistentes($fecha) {
 }
 
 function f_getPropietariosRepresentantes($apa, $fecha, $sel='', $repr='N', $onCh='') {
-    global $oPers;
-    
-    $aPro = ($repr == 'S') ? $oPers->getRepresentantes($apa, $fecha) : $oPers->getPropietariosEnFecha($apa, $fecha, FALSE);
+    global $oProps;
+    //global $oPers;
+    //$aPro = ($repr == 'S') ? $oPers->getRepresentantes($apa, $fecha) : $oPers->getPropietariosEnFecha($apa, $fecha, FALSE);
+    //$aPro = ($repr == 'S') ? $oProps->getRepresentantes($apa, $fecha) : $oProps->getPropietariosEnFecha($apa, $fecha, FALSE);
+    $aPro = ($repr == 'S') ? $oProps->getRepresentantes($apa, $fecha) : $oProps->getNombresPropietariosApartamentoFecha($apa, $fecha);
     $func = "$('#boton$apa').prop('disabled',false); if(!this.value){ $('#voto$apa').prop('checked',false); } else { $('#voto$apa').prop('checked',true); }; $onCh";
-    
+
+    //return f_getSelect($aPro, "nombre$apa", $sel, "form-control", $func, TRUE);
     return f_getSelect($aPro, "nombre$apa", $sel, "form-control", $func, TRUE);
 }
 
@@ -1063,7 +1071,7 @@ function f_getVotacionesListado() {
  * @return string Codigo HTML de la votacion.
  */
 function f_getAsistentesVotacion($fecha, $num=1) {
-    global $oApars, $oPers;
+    global $oApars, $oProps; //$oPers;
     
     $aApars = $oApars->getApartamentos();
     $oVots = new Votaciones();
@@ -1088,9 +1096,14 @@ function f_getAsistentesVotacion($fecha, $num=1) {
         }
         
         // Datos del propietario.
-        $aProp = $oPers->getPropietarioEnFecha($apa, $fecha, FALSE);    // array('codpers'=>'nombre')
-        $iProp = $oPers->getPropietarioEnFechaCodigo($apa, $fecha);     // codpers
-        $aApPr = array_keys($oPers->getMisPropiedades($apa, $fecha));   // array(apa1,apa2...)
+        //$aProp = $oProps->getPropietarioEnFecha($apa, $fecha, FALSE);    // array('codpers'=>'nombre')
+        //$iProp = $oProps->getPropietarioEnFechaCodigo($apa, $fecha);     // codpers
+        //$aApPr = array_keys($oProps->getMisPropiedades($apa, $fecha));   // array(apa1,apa2...)
+        
+        $aProp = $oProps->getNombrePropietarioApartamentoFecha($apa, $fecha);   // array('codpers'=>array('persona','date','fecha','orden'))
+        $iProp = $oProps->getCodigoPropietarioApartamentoFecha($apa, $fecha);   // codpers
+        $aApPr = $oProps->getCodigosPropiedadesPersonaFecha($iProp, $fecha);    // array(apa1,apa2...)
+        
         $sApPr = "[" . implode(",", $aApPr) . "]";                      // Codigos en formato [1,2,3]
         
         // Datos de la votacion.
@@ -1838,6 +1851,123 @@ function f_getListadoApartamentosFiltros($frm) {
         $filtros = "ninguno";
     }
     return $filtros;
+}
+
+//--- LISTADOS DE PROPIETARIOS ---//
+
+function f_getListadoPropietarios($frm) {
+    
+    $int = (isset($frm['intervalo']) && $frm['intervalo'] == 0) ? FALSE : TRUE; // Fechas puntuales : Intervalo completo.
+    $din = ($frm['fechaini']) ? $frm['fechaini'] : '24-08-1984';
+    $dfi = ($frm['fechafin']) ? $frm['fechafin'] : date('d-m-Y');
+    $ver = ($frm['verpor'] == 1) ? TRUE : FALSE;    // Por personas : Por apartamentos.
+    $que = ($frm['verque'] == 1) ? TRUE : FALSE;    // Tambien bajas : Solo actuales.
+    $dis = ($frm['distintos']) ? TRUE : FALSE;      // Solo distintos : Todos.
+    $may = ($frm['mayusculas']) ? TRUE : FALSE;     // Mayusculas : Minusculas.
+    
+    $lis = ($int) ? f_getListadoPropietariosCompleto($din, $dfi, $ver, $que, $may) : f_getListadoPropietariosFechas($din, $dfi, $ver, $dis, $may);
+    
+    return f_getListadoPropietariosTitulo($int, $din, $dfi, $ver, $que, $dis) . $lis;
+}
+
+function f_getListadoPropietariosTitulo($int, $din, $dfi, $ver, $que, $dis) {
+    $ti0 = ($int) ? "Listado de propietarios entre el d&iacute;a $din y el $dfi " : "Listado de propietarios el d&iacute;a $din y el d&iacute;a $dfi ";
+    $tit = ($que) ? $ti0 : "Listado de propietarios actuales ";
+    $tit .= ($ver) ? "ordenado por personas. " : "ordenado por apartamentos. ";
+    $tit .= ($dis) ? "Solo los distintos." : "";
+    return "<h4>$tit</h4>";
+}
+
+function f_getListadoPropietariosCompleto($din, $dfi, $ver, $que, $may) {
+    global $oProps;
+    //array('0 codapa','1 apartamento','2 codpers','3 persona','4 date','5 fecha','6 orden')
+    $aPro = ($que) ? $oProps->getPropietariosEntreFechas($din, $dfi, $ver) : $oProps->getPropietariosAlta($ver);
+    $html = "<table class=\"table table-hover table-condensed table-ultra\">";
+    $dini = "";
+    $cuer = "";
+    $cini = "";
+    foreach ($aPro as $aD) {
+        $nomb = ($may) ? $aD[3] : f_primeraMayuscula($aD[3]);
+        $dato = ($ver) ? $nomb : $aD[1];   // persona : apartamento.
+        $inic = ($ver) ? "<th>Propietarios - " . substr($aD[3], 0, 1) . "</th><th>Apartamentos</th>" : "<th>Portal " . strstr($aD[1], '-', true) . "&nbsp;</th><th>Propietarios</th>";
+        if ($dato != $dini) {
+            $html .= ($dini) ? "<tr><td>$dini</td><td>$cuer</td></tr>" : "";
+            $cuer  = ($dini) ? "" : $cuer;
+            $dini = $dato;
+        }
+        if ($inic != $cini) {
+            $html .= "<tr>$inic</tr>";
+            $cini = $inic;
+        }
+        $nuevo = ($cuer) ? " &mdash; " : ""; 
+        $nuevo .= ($ver) ? $aD[1] : $nomb;
+        $nuevo .= ($aD[5]) ? " (" . $aD[5] . ")" : "";
+        $clase = ($aD[5]) ? "class=\"baja\"" : "";
+        $cuer .= "<span $clase>$nuevo</span>";
+    }
+    return "$html<tr><td>$dato</td><td>$cuer</td></tr></table>";
+}
+
+function f_getListadoPropietariosFechas($din, $dfi, $ver, $dis, $may) {
+    global $oProps;
+    $aPr1 = f_getListadoPropietariosAgrupar($oProps->getPropietariosFecha($din, $ver), $ver, $may);
+    $aPr2 = f_getListadoPropietariosAgrupar($oProps->getPropietariosFecha($dfi, $ver), $ver, $may);
+    $aPro = f_getListadoPropietariosUnir($aPr1, $aPr2, $ver);
+    $html = "<table class=\"table table-hover table-condensed table-ultra\">";
+    $cini = "";
+    foreach ($aPro as $aP) {
+        $inic = ($ver) ? "<tr><th>Propietarios - " . substr($aP[0], 0, 1) . "</th><th>Apartamentos el $din</th><th>Apartamentos el $dfi</th></tr>" : "<tr><th>Portal " . strstr($aP[0], '-', true) . "&nbsp;</th><th>Propietarios el $din</th><th>Propietarios el $dfi</th></tr>";
+        if ($inic != $cini) {
+            $html .= $inic;
+            $cini = $inic;
+        }
+        $html .= ($dis && $aP[1] == $aP[2]) ? "" : "<tr><td>" . $aP[0] . "</td><td>" . $aP[1] . "</td><td>" . $aP[2] . "</td></tr>";
+    }
+    return "$html</table>";
+}
+
+function f_getListadoPropietariosAgrupar($aPro, $ver, $may) {
+    //array('0 codapa','1 apartamento','2 codpers','3 persona','4 date','5 fecha','6 orden')
+    $aDatos = array();
+    $t = "";
+    $i = "";
+    $k = 0;
+    foreach ($aPro as $aD) {
+        $key = ($ver) ? $aD[2] : $aD[0];                        // Por Persona : Por Apartamento.
+        $nom = ($may) ? $aD[3] : f_primeraMayuscula($aD[3]);    // NOMBRE : Nombre.
+        $dat = ($ver) ? $aD[1] : $nom;                          // Nombre : Apartamento.
+        
+        if ($k != $key) {
+            if ($k != 0) {
+                $aDatos[$k] = array($i, $t);
+                $t = "";
+            }
+            $k = $key;
+        }
+        $n  = ($t) ? " &mdash; $dat" : " $dat"; 
+        $n .= ($aD[5]) ? " (" . $aD[5] . ")" : "";
+        $c  = ($aD[5]) ? "class=\"baja\"" : "";
+        $t .= "<span $c>$n</span>";
+        $i  = ($ver) ? $nom : $aD[1];                          // Apartamento : Nombre.
+    }
+    $aDatos[$k] = array($i, $t);    // codigo => array(descrip, propietarios o apartamentos)
+    return $aDatos;
+}
+
+function f_getListadoPropietariosUnir($aPr1, $aPr2, $ver) {
+    $aNueva = array();
+    foreach ($aPr1 as $key => $aPro) {
+        $aNueva[$key][0] = $aPro[0];
+        $aNueva[$key][1] = $aPro[1];
+        $aAux[$key] = ($ver) ? $aPro[0] : $key; // Nombre : Codapar
+    }
+    foreach ($aPr2 as $key => $aPro) {
+        $aNueva[$key][0] = $aPro[0];
+        $aNueva[$key][2] = $aPro[1];
+        $aAux[$key] = ($ver) ? $aPro[0] : $key; // Nombre : Codapar
+    }
+    array_multisort($aAux, SORT_ASC, $aNueva);
+    return $aNueva;
 }
 
 //--- CALCULO DE CUOTA MENSUAL ---//
