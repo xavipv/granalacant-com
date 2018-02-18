@@ -678,7 +678,10 @@ function js_controlFechas() {
     $('#puntuales').prop('disabled', $('#actuales').prop('checked'));
     $('#fechaini').prop('disabled', $('#actuales').prop('checked'));
     $('#fechafin').prop('disabled', $('#actuales').prop('checked'));
-    $('#distintos').prop('disabled', $('#actuales').prop('checked'));
     
-    $('#distintos').prop('disabled', $('#puntuales').prop('checked'));
+    if ($('#actuales').prop('checked') === true || $('#puntuales').prop('disabled') === true || $('#completo').prop('checked') === true) {
+        $('#distintos').prop('disabled', true);
+    } else {
+        $('#distintos').prop('disabled', false);
+    }
 }

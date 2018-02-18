@@ -146,3 +146,19 @@
     border-top: 1px solid lightgrey;
     border-bottom: 1px solid lightgrey;
 }
+
+.table-ultra td.tit {
+    font-weight: bold;
+    border-top: 1px solid lightgrey;
+    border-bottom: 1px solid lightgrey;
+    text-align: center;
+    background-color: #FCFCFC;
+}
+
+.table-ultra td {
+    white-space: normal;
+}
+
+.baja {
+    color: grey;
+}

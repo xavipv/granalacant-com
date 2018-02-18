@@ -126,6 +126,8 @@ class Propietarios {
     
     //--- METODOS PUBLICOS ---------------------------------------------------//
     
+    //--- PROPIETARIOS ---//
+    
     /**
      * Obtiene todos los propietarios ordenados por apartamento o por nombre de persona.
      * Se devuelve un array cuyos valores son los siguientes:
@@ -174,6 +176,73 @@ class Propietarios {
     }
     
     /**
+     * Obtiene los propietarios de los apartamentos entre dos fechas dadas y ordenados por apartamento o por nombre de persona.
+     * Se devuelve un array cuyos valores son los siguientes:
+     * <ul>
+     * <li>0 - Codigo del apartamento.</li>
+     * <li>1 - Nombre del apartamento.</li>
+     * <li>2 - Codigo de persona.</li>
+     * <li>3 - Nombre de persona.</li>
+     * <li>4 - Fecha de baja en formato YYYY-MM-DD.</li>
+     * <li>5 - Fecha de baja en formato DD-MM-YYYY.</li>
+     * <li>6 - Numero de orden.</li>
+     * </ul>
+     * 
+     * @param date $fecha1 Fecha inicial, en cualquier formato.
+     * @param date $fecha2 Fecha final, en cualquier formato.
+     * @param boolean $bPer Si es TRUE ordena por los nombres de personas o si es FALSE por apartamentos.
+     * @return array del tipo array del tipo array('codapa','apartamento','codpers','persona','date','fecha','orden')
+     */
+    public function getPropietariosEntreFechas($fecha1='', $fecha2='', $bPer=FALSE) {
+        $aNueva = array();
+        $date1 = ($fecha1) ? $this->fechaIso_Base($fecha1) : "1984-08-24";  // Fecha constitucion de la comunidad.
+        $date2 = ($fecha2) ? $this->fechaIso_Base($fecha2) : date("Y-m-d"); // Fecha actual.
+        if ($date1 > $date2) {
+            $d = $date1;
+            $date1 = $date2;
+            $date2 = $d;
+        }
+        $orden = ($bPer) ? "PERSONA,IFNULL(PR.BAJA,'9999-99-99') DESC,PR.CODAPAR" : "PR.CODAPAR,IFNULL(PR.BAJA,'9999-99-99') DESC,PR.ORDEN";
+        $res = $this->ejecutarSQL("SELECT PR.CODAPAR,CONCAT(A.PORTAL,'-',A.PISO,A.LETRA) AS APARTAMENTO,PR.CODPERS,CONCAT(P.APELLIDOS,' ',P.NOMBRE) AS PERSONA,PR.BAJA,DATE_FORMAT(PR.BAJA,'%d-%m-%Y') AS FECHA,PR.ORDEN FROM PROPIETARIOS PR LEFT JOIN APARTAMENTOS A ON PR.CODAPAR=A.CODAPAR LEFT JOIN PERSONAS P ON PR.CODPERS=P.CODPERS WHERE IFNULL(PR.BAJA,'9999-99-99') >= '$date1' AND IFNULL((SELECT MAX(IFNULL(BAJA,'9999-99-99')) FROM PROPIETARIOS WHERE CODAPAR=PR.CODAPAR AND IFNULL(BAJA,'9999-99-99')<IFNULL(PR.BAJA,'9999-99-99')),'0000-00-00') <= '$date2' ORDER BY $orden");
+        while($aRow = $res->fetch(PDO::FETCH_ASSOC)) {
+            $aNueva[] = array($aRow['CODAPAR'],$aRow['APARTAMENTO'],$aRow['CODPERS'],$aRow['PERSONA'],$aRow['BAJA'],$aRow['FECHA'],$aRow['ORDEN']);
+        }
+        $res->closeCursor();
+        return $aNueva;
+    }
+    
+    /**
+     * Obtiene los datos de los propietarios en una fecha determinada.
+     * Se devuelve un array cuyos valores son los siguientes:
+     * <ul>
+     * <li>0 - Codigo del apartamento.</li>
+     * <li>1 - Nombre del apartamento.</li>
+     * <li>2 - Codigo de persona.</li>
+     * <li>3 - Nombre de persona.</li>
+     * <li>4 - Fecha de baja en formato YYYY-MM-DD.</li>
+     * <li>5 - Fecha de baja en formato DD-MM-YYYY.</li>
+     * <li>6 - Numero de orden.</li>
+     * </ul>
+     * 
+     * @param date $fecha Fecha en cualquier formato.
+     * @param boolean $bPer Si es TRUE ordena por los nombres de personas o si es FALSE por apartamentos.
+     * @return array del tipo array('codapa','apartamento','codpers','persona','date','fecha','orden')
+     */
+    public function getPropietariosFecha($fecha='', $bPer=FALSE) {
+        $aDatos = array();
+        $date = $this->fechaIso_Base($fecha);
+        $orden = ($bPer) ? "PERSONA,IFNULL(PR.BAJA,'9999-99-99') DESC,PR.CODAPAR" : "PR.CODAPAR,IFNULL(PR.BAJA,'9999-99-99') DESC,PR.ORDEN";
+        $res = $this->ejecutarSQL("SELECT PR.CODAPAR,CONCAT(A.PORTAL,'-',A.PISO,A.LETRA) AS APARTAMENTO,PR.CODPERS,CONCAT(P.APELLIDOS,' ',P.NOMBRE) AS PERSONA,PR.BAJA,DATE_FORMAT(PR.BAJA,'%d-%m-%Y') AS FECHA,PR.ORDEN FROM PROPIETARIOS PR LEFT JOIN APARTAMENTOS A ON PR.CODAPAR=A.CODAPAR LEFT JOIN PERSONAS P ON PR.CODPERS=P.CODPERS WHERE IFNULL(PR.BAJA,'9999-99-99')=(SELECT MIN(IFNULL(BAJA,'9999-99-99')) FROM PROPIETARIOS WHERE CODAPAR=PR.CODAPAR AND IFNULL(BAJA,'9999-99-99')>'$date') ORDER BY $orden");
+        while($aRow = $res->fetch(PDO::FETCH_ASSOC)) {
+            $aDatos[] = array($aRow['CODAPAR'],$aRow['APARTAMENTO'],$aRow['CODPERS'],$aRow['PERSONA'],$aRow['BAJA'],$aRow['FECHA'],$aRow['ORDEN']);
+        }
+        $res->closeCursor();
+        return $aDatos;
+    }
+    
+    //--- PROPIETARIOS APARTAMENTO ---//
+    
+    /**
      * Obtiene todos los propietarios que tiene y ha tenido un apartamento.
      * Se devuelve un array cuya clave es el <b>codigo de persona</b> y cuyos valores son los siguientes:
      * <ul>
@@ -198,31 +267,7 @@ class Propietarios {
     }
     
     /**
-     * Obtiene todas las propiedades que tiene y ha tenido una persona.
-     * Se devuelve un array cuya clave es el <b>codigo de apartamento</b> y cuyos valores son los siguientes:
-     * <ul>
-     * <li>0 - Apartamento.</li>
-     * <li>1 - Fecha de baja en formato YYYY-MM-DD.</li>
-     * <li>2 - Fecha de baja en formato DD-MM-YYYY.</li>
-     * <li>3 - Numero de orden.</li>
-     * </ul>
-     * 
-     * @param int $per Codigo de persona.
-     * @return array del tipo array('codapar'=>array('apartamento','date','fecha','orden')...)
-     */
-    public function getPropiedadesPersona($per) {
-        $aDatos = array();
-        $aPro = $this->getPropietarios(TRUE);
-        foreach ($aPro as $aP) {
-            if ($aP[2] == $per) {
-                $aDatos[$aP[0]] = array($aP[1],$aP[4],$aP[5],$aP[6]);
-            }
-        }
-        return $aDatos;
-    }
-    
-    /**
-     * Obtiene los datos de los propietarios en una fecha determinada.
+     * Obtiene los propietarios de un apartamento entre dos fechas dadas.
      * Se devuelve un array cuyos valores son los siguientes:
      * <ul>
      * <li>0 - Codigo del apartamento.</li>
@@ -234,20 +279,27 @@ class Propietarios {
      * <li>6 - Numero de orden.</li>
      * </ul>
      * 
-     * @param date $fecha Fecha en cualquier formato.
-     * @return array del tipo array('codapa','apartamento','codpers','persona','date','fecha','orden')
+     * @param int $apa Codigo de apartamento.
+     * @param date $fecha1 Fecha inicial, en cualquier formato.
+     * @param date $fecha2 Fecha final, en cualquier formato.
+     * @return array del tipo array del tipo array('codapa','apartamento','codpers','persona','date','fecha','orden')
      */
-    public function getPropietariosFecha($fecha='') {
-        $aDatos = array();
-        $date = $this->fechaIso_Base($fecha);
-        $res = $this->ejecutarSQL("SELECT PR.CODAPAR,CONCAT(A.PORTAL,'-',A.PISO,A.LETRA) AS APARTAMENTO,PR.CODPERS,CONCAT(P.APELLIDOS,' ',P.NOMBRE) AS PERSONA,PR.BAJA,DATE_FORMAT(PR.BAJA,'%d-%m-%Y') AS FECHA,PR.ORDEN FROM PROPIETARIOS PR LEFT JOIN APARTAMENTOS A ON PR.CODAPAR=A.CODAPAR LEFT JOIN PERSONAS P ON PR.CODPERS=P.CODPERS WHERE IFNULL(PR.BAJA,'9999-99-99')=(SELECT MIN(IFNULL(BAJA,'9999-99-99')) FROM PROPIETARIOS WHERE CODAPAR=PR.CODAPAR AND IFNULL(BAJA,'9999-99-99')>'$date') ORDER BY PR.CODAPAR,PR.ORDEN");
+    public function getPropietariosApartamentoEntreFechas($apa, $fecha1='', $fecha2='') {
+        $aNueva = array();
+        $date1 = ($fecha1) ? $this->fechaIso_Base($fecha1) : "1984-08-24";  // Fecha constitucion de la comunidad.
+        $date2 = ($fecha2) ? $this->fechaIso_Base($fecha2) : date("Y-m-d"); // Fecha actual.
+        if ($date1 > $date2) {
+            $d = $date1;
+            $date1 = $date2;
+            $date2 = $d;
+        }
+        $res = $this->ejecutarSQL("SELECT PR.CODAPAR,CONCAT(A.PORTAL,'-',A.PISO,A.LETRA) AS APARTAMENTO,PR.CODPERS,CONCAT(P.APELLIDOS,' ',P.NOMBRE) AS PERSONA,PR.BAJA,DATE_FORMAT(PR.BAJA,'%d-%m-%Y') AS FECHA,PR.ORDEN FROM PROPIETARIOS PR LEFT JOIN APARTAMENTOS A ON PR.CODAPAR=A.CODAPAR LEFT JOIN PERSONAS P ON PR.CODPERS=P.CODPERS WHERE PR.CODAPAR='$apa' AND IFNULL(PR.BAJA,'9999-99-99') >= '$date1' AND IFNULL((SELECT MAX(IFNULL(BAJA,'9999-99-99')) FROM PROPIETARIOS WHERE CODAPAR=PR.CODAPAR AND IFNULL(BAJA,'9999-99-99')<IFNULL(PR.BAJA,'9999-99-99')),'0000-00-00')  <= '$date2' ORDER BY IFNULL(PR.BAJA,'9999-99-99') DESC,PR.ORDEN,PERSONA");
         while($aRow = $res->fetch(PDO::FETCH_ASSOC)) {
-            $aDatos[] = array($aRow['CODAPAR'],$aRow['APARTAMENTO'],$aRow['CODPERS'],$aRow['PERSONA'],$aRow['BAJA'],$aRow['FECHA'],$aRow['ORDEN']);
+            $aNueva[] = array($aRow['CODAPAR'],$aRow['APARTAMENTO'],$aRow['CODPERS'],$aRow['PERSONA'],$aRow['BAJA'],$aRow['FECHA'],$aRow['ORDEN']);
         }
         $res->closeCursor();
-        return $aDatos;
+        return $aNueva;
     }
-    
     
     /**
      * Obtiene los propietarios de un apartamento en una fecha determinada.
@@ -293,6 +345,72 @@ class Propietarios {
     }
     
     /**
+     * Obtiene los codigos de los propietarios de un apartamento en una fecha determinada.
+     * 
+     * @param int $apa Codigo de apartamento.
+     * @param date $fecha Fecha en cualquier formato.
+     * @return array del tipo array(codper1, coper2...)
+     */
+    public function getCodigosPropietariosApartamentoFecha($apa, $fecha='') {
+        return array_keys($this->getPropietariosApartamentoFecha($apa, $fecha));
+    }
+    
+    /**
+     * Obtiene el numero de propietarios que tiene o ha tenido un apartamento.
+     * Se devuelve un array con los siguientes valores:
+     * <ul>
+     * <li>0 - Numero total de propietarios.</li>
+     * <li>1 - Numero de propietarios de alta.</li>
+     * <li>2 - Numero de propietarios de baja.</li>
+     * </ul>
+     * 
+     * @param int $apa Codigo de apartamento.
+     * @return array del tipo array(total, alta, baja)
+     */
+    public function getNumeroPropietarios($apa) {
+        $tota = 0;
+        $alta = 0;
+        $baja = 0;
+        $aPro = $this->getPropietariosApartamento($apa);
+        foreach ($aPro as $aDatos) {
+            $tota++;
+            if ($aDatos[1]) {
+                $baja++;    // Con fecha de baja.
+            } else {
+                $alta++;    // Sin fecha de baja.
+            }
+        }
+        return array($tota, $alta, $baja);
+    }
+    
+    /**
+     * Obtiene el numero de propiedades totales, de alta y de baja que tienen todos los propietarios.
+     * Se devuelve un array cuya clave es el <b>codigo de persona</b> y con los siguientes valores:
+     * <ul>
+     * <li>0 - Nombre del propietario.</li>
+     * <li>1 - Numero total de propiedades.</li>
+     * <li>2 - Numero de propiedades de alta.</li>
+     * <li>3 - Numero de propiedades de baja.</li>
+     * </ul>
+     * 
+     * @param boolean $bPer Si es TRUE ordena por los nombres de personas o si es FALSE por apartamentos.
+     * @return array del tipo array(codper=>array(nombre,total, alta, baja)...)
+     */
+    public function getPropietariosNumeroPropiedades($bPer=FALSE) {
+        $aDatos = array();
+        $aProp = $this->getPropietarios($bPer);  // array('codapa','apartamento','codpers','persona','date','fecha','orden')
+        foreach ($aProp as $aP) {
+            $per = $aP[2];
+            $nom = $aP[3];
+            $aNum = $this->getNumeroPropiedades($per);
+            $aDatos[$per] = array($nom, $aNum[0], $aNum[1], $aNum[2]);
+        }
+        return $aDatos;
+    }
+    
+    //--- PROPIETARIO PRINCIPAL ---//
+    
+    /**
      * Obtiene el primer propietario de un apartamento en una fecha determinada.
      * Se devuelve un array cuya clave es el <b>codigo de persona</b> y cuyos valores son los siguientes:
      * <ul>
@@ -333,17 +451,6 @@ class Propietarios {
     }
     
     /**
-     * Obtiene los codigos de los propietarios de un apartamento en una fecha determinada.
-     * 
-     * @param int $apa Codigo de apartamento.
-     * @param date $fecha Fecha en cualquier formato.
-     * @return array del tipo array(codper1, coper2...)
-     */
-    public function getCodigosPropietariosApartamentoFecha($apa, $fecha='') {
-        return array_keys($this->getPropietariosApartamentoFecha($apa, $fecha));
-    }
-    
-    /**
      * Obtiene el codigo del primer propietario de un apartamento en una fecha determinada.
      * 
      * @param int $apa Codigo de apartamento.
@@ -352,6 +459,32 @@ class Propietarios {
      */
     public function getCodigoPropietarioApartamentoFecha($apa, $fecha='') {
         return key($this->getPropietarioApartamentoFecha($apa, $fecha));    // Clave del primer propietario.
+    }
+    
+    //--- PROPIEDADES ---//
+    
+    /**
+     * Obtiene todas las propiedades que tiene y ha tenido una persona.
+     * Se devuelve un array cuya clave es el <b>codigo de apartamento</b> y cuyos valores son los siguientes:
+     * <ul>
+     * <li>0 - Apartamento.</li>
+     * <li>1 - Fecha de baja en formato YYYY-MM-DD.</li>
+     * <li>2 - Fecha de baja en formato DD-MM-YYYY.</li>
+     * <li>3 - Numero de orden.</li>
+     * </ul>
+     * 
+     * @param int $per Codigo de persona.
+     * @return array del tipo array('codapar'=>array('apartamento','date','fecha','orden')...)
+     */
+    public function getPropiedadesPersona($per) {
+        $aDatos = array();
+        $aPro = $this->getPropietarios(TRUE);
+        foreach ($aPro as $aP) {
+            if ($aP[2] == $per) {
+                $aDatos[$aP[0]] = array($aP[1],$aP[4],$aP[5],$aP[6]);
+            }
+        }
+        return $aDatos;
     }
     
     /**
@@ -391,34 +524,6 @@ class Propietarios {
     }
     
     /**
-     * Obtiene el numero de propietarios que tiene o ha tenido un apartamento.
-     * Se devuelve un array con los siguientes valores:
-     * <ul>
-     * <li>0 - Numero total de propietarios.</li>
-     * <li>1 - Numero de propietarios de alta.</li>
-     * <li>2 - Numero de propietarios de baja.</li>
-     * </ul>
-     * 
-     * @param int $apa Codigo de apartamento.
-     * @return array del tipo array(total, alta, baja)
-     */
-    public function getNumeroPropietarios($apa) {
-        $tota = 0;
-        $alta = 0;
-        $baja = 0;
-        $aPro = $this->getPropietariosApartamento($apa);
-        foreach ($aPro as $aDatos) {
-            $tota++;
-            if ($aDatos[1]) {
-                $baja++;    // Con fecha de baja.
-            } else {
-                $alta++;    // Sin fecha de baja.
-            }
-        }
-        return array($tota, $alta, $baja);
-    }
-    
-    /**
      * Obtiene el numero de propiedades que tiene o ha tenido una persona.
      * Se devuelve un array con los siguientes valores:
      * <ul>
@@ -444,31 +549,6 @@ class Propietarios {
             }
         }
         return array($tota, $alta, $baja);
-    }
-    
-    /**
-     * Obtiene el numero de propiedades totales, de alta y de baja que tienen todos los propietarios.
-     * Se devuelve un array cuya clave es el <b>codigo de persona</b> y con los siguientes valores:
-     * <ul>
-     * <li>0 - Nombre del propietario.</li>
-     * <li>1 - Numero total de propiedades.</li>
-     * <li>2 - Numero de propiedades de alta.</li>
-     * <li>3 - Numero de propiedades de baja.</li>
-     * </ul>
-     * 
-     * @param boolean $bPer Si es TRUE ordena por los nombres de personas o si es FALSE por apartamentos.
-     * @return array del tipo array(codper=>array(nombre,total, alta, baja)...)
-     */
-    public function getPropietariosNumeroPropiedades($bPer=FALSE) {
-        $aDatos = array();
-        $aProp = $this->getPropietarios($bPer);  // array('codapa','apartamento','codpers','persona','date','fecha','orden')
-        foreach ($aProp as $aP) {
-            $per = $aP[2];
-            $nom = $aP[3];
-            $aNum = $this->getNumeroPropiedades($per);
-            $aDatos[$per] = array($nom, $aNum[0], $aNum[1], $aNum[2]);
-        }
-        return $aDatos;
     }
     
     //--- REPRESENTANTES ---//

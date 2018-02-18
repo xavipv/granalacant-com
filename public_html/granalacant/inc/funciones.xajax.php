@@ -1141,9 +1141,9 @@ function getListadoApartamentos($frm) {
     return $response;
 }
 
-function getListadoPropietarioss($frm) {
+function getListadoPropietarios($frm) {
     $response = new xajaxResponse();
-    $response->assign("divbusqueda", "innerHTML", "LISTADO");
+    $response->assign("divbusqueda", "innerHTML", f_getListadoPropietarios($frm));
     return $response;
 }
 
