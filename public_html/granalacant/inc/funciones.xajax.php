@@ -739,7 +739,7 @@ function setAsistente($fecha, $apar) {
  * @global Propietarios $oPers Instancia de Propietarios.
  * @param date $fecha Fecha de la Junta.
  * @param int $apar Codigo de apartamento.
- * @param int $per Codigo de persona.
+ * @param int $per Codigo de persona (propietario o representante).
  * @param boolean $vot Indica si tiene voto.
  * @param boolean $rep Indica si esta representado.
  * @param boolean $mul Indica si esta activada la sincronizacion.
@@ -755,7 +755,8 @@ function setAsistenteMulti($fecha, $apar, $per, $vot, $rep, $mul) {
     if ($mul) {
         // Esta activado el multiple, puede tener mas apartamentos.
         //$aProps = $oPers->getMisPropiedades($apar, $fecha); // Propiedades del dueño del apartamento array('codapar'=>array('apartamento','orden')...)
-        $aProps = $oProps->getPropiedadesPersonaFecha($per, $fecha); //array('codapar'=>array('apartamento','date','fecha','orden')...)
+        $prop = $oProps->getCodigoPropietarioApartamentoFecha($apar, $fecha);
+        $aProps = $oProps->getPropiedadesPersonaFecha($prop, $fecha); //array('codapar'=>array('apartamento','date','fecha','orden')...)
         foreach ($aProps as $codapar => $aDatos) {
             if ($codapar != $apar) {
                 $tool .= (!$tool) ? "Sincronizado con " . $aDatos[0] : ", " . $aDatos[0];
