@@ -461,6 +461,37 @@ class Propietarios {
         return key($this->getPropietarioApartamentoFecha($apa, $fecha));    // Clave del primer propietario.
     }
     
+    /**
+     * Obtiene las propiedades del primer propietario de un apartamento en una fecha determinada.
+     * Se devuelve un array cuya clave es el <b>codigo de apartamento</b> y cuyos valores son los siguientes:
+     * <ul>
+     * <li>0 - Apartamento.</li>
+     * <li>1 - Fecha de baja en formato YYYY-MM-DD.</li>
+     * <li>2 - Fecha de baja en formato DD-MM-YYYY.</li>
+     * <li>3 - Numero de orden.</li>
+     * </ul>
+     * 
+     * @param int $apa Codigo de apartamento.
+     * @param date $fecha Fecha en cualquier formato.
+     * @return array del tipo array('codapar'=>array('apartamento','date','fecha','orden')...)
+     */
+    public function getMisPropiedadesFecha($apa, $fecha) {
+        $per = $this->getCodigoPropietarioApartamentoFecha($apa, $fecha);   // Codigo del primer propietario.
+        return $this->getPropiedadesPersonaFecha($per, $fecha);
+    }
+    
+    /**
+     * Obtiene los codigos de las propiedades del primer propietario de un apartamento en una fecha determinada.
+     * 
+     * @param int $apa Codigo de apartamento.
+     * @param date $fecha Fecha en cualquier formato.
+     * @return array del tipo array(codapa1, codapa2...)
+     */
+    public function getCodigosMisPropiedadesFecha($apa, $fecha) {
+        return array_keys($this->getMisPropiedadesFecha($apa, $fecha));
+    }
+
+
     //--- PROPIEDADES ---//
     
     /**
