@@ -317,7 +317,7 @@ class Propietarios {
      */
     public function getPropietariosApartamentoFecha($apa, $fecha='') {
         $aDatos = array();
-        $aPro = $this->getPropietariosFecha($fecha);
+        $aPro = $this->getPropietariosFecha($fecha); // array('codapa','apartamento','codpers','persona','date','fecha','orden')
         foreach ($aPro as $aP) {
             if ($aP[0] == $apa) {
                 $aDatos[$aP[2]] = array($aP[3],$aP[4],$aP[5],$aP[6]);
@@ -335,7 +335,7 @@ class Propietarios {
      */
     public function getNombresPropietariosApartamentoFecha($apa, $fecha='') {
         $aDatos = array();
-        $aPro = $this->getPropietariosFecha($fecha);
+        $aPro = $this->getPropietariosFecha($fecha, FALSE);
         foreach ($aPro as $aP) {
             if ($aP[0] == $apa) {
                 $aDatos[$aP[2]] = $aP[3];

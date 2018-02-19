@@ -790,7 +790,7 @@ function grabarAsistenteMulti($fecha, $apar, $per, $rep, $vot, $mul) {
     global $oProps;
     $response = new xajaxResponse();
     //$aProps = ($mul) ? array_keys($oPers->getMisPropiedades($apar, $fecha)) : array($apar);
-    $aProps = ($mul) ? $oProps->getCodigosPropiedadesPersonaFecha($apar, $fecha) : array($apar);
+    $aProps = ($mul) ? $oProps->getCodigosPropiedadesPersonaFecha($per, $fecha) : array($apar);
     foreach ($aProps as $codapar) {
         $response->call("xajax_grabarAsistente", $fecha, $codapar, $per, $rep, $vot);
     }
@@ -816,9 +816,9 @@ function grabarAsistente($fecha, $apar, $per, $rep, $vot) {
         $oAsis->setPersona($per);
         $oAsis->setRepresentado($repr);
         $oAsis->setVoto($voto);
-        if ($oAsis->grabar()) {
-            $response->call("xajax_getAsistentesJuntaSumas", $fecha);
+        if ($oAsis->grabar()) {  
             $response->assign("boton$apar", "disabled", TRUE);
+            $response->call("xajax_getAsistentesJuntaSumas", $fecha);
         } else {
             $response->alert("Error al grabar el asistente a la Junta General.");
         } 
