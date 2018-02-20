@@ -295,6 +295,7 @@ function f_getPersonasListado() {
  * @return string Mensaje de error o de que todo ha ido bien.
  */
 function f_grabarPersona($frm) {
+    global $oPers;
     $cod = $frm['codigo'];
     $ape = $frm['apellidos'];
     $nom = $frm['nombre'];
@@ -312,7 +313,14 @@ function f_grabarPersona($frm) {
     $oPer->setTelefono($tel);
     $oPer->setSexo($sex);
     $oPer->setNotas($not);
-    return ($oPer->grabar()) ? "Los datos se han guardado correctamente." : "Error al guardar los datos.";
+    
+    if ($oPer->grabar()) {
+        $oPers->actualizar();   // Actualiza las personas.
+        $msg = "Los datos se han guardado correctamente.";
+    } else {
+        $msg = "Error al guardar los datos.";
+    }
+    return $msg;
 }
 
 //--- APARTAMENTOS -----------------------------------------------------------//

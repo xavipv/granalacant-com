@@ -181,7 +181,7 @@ function setPersonasDatosForm($cod=0) {
 }
 
 /**
- * Graba los datos de la persona.
+ * Graba los datos de la persona y refresca el listado.
  * 
  * @param array $frm Datos del formulario.
  * @return \xajaxResponse
@@ -189,9 +189,9 @@ function setPersonasDatosForm($cod=0) {
 function grabarPersona($frm) {
     $response = new xajaxResponse();
     $msg = f_grabarPersona($frm);
-    
     $response->alert($msg);
-    
+    $response->assign("submenu1", "innerHTML", f_getPersonasIniciales());
+    $response->assign("divlistado", "innerHTML", f_getPersonasListado());
     return $response;
 }
 

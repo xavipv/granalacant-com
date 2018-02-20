@@ -372,6 +372,14 @@ class Personas {
     //--- METODOS PUBLICOS ---------------------------------------------------//
     
     /**
+     * Actualiza los datos de las personas.
+     */
+    public function actualizar() {
+        $ord = $this->orden;
+        $this->cargarPersonas($ord);
+    }
+    
+    /**
      * Obtiene los datos de todas las personas.
      * El array tiene como clave el <b>codigo de la persona</b> y como datos:
      * <ul>
