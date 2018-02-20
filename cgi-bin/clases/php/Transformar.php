@@ -59,7 +59,7 @@ class Transformar {
      */
     private function decodificar($txt) {
         // return addslashes(html_entity_decode($txt, ENT_QUOTES, 'UTF-8'));
-        return addslashes(htmlspecialchars_decode($txt, ENT_QUOTES));
+        return addslashes(html_entity_decode($txt, ENT_QUOTES, 'UTF-8'));
     }
     
     /**
@@ -85,7 +85,7 @@ class Transformar {
      * @param boolean $bCodif Si es TRUE codifica los textos, si es FALSE los decodifica.
      * @return boolean Devuelve TRUE si todo ha ido bien y FALSE si ha fallado algo.
      */
-    public function transformar($tabla, $aClaves, $aCampos, $bCodif=TRUE) {
+    public function transformar($tabla, $aClaves, $aCampos, $bCodif=FALSE) {
         $bOK = TRUE;
         $sClaves = implode(', ', $aClaves);
         $sCampos = implode(', ', $aCampos); 
@@ -101,11 +101,9 @@ class Transformar {
                 $txt = $aRow[$clave];
                 $whe .= ($whe) ? " AND $clave='$txt'" : " WHERE $clave='$txt'"; 
             }
-            //$sql .= "<pre>UPDATE $tabla $set $whe</pre><br>"; 
             $bOK = (!$this->setTranformacion("UPDATE $tabla $set $whe")) ? FALSE : $bOK;
         }
         $res->closeCursor(); 
-        //return $sql;
         return $bOK;
     }
 }

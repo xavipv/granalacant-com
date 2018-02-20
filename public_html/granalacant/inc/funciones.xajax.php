@@ -1165,7 +1165,7 @@ function getCalculos($frm) {
 function setTransformar($frm) {
     $response = new xajaxResponse();
     $oTrans = new Transformar();
-    $tipo = ($frm['codificar']) ? TRUE : FALSE;
+    $tipo = ($frm['codificar']) ? TRUE : FALSE; 
     // Recorre las tablas.
     foreach ($frm as $t => $aTabla) {
         $tabla = "";
@@ -1179,13 +1179,12 @@ function setTransformar($frm) {
             }
         }
         $aClav = f_transformarClaves($tabla);
-        //$sql .= $oTrans->transformar($tabla, $aClav, $aCamp);
         $bOK = $oTrans->transformar($tabla, $aClav, $aCamp, $tipo);
         $response->assign("${t}l", "innerHTML", f_transformarLabel($tabla, $bOK));
         if($bOK) {
             $response->script("$('#$t').prop('checked',false); js_transformar('$t', false)");
         }
-    }
+    } 
     $response->script("$('#botontrans').show(); $('#todas').prop('checked',false)");
     return $response;
 }

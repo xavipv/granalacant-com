@@ -36,14 +36,14 @@ $aIncludes = array('config.inc.php', 'funciones.inc.php', 'funciones.xajax.php')
                     <pre>       Codificar: &aacute; --> &amp;aacute;          Decodificar: &amp;ntilde; --> &ntilde;</pre>
                     <p>Las tablas y campos a transformar son los siguientes:</p>
                     <hr />
-                    <form id="frmtrans">
+                    <form id="frmtrans" onsubmit="return false;">
                         <div class="form-group row">
                             <div class="form-check col-sm-6">
                                 <input class="form-check-input" type="checkbox" id="todas" onclick="js_transformarCheck($(this).prop('checked')); if($(this).prop('checked')) { $('#tl').html('todas'); } else { $('#tl').html('ninguna'); }">
                                 <label class="form-check-label" for="todas" id="todasl">Elegir tablas (<span id="tl" style="font-weight: bold">ninguna</span>)</label>
                             </div>
                             <div class="form-check col-sm-6">
-                                <input class="form-check-input" type="checkbox" id="codificar" onclick="if($(this).prop('checked')) { $('#cl').html('codificar'); } else { $('#cl').html('decodificar'); }">
+                                <input class="form-check-input" type="checkbox" id="codificar" name="codificar" onclick="if($(this).prop('checked')) { $('#cl').html('codificar'); } else { $('#cl').html('decodificar'); }">
                                 <label class="form-check-label" for="codificar" id="codificarl">Codificaci&oacute;n de datos (<span id="cl" style="font-weight: bold">decodificar</span>)</label>
                             </div>
                         </div>
