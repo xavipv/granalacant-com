@@ -1084,7 +1084,7 @@ function f_getAsistentesVotacion($fecha, $num=1) {
     $opc4 = ($oVota->getOpcion4()) ? $oVota->getOpcion4() : "Opc. 4";
     
     $portal = "";
-    $tabla  = "<table id=\"tablavot\" class=\"table table-sm\">";
+    $tabla  = "<a name=\"iniciolis\"></a><table id=\"tablavot\" class=\"table table-sm\">";
     
     // Recorre los apartamentos de la urbanizacion.
     foreach ($aApars as $apa => $aApartamento) {
@@ -1414,7 +1414,7 @@ function f_getActasDatosBusqueda($lista, $tipo) {
         case 2 : $aBus = $oActas->busquedaLiteral($lista); break;
         default: $aBus = $oActas->busquedaNatural($lista); break;
     }
-    $html = "<h3>Encontradas " . count($aBus) . " actas para <em>$lista</em></h3><div id=\"accordion\" role=\"tablist\">"; 
+    $html = "<h3><a name=\"inicio\"></a>Encontradas " . count($aBus) . " actas para <em>$lista</em></h3><div id=\"accordion\" role=\"tablist\">"; 
     foreach ($aBus as $aPunto) {
         $fecha = $aPunto[0];
         $feISO = $oActas->convertirFechaBDaISO($fecha);
@@ -1442,7 +1442,7 @@ function f_getActasDatosBusqueda($lista, $tipo) {
 //--- ACTAS EDITAR -----------------------------------------------------------//
 
 function f_getActa($fecha='') {
-    $html = "<div id=\"accordion\" role=\"tablist\">";
+    $html = "<a name=\"inicioacta\"></a><div id=\"accordion\" role=\"tablist\">";
     $oActa = new Acta($fecha);
     $aPunt = $oActa->getPuntos();
     $iNuev = 0;
@@ -1580,7 +1580,7 @@ function f_getListadoPersonas($frm) {
         $fPer .= (isset($frm['notas']) && $aPersona[7]) ? f_getListadoPersonasNotas($frm, $aPersona[7]) : "";
         $num++;
     }
-    return "<h4>Listado de $num personas ordenado por $sOrd. <span style=\"font-size:0.8em\"><em>Filtro: " . f_getListadoPersonasFiltros($frm) . "</em>.</span></h4><table class=\"table table-condensed table-ultra\">$fTit$fPer</table>";
+    return "<h4><a name=\"inicio\"></a>Listado de $num personas ordenado por $sOrd. <span style=\"font-size:0.8em\"><em>Filtro: " . f_getListadoPersonasFiltros($frm) . "</em>.</span></h4><table class=\"table table-condensed table-ultra\">$fTit$fPer</table>";
 }
 
 /**
@@ -1757,7 +1757,7 @@ function f_getListadoApartamentos($frm) {
     $fApa .= ($frm['sumas']) ? f_getListadoApartamentosSumas($frm, "Portal $portal: ", $bloApa, $bloMe2, $bloTer, $bloCoe, $bloCof, $bloCor, $bloCob, $bloGar) : "";
     $fApa .= ($frm['sumas']) ? f_getListadoApartamentosSumas($frm, "Fase $fase: ", $fasApa, $fasMe2, $fasTer, $fasCoe, $fasCof, $fasCor, $fasCob, $fasGar) : "";
     $fApa .= ($frm['sumas']) ? f_getListadoApartamentosSumas($frm, "Total: ", $sumApa, $sumMe2, $sumTer, $sumCoe, $sumCof, $sumCor, $sumCob, $sumGar) : "";
-    return "<h4>Listado de $sumApa apartamentos. <span style=\"font-size:0.8em\"><em>Filtros: " . f_getListadoApartamentosFiltros($frm) . "</em>.</span></h4><table class=\"table table-condensed table-ultra\">$fTit$fApa</table>";
+    return "<h4><a name=\"inicio\"></a>Listado de $sumApa apartamentos. <span style=\"font-size:0.8em\"><em>Filtros: " . f_getListadoApartamentosFiltros($frm) . "</em>.</span></h4><table class=\"table table-condensed table-ultra\">$fTit$fApa</table>";
 }
 
 /**
@@ -1875,7 +1875,7 @@ function f_getListadoPropietariosTitulo($int, $din, $dfi, $ver, $que, $dis) {
     $tit = ($que) ? $ti0 : "Listado de propietarios actuales ";
     $tit .= ($ver) ? "ordenado por personas. " : "ordenado por apartamentos. ";
     $tit .= ($dis) ? "Solo los distintos." : "";
-    return "<h4>$tit</h4>";
+    return "<h4><a name=\"inicio\"></a>$tit</h4>";
 }
 
 function f_getListadoPropietariosCompleto($din, $dfi, $ver, $que, $may) {
@@ -2095,7 +2095,7 @@ function f_getCalculos($frm) {
     $fApa .= ($frm['sumas']) ? f_getCalculosSumas($frm, "Portal $portal: ", $bloApa, $bloMe2, $bloCoe, $bloEue, $bloCof, $bloCor, $bloEuf, $bloRes, $bloCob, $bloEub, $bloCog, $bloEug) : "";
     $fApa .= ($frm['sumas']) ? f_getCalculosSumas($frm, "Fase $fase: ", $fasApa, $fasMe2, $fasCoe, $fasEue, $fasCof, $fasCor, $fasEuf, $fasRes, $fasCob, $fasEub, $fasCog, $fasEug) : "";
     $fApa .= ($frm['sumas']) ? f_getCalculosSumas($frm, "Total: ", $sumApa, $sumMe2, $sumCoe, $sumEue, $sumCof, $sumCor, $sumEuf, $sumRes, $sumCob, $sumEub, $sumCog, $sumEug) : "";
-    return "<h4>Cuotas mensuales para pagar la cantidad de " . number_format($can,2,',','.') . " € en un plazo de $meses.</h4><table class=\"table table-condensed table-ultra\">$fTit$fApa</table>";
+    return "<h4><a name=\"inicio\"></a>Cuotas mensuales para pagar la cantidad de " . number_format($can,2,',','.') . " € en un plazo de $meses.</h4><table class=\"table table-condensed table-ultra\">$fTit$fApa</table>";
 }
 
 /**

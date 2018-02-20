@@ -30,9 +30,7 @@ $aIncludes = array('config.inc.php', 'funciones.inc.php', 'funciones.xajax.php')
             </ul>
         </div>
         <div id="contenedor" class="container" style="width: 90%">
-            <div id="divlistado" class="listado">
-            <?php echo f_getDatosApartamentos(); ?>
-            </div>
+            <div id="divlistado" class="listado"><?php echo f_getDatosApartamentos(); ?></div>
         </div>
         <div id="ainicio" class=""><a href="#inicio" title="Ir al inicio" role="button" class="btn btn-outline-secondary"><span class="oi oi-arrow-thick-top"></span></a></div>
         <!-- JavaScript -->

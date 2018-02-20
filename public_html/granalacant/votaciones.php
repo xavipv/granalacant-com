@@ -117,6 +117,7 @@ if(!$fec) {
                 </div>
             </div>    
         </div>
+        <div id="ainicio" class=""><a href="#iniciolis" title="Ir al inicio" role="button" class="btn btn-outline-secondary"><span class="oi oi-arrow-thick-top"></span></a></div>
         <!-- JavaScript -->
         <script id="scripts" type="text/javascript"></script>
         <?php echo f_getScripts(); ?>

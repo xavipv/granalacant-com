@@ -92,7 +92,7 @@ $onLo = ($iPer) ? "onload=\"xajax_setPersonasDatosForm($iPer)\"" : "";
                 </div>
             </div>    
         </div>
-        
+        <div id="ainicio" class=""><a href="#inicio" title="Ir al inicio" role="button" class="btn btn-outline-secondary"><span class="oi oi-arrow-thick-top"></span></a></div>
         <!-- JavaScript -->
         <?php echo f_getScripts(); ?>
   </body>
