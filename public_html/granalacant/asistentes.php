@@ -19,6 +19,7 @@ if(!$fec) {
         <?php echo f_getCabeceraHTML("Asistentes"); ?>
     </head>
     <body onload="xajax_getAsistentes('<?php echo $fec; ?>')">
+        <a name="iniciopagina"></a>
         <div id="cabecera">
             <!-- Barra de navegacion -->
             <?php include 'menu.php'; ?>
@@ -86,7 +87,7 @@ if(!$fec) {
                 </div>
             </div>    
         </div>
-        <div id="ainicio" class=""><a href="#ini1" title="Ir al inicio" role="button" class="btn btn-outline-secondary"><span class="oi oi-arrow-thick-top"></span></a></div>
+        <div id="ainicio" class=""><a href="#iniciopagina" title="Ir al inicio" role="button" class="btn btn-outline-secondary"><span class="oi oi-arrow-thick-top"></span></a></div>
         <!-- JavaScript -->
         <?php echo f_getScripts(); ?>
   </body>
