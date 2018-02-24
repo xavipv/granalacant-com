@@ -115,25 +115,26 @@ function js_busquedaResize() {
     $("#divbusqueda").css("height",0);
     var altoPag = $(document).innerHeight();
     var altoCab = $("#cabecera").outerHeight(true);
-    var altura = (altoPag - altoCab - 10);
+    var altura = (altoPag - altoCab - 16);
     var altoFor = $("#divformulario").outerHeight(true);
     var altura1 = (altoFor>10) ? (altura - altoFor) : (altura / 2);
     $("#divbusqueda").css("height", altura1 + "px");    // Busquedas.
 }
 
 /**
- * Ajusta el tamaño del DIV de asistentes.
+ * Redimensiona el DIV del formulario de asistentes y votaciones.
  */
 function js_asistentesResize() {
     $("#divformularioasis").css("height",0);
-    var altoPag = $(document).innerHeight();
-    var altoCab = $("#cabecera").outerHeight(true);
-    var altura = (altoPag - altoCab - 16);
-    var altoFor = $("#divcabeceraasis").outerHeight(true);
-    var altura1 = (altoFor > 10) ? (altura - altoFor) : (altura / 2);
-    $("#divformularioasis").css("height", altura1 + "px");
-}
+    $("#divcontenido").height($("#divlistado").height());
+    $("#divformularioasis").height($("#divcontenido").innerHeight() - $("#divcabeceraasis").outerHeight(true)); 
+} 
 
+/**
+ * Suma todas las columnas.
+ * 
+ * @param {int} por Numero de portal.
+ */
 function js_sumarTodos(por) {
     js_sumar(por, "me");
     js_sumar(por, "te");
@@ -142,6 +143,12 @@ function js_sumarTodos(por) {
     js_sumar(por, "cb");
 }
 
+/**
+ * Realiza las sumas de cada portal.
+ * 
+ * @param {int} por Numero de portal.
+ * @param {string} id Id de columna.
+ */
 function js_sumar(por, id) {
     var col = id.substr(0, 2);
     var fas = (por > 15) ? "II" : "I";
@@ -176,6 +183,12 @@ function js_sumar(por, id) {
     js_sumarFase(col, fas);
 }
 
+/**
+ * Suma los datos de cada fase.
+ * 
+ * @param {string} col Id de columna.
+ * @param {string} fas Id de la fase.
+ */
 function js_sumarFase(col, fas) {
     var sfa = "f" + col + fas;
     var a = (fas === "I") ? [1, 15] : [16, 26];
@@ -200,6 +213,11 @@ function js_sumarFase(col, fas) {
     js_sumarTotal(col);
 }
 
+/**
+ * Obtiene las sumas totales.
+ * 
+ * @param {string} col Id de columna.
+ */
 function js_sumarTotal(col) {
     var f1 = "f" + col + "I";
     var f2 = "f" + col + "II";
@@ -214,6 +232,12 @@ function js_sumarTotal(col) {
     }
 }
 
+/**
+ * Obtiene el primer y ultimo numero de apartamento de un portal.
+ * 
+ * @param {int} por Numero de portal.
+ * @returns {Array} Con el primer y ultimo numero de apartamento.
+ */
 function js_apartPortal(por) {
     var a = [0, 0];
     switch(por) {
@@ -272,6 +296,20 @@ $(function () {
     });
 });
 
+function js_comprobarBotones() {
+    for (var i=0; i<=26; i++) {
+        if ( $('#boton' + i) && $('#boton' + i).prop('disabled') === false ) {
+            if (confirm("El asistente " + i + " no se ha guardado. ¿Quieres grabarlo?") === true) {
+                $('#boton' + i).focus();
+                return false;
+            }
+        } 
+    }
+    return true;
+}
+
+//--- TOOLTIPS ---------------------------------------------------------------//
+
 /**
  * Crea los tooltips.
  */
@@ -305,18 +343,39 @@ function js_eliminarTooltips(ch) {
     }
 }
 
-function js_comprobarBotones() {
-    for (var i=0; i<=26; i++) {
-        if ( $('#boton' + i) && $('#boton' + i).prop('disabled') === false ) {
-            if (confirm("El asistente " + i + " no se ha guardado. ¿Quieres grabarlo?") === true) {
-                $('#boton' + i).focus();
-                return false;
-            }
-        } 
-    }
-    return true;
-}
+//--- POPOVERS ---------------------------------------------------------------//
 
+/**
+ * Crea los Popover.
+ */
+$(function () {
+    $('[data-toggle="popover"]').popover({
+        trigger: 'focus',
+        html: true,
+        title: '',
+        content: js_popoverContenido(),
+        container: 'body',
+        placement: 'top',
+        boundary: 'window',
+        delay: { 'show': 100, 'hide': 200 }
+    });
+});
+
+/**
+ * Crea el contenido del popover.
+ * 
+ * @returns {String} Codigo HTML del popover.
+ */
+function js_popoverContenido() {
+    var h = "";
+    // Botones de los portales.
+    for(var i=1; i<=26; i++) {
+        h += "<a class=\"btn btn-outline-primary btn-portal\" href=\"#ini" + i + "\" role=\"button\" onclick=\"$(this).popover('hide');\">" + i + "</a>";
+        h += (i % 3 === 0) ? "<br />" : "";
+    }
+    h += "<a class=\"btn btn-outline-danger btn-portal\" href=\"#iniciopagina\" role=\"button\" onclick=\"$(this).popover('hide');\"><span class=\"oi oi-arrow-thick-top\"></span></a>";
+    return h;
+}
 
 //--- VOTACIONES -------------------------------------------------------------//
 

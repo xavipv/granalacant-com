@@ -109,6 +109,20 @@ function f_getSelectAgrupado($aDat, $id='', $sel='', $clase='', $onch='' , $bla=
     return "$s</optgroup></select>";
 }
 
+//TODO: ELIMINAR
+function f_getBotonesPortales($id) {
+    $html = "";
+    // Botones de los portales.
+    for($i=1; $i<=26; $i++) {
+        $html .= "<a class=\"btn btn-outline-primary btn-portal\" href=\"#$id$i\" role=\"button\">$i</a>";
+        $html .= ($i % 3 == 0) ? "<br />" : "";
+    }
+    // Boton de cancelar.
+    $html .= "<a class=\"btn btn-outline-danger btn-portal\" href=\"#\" role=\"button\">x</a>";
+    // Crea el popover
+    
+}
+
 //--- CABECERA Y PIE DE PAGINA -----------------------------------------------//
 
 /**
@@ -1102,11 +1116,6 @@ function f_getAsistentesVotacion($fecha, $num=1) {
             $portal = $aApartamento[0];
             $tabla .= f_cabeceraTablaAsistentes($portal, $opc1, $opc2, $opc3, $opc4);
         }
-        
-        // Datos del propietario.
-        //$aProp = $oProps->getPropietarioEnFecha($apa, $fecha, FALSE);    // array('codpers'=>'nombre')
-        //$iProp = $oProps->getPropietarioEnFechaCodigo($apa, $fecha);     // codpers
-        //$aApPr = array_keys($oProps->getMisPropiedades($apa, $fecha));   // array(apa1,apa2...)
         
         $aProp = $oProps->getNombrePropietarioApartamentoFecha($apa, $fecha);   // array('codpers'=>array('persona','date','fecha','orden'))
         $iProp = $oProps->getCodigoPropietarioApartamentoFecha($apa, $fecha);   // codpers

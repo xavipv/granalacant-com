@@ -20,6 +20,7 @@ if(!$fec) {
         <?php echo f_getCabeceraHTML("Votaciones"); ?>
     </head>
     <body onload="xajax_setVotacionDatosForm('<?php echo $fec; ?>')">
+        <a name="iniciopagina"></a>
         <div id="cabecera">
             <!-- Barra de navegacion -->
             <?php include 'menu.php'; ?>
@@ -38,9 +39,9 @@ if(!$fec) {
             <div class="row">
                 <div id="divlistado" class="col-sm-2 hidden-ms hidden-xs listado"><?php echo f_getVotacionesListado(); ?></div>
                 <div id="divcontenido" class="col-sm-10">
-                    <form id="frmvotacion" onsubmit="return false;">
-                        <div id="divcabeceraasis">
-                            <table class="table table-sm" style="border-bottom: 1px solid lightgray; font-size: 0.9em">
+                    <div id="divcabeceraasis">
+                        <form id="frmvotacion" onsubmit="return false;">
+                            <table class="table table-sm" style="border-bottom: 1px solid lightgray; font-size: 0.9em; margin: 0">
                                 <tbody id="datosvot">
                                     <tr>
                                         <th class="col-sm-3 text-left align-middle" colspan="2">Opciones para la votaci&oacute;n</th>
@@ -111,13 +112,14 @@ if(!$fec) {
                                     </tr>
                                 </tbody>
                             </table>
-                        </div>
-                        <div id="divformularioasis" class="listado"></div>
-                    </form>
+                        </form>
+                    </div>
+                    <div id="divformularioasis" class="listado"></div>
                 </div>
             </div>    
         </div>
-        <div id="ainicio" class=""><a href="#iniciolis" title="Ir al inicio" role="button" class="btn btn-outline-secondary"><span class="oi oi-arrow-thick-top"></span></a></div>
+        <div id="aportales" class=""><button type="button" class="btn btn-outline-primary" data-toggle="popover" data-container="divformularioasis">Portales</button></div>
+        <!-- <div id="ainicio" class=""><a href="#iniciolis" title="Ir al inicio" role="button" class="btn btn-outline-secondary"><span class="oi oi-arrow-thick-top"></span></a></div>
         <!-- JavaScript -->
         <script id="scripts" type="text/javascript"></script>
         <?php echo f_getScripts(); ?>

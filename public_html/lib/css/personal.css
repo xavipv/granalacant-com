@@ -128,6 +128,18 @@
     right: 10px;
 }
 
+#aportales {
+    position:fixed;
+    bottom: 20px;
+    right: 50px;
+}
+
+#btnfechair {
+    margin-top: 10px;
+    position:fixed;
+    right: 10px;
+}
+
 .trumbowyg-box,
 .trumbowyg-editor,
 .trumbowyg-textarea {
@@ -161,4 +173,11 @@
 
 .baja {
     color: grey;
+}
+
+.btn-portal {
+    margin: 1px;
+    height: 32px;
+    width: 32px;
+    padding: 5px 0;
 }

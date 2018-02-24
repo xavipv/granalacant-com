@@ -682,7 +682,7 @@ function getAsistentesJuntaSumas($fecha) {
     $aSumas = $oAsis->getSumas();   // array('prop' => array('propietarios', 'distintos', 'con voto', 'sin voto', 'coef. urb', 'coef. fase'), 'repr' => array('representados', 'distintos', 'con voto', 'sin voto', 'coef. urb', 'coef. fase'))
     $aProps = $aSumas['prop'];
     $aReprs = $aSumas['repr'];
-    $response->assign("fechatit", "innerHTML", "<a class=\"btn btn-outline-primary\" onclick=\"return js_comprobarBotones();\" href=\"juntas.php?fecha=$fecha\" role=\"button\" title=\"Ir a datos de la Junta\"><span class=\"oi oi-caret-left\"></span>&nbsp;&nbsp;" . $oAsis->convertirFechaBDaISO($fecha) . "</a>");
+    $response->assign("btnfechair", "innerHTML", "<a class=\"btn btn-outline-primary\" onclick=\"return js_comprobarBotones();\" href=\"juntas.php?fecha=$fecha\" role=\"button\" title=\"Ir a datos de la Junta\"><span class=\"oi oi-calendar\"></span>&nbsp;&nbsp;" . $oAsis->convertirFechaBDaISO($fecha) . "</a>");
     
     $response->assign("asiapa", "innerHTML", $aProps[0]);
     $response->assign("asiper", "innerHTML", $aProps[1]);

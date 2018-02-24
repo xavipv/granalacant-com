@@ -34,14 +34,16 @@ if(!$fec) {
             </ul>
         </div>
         <!-- Contenido -->
-        <div id="contenedor" class="container">
+        <div id="contenedor" class="container" style="width: 80%">
             <div class="row">
                 <div id="divlistado" class="col-sm-2 hidden-ms hidden-xs listado"><?php echo f_getJuntasListado(); ?></div>
                 <div id="divcontenido" class="col-sm-10">
                     <div id="divcabeceraasis">
-                        <table class="table table-sm" style="border-bottom: 1px solid lightgray;">
+                        <div id="btnfechair"></div>
+                        <table class="table table-sm" style="border-bottom: 1px solid lightgray; margin: 0; padding: 0">
+                            <tbody id="datosvot">
                             <tr>
-                                <th colspan="2" id="fechatit" class="col-sm-2">&nbsp;</th>
+                                <td colspan="2" class="col-sm-2"><input type="checkbox" id="multiples" checked="checked" onclick="js_eliminarTooltips(this.checked);" title="Marcar usuario con varios apartamentos."><label class="form-check-label" for="multiples">Sincronizar</label></td>
                                 <th class="col-sm-1 text-right align-middle">Apart.</th>
                                 <th class="col-sm-1 text-right align-middle">Personas</th>
                                 <th class="col-sm-1 text-right align-middle">Con&nbsp;voto</th>
@@ -70,16 +72,17 @@ if(!$fec) {
                                 <td id="rep200" class="text-right">0%</td>
                                 <td id="rep100" class="text-right">0%</td>
                             </tr>
+                            </tbody>
                             <tr>
-                                <th class="text-left"><input type="checkbox" id="multiples" checked="checked" onclick="js_eliminarTooltips(this.checked);" title="Marcar usuario con varios apartamentos."></th>
-                                <th class="text-right">Sumas</th>
-                                <th id="sumapa" class="text-right">0</th>
-                                <th id="sumper" class="text-right">0</th>
-                                <th id="sumsin" class="text-right">0</th>
-                                <th id="sumcon" class="text-right">0</th>
-                                <th id="sumurb" class="text-right">0%</th>
-                                <th id="sum200" class="text-right">0%</th>
-                                <th id="sum100" class="text-right">0%</th>
+                                <th class="col-sm-1 text-left"><input type="hidden" id="oculto" name="oculto" value="N"><button class="btn btn-default btn-sm btn-block" onclick="if($('#oculto').val() === 'N'){ $('#oculto').val('S'); $('#datosvot').hide(); $('#caret').removeClass('oi-caret-top').addClass('oi-caret-bottom');  } else { $('#oculto').val('N'); $('#datosvot').show(); $('#caret').removeClass('oi-caret-bottom').addClass('oi-caret-top'); }; js_asistentesResize();" title="Mostrar/Ocultar cabecera"><span id="caret" class="oi oi-caret-top"></span></button></th>
+                                <th class="col-sm-1 text-right">Sumas</th>
+                                <th id="sumapa" class="col-sm-1 text-right">0</th>
+                                <th id="sumper" class="col-sm-1 text-right">0</th>
+                                <th id="sumsin" class="col-sm-1 text-right">0</th>
+                                <th id="sumcon" class="col-sm-1 text-right">0</th>
+                                <th id="sumurb" class="col-sm-2 text-right">0%</th>
+                                <th id="sum200" class="col-sm-2 text-right">0%</th>
+                                <th id="sum100" class="col-sm-2 text-right">0%</th>
                             </tr>
                         </table>
                     </div>
@@ -87,7 +90,8 @@ if(!$fec) {
                 </div>
             </div>    
         </div>
-        <div id="ainicio" class=""><a href="#iniciopagina" title="Ir al inicio" role="button" class="btn btn-outline-secondary"><span class="oi oi-arrow-thick-top"></span></a></div>
+        <div id="aportales" class=""><button type="button" class="btn btn-outline-primary" data-toggle="popover" data-container="divformularioasis">Portales</button></div>
+        <!-- <div id="ainicio" class=""><a href="#iniciopagina" title="Ir al inicio" role="button" class="btn btn-outline-secondary"><span class="oi oi-arrow-thick-top"></span></a></div>
         <!-- JavaScript -->
         <?php echo f_getScripts(); ?>
   </body>
