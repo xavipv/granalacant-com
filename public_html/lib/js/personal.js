@@ -103,6 +103,7 @@ function js_bodyResize() {
     
     $("#contenedor").css("height", altura + "px");      // Contenedor principal.
     $("#divlistado").css("height", altura + "px");      // Listados.
+    $("#divcontenido").height(altura);
     $("#divcontenidoacta").css("height", (altura - 10) + "px");
     setTimeout(js_busquedaResize,1000);
     setTimeout(js_asistentesResize,1000);
@@ -126,7 +127,7 @@ function js_busquedaResize() {
  */
 function js_asistentesResize() {
     $("#divformularioasis").css("height",0);
-    $("#divcontenido").height($("#divlistado").height());
+    $("#divcontenido").height($("#contenedor").height());
     $("#divformularioasis").height($("#divcontenido").innerHeight() - $("#divcabeceraasis").outerHeight(true)); 
 } 
 
