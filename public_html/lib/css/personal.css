@@ -8,15 +8,16 @@
     vertical-align: middle;
 }
 
+.listadowrap {
+    overflow-y: scroll;
+    white-space: normal;
+}
+
 .listado {
     overflow-y: scroll;
     overflow-x: hidden; 
     white-space: nowrap;
     height: 200px;
-}
-
-#divcontenidoacta {
-    overflow-y: scroll;
 }
 
 .listado-elem, .listado-elem-des, .listado-elem-baja {

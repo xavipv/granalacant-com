@@ -26,7 +26,7 @@ $aIncludes = array('config.inc.php', 'funciones.inc.php', 'funciones.xajax.php')
         <!-- Contenido -->
         <div id="contenedor" class="container" style="width: 90%">
             <div class="row">
-                <div id="divcontenido" class="col-sm-12">
+                <div id="contenido" class="col-sm-12">
                     <br />
                     <h1><a name="inicio"></a>Transformar textos</h1>
                     <p>

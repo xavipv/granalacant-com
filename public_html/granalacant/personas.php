@@ -37,8 +37,8 @@ $onLo = ($iPer) ? "onload=\"xajax_setPersonasDatosForm($iPer)\"" : "";
         <div id="contenedor" class="container">
             <div class="row">
                 <div id="divlistado" class="col-sm-3 hidden-ms hidden-xs listado"><?php echo f_getPersonasListado(); ?></div>
-                <div id="divcontenido" class="col-sm-9">
-                    <div id="divformulario">
+                <div id="contenido" class="col-sm-9">
+                    <div id="divcabecera">
                         <h2>Persona</h2>
                         <form id="frmpersona">
                             <div class="row">

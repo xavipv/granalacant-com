@@ -40,13 +40,15 @@ if(!$iApar) {
         <div id="contenedor" class="container">
             <div class="row">
                 <div id="divlistado" class="col-sm-2 hidden-ms hidden-xs listado" style=""><?php echo f_getApartamentosListado(); ?></div>
-                <div id="divcontenido" class="col-sm-10">
-                    <div id="divformulario">
-                        <h2>Propietarios</h2>
-                        <form id="frmpropietarios"></form>
-                        <br />
+                <div id="contenido" class="col-sm-10">
+                    <div id="divcontenido">
+                        <div id="divcabecera">
+                            <h2>Propietarios</h2>
+                            <form id="frmpropietarios"></form>
+                            <br />
+                        </div>
+                        <div id="divbusqueda" class="listado"></div>
                     </div>
-                    <div id="divbusqueda" class="listado"></div>
                 </div>
             </div>    
         </div>

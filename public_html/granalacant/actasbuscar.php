@@ -41,7 +41,7 @@ $aIncludes = array('config.inc.php', 'funciones.inc.php', 'funciones.xajax.php')
             </form>
         </div>
         <!-- Contenido -->
-        <div id="contenedor" class="container" style="width: 95%; overflow-y: scroll"></div>
+        <div id="contenedor" class="container listadowrap" style="width: 95%;"></div>
         <div id="ainicio" class=""><a href="#inicio" title="Ir al inicio" role="button" class="btn btn-outline-secondary"><span class="oi oi-arrow-thick-top"></span></a></div>
         <!-- JavaScript -->
         <?php echo f_getScripts(); ?>

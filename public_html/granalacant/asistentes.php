@@ -37,8 +37,8 @@ if(!$fec) {
         <div id="contenedor" class="container" style="width: 80%">
             <div class="row">
                 <div id="divlistado" class="col-sm-2 hidden-ms hidden-xs listado"><?php echo f_getJuntasListado(); ?></div>
-                <div id="divcontenido" class="col-sm-10">
-                    <div id="divcabeceraasis">
+                <div id="contenido"  class="col-sm-10">
+                    <div id="divcabecera">
                         <div id="btnfechair"></div>
                         <table class="table table-sm" style="border-bottom: 1px solid lightgray; margin: 0; padding: 0">
                             <tbody id="datosvot">
@@ -74,7 +74,7 @@ if(!$fec) {
                             </tr>
                             </tbody>
                             <tr>
-                                <th class="col-sm-1 text-left"><input type="hidden" id="oculto" name="oculto" value="N"><button class="btn btn-default btn-sm btn-block" onclick="if($('#oculto').val() === 'N'){ $('#oculto').val('S'); $('#datosvot').hide(); $('#caret').removeClass('oi-caret-top').addClass('oi-caret-bottom');  } else { $('#oculto').val('N'); $('#datosvot').show(); $('#caret').removeClass('oi-caret-bottom').addClass('oi-caret-top'); }; js_asistentesResize();" title="Mostrar/Ocultar cabecera"><span id="caret" class="oi oi-caret-top"></span></button></th>
+                                <th class="col-sm-1 text-left"><input type="hidden" id="oculto" name="oculto" value="N"><button class="btn btn-default btn-sm btn-block" onclick="if($('#oculto').val() === 'N'){ $('#oculto').val('S'); $('#datosvot').hide(); $('#caret').removeClass('oi-caret-top').addClass('oi-caret-bottom');  } else { $('#oculto').val('N'); $('#datosvot').show(); $('#caret').removeClass('oi-caret-bottom').addClass('oi-caret-top'); }; js_redimensionar();" title="Mostrar/Ocultar cabecera"><span id="caret" class="oi oi-caret-top"></span></button></th>
                                 <th class="col-sm-1 text-right">Sumas</th>
                                 <th id="sumapa" class="col-sm-1 text-right">0</th>
                                 <th id="sumper" class="col-sm-1 text-right">0</th>
@@ -86,12 +86,11 @@ if(!$fec) {
                             </tr>
                         </table>
                     </div>
-                    <div id="divformularioasis" class="listado"></div>
+                    <div id="divcontenido" class="listado"></div>
                 </div>
             </div>    
         </div>
-        <div id="aportales" class=""><button type="button" class="btn btn-outline-primary" data-toggle="popover" data-container="divformularioasis">Portales</button></div>
-        <!-- <div id="ainicio" class=""><a href="#iniciopagina" title="Ir al inicio" role="button" class="btn btn-outline-secondary"><span class="oi oi-arrow-thick-top"></span></a></div>
+        <div id="aportales" class=""><button type="button" class="btn btn-outline-primary" data-toggle="popover">Portales</button></div>
         <!-- JavaScript -->
         <?php echo f_getScripts(); ?>
   </body>

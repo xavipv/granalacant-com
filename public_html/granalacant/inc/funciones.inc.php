@@ -456,9 +456,9 @@ function f_getDatosApartamentos() {
     $fap = 0; $fm2 = 0; $ft2 = 0; $fcu = 0; $fcf = 0; $fcr = 0; $fcb = 0;
     $tap = 0; $tm2 = 0; $tt2 = 0; $tcu = 0; $tcf = 0; $tcr = 0; $tcb = 0;
     
-    $sTabla  = "<a name=\"inicio\"></a><table class=\"table table-sm\" style=\"width:100%\">";
+    $sTabla  = "<a name=\"iniciopagina\"></a><table class=\"table table-sm\" style=\"width:100%\">";
     $sTabla .= "<tr><th class=\"text-center\" colspan=\"10\">Fase $sFase</th></tr>";
-    $sTabla .= "<tr><th class=\"text-center\" colspan=\"10\"><a name=\"ini$iPortal\" href=\"#inicio\">Portal $iPortal</a></th></tr><tr><th colspan=\"2\" class=\"text-center\">Apartamento</th><th class=\"text-center\">Superficie</th><th class=\"text-center\">Terraza</th><th class=\"text-center\">Urbanizaci&oacute;n</th><th class=\"text-center\">Fase 200%</th><th class=\"text-center\">Fase 100%</th><th class=\"text-center\">Escalera</th><th>&nbsp;</th><th>&nbsp;</th></tr>";
+    $sTabla .= "<tr><th class=\"text-center\" colspan=\"10\"><a name=\"ini$iPortal\" href=\"#iniciopagina\">Portal $iPortal</a></th></tr><tr><th colspan=\"2\" class=\"text-center\">Apartamento</th><th class=\"text-center\">Superficie</th><th class=\"text-center\">Terraza</th><th class=\"text-center\">Urbanizaci&oacute;n</th><th class=\"text-center\">Fase 200%</th><th class=\"text-center\">Fase 100%</th><th class=\"text-center\">Escalera</th><th>&nbsp;</th><th>&nbsp;</th></tr>";
     
     // Recorre los apartamentos.
     foreach ($aApars as $cod => $aDat) {
@@ -473,7 +473,7 @@ function f_getDatosApartamentos() {
                 $sTabla .= "<tr class=\"active\"><th class=\"text-center\" colspan=\"10\">Fase $sFase</th></tr>";
             }
             // Cabecera del portal.
-            $sTabla .= "<tr class=\"active\"><th class=\"text-center\" colspan=\"10\"><a name=\"ini$iPortal\" href=\"#inicio\">Portal $iPortal</a></th></tr><tr><th colspan=\"2\" class=\"text-center\">Apartamento</th><th class=\"text-center\">Superficie</th><th class=\"text-center\">Terraza</th><th class=\"text-center\">Urbanizaci&oacute;n</th><th class=\"text-center\">Fase 200%</th><th class=\"text-center\">Fase 100%</th><th class=\"text-center\">Escalera</th><th>&nbsp;</th><th>&nbsp;</th></tr>";
+            $sTabla .= "<tr class=\"active\"><th class=\"text-center\" colspan=\"10\"><a name=\"ini$iPortal\" href=\"#iniciopagina\">Portal $iPortal</a></th></tr><tr><th colspan=\"2\" class=\"text-center\">Apartamento</th><th class=\"text-center\">Superficie</th><th class=\"text-center\">Terraza</th><th class=\"text-center\">Urbanizaci&oacute;n</th><th class=\"text-center\">Fase 200%</th><th class=\"text-center\">Fase 100%</th><th class=\"text-center\">Escalera</th><th>&nbsp;</th><th>&nbsp;</th></tr>";
         }
         // Realiza las sumas.
         $pap++; $pm2 += $aDat[6]; $pt2 += $aDat[7]; $pcu += $aDat[8]; $pcf += $aDat[9]; $pcr += $aDat[9]/2; $pcb += $aDat[10];

@@ -38,8 +38,8 @@ $oJ = new Junta();
         <div id="contenedor" class="container">
             <div class="row">
                 <div id="divlistado" class="col-sm-2 hidden-ms hidden-xs listado" style=""><?php echo f_getJuntasListado(); ?></div>
-                <div id="divcontenido" class="col-sm-10">
-                    <div id="divformulario">
+                <div id="contenido" class="col-sm-10">
+                    <div id="divcontenido">
                         <h2 id="titulo1">Juntas</h2>
                         <hr />
                         <form id="frmjunta">

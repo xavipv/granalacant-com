@@ -29,10 +29,11 @@ $aIncludes = array('config.inc.php', 'funciones.inc.php', 'funciones.xajax.php')
                 </li>
             </ul>
         </div>
-        <div id="contenedor" class="container" style="width: 90%">
+        <div id="contenedor" class="container" style="width: 80%">
             <div id="divlistado" class="listado"><?php echo f_getDatosApartamentos(); ?></div>
         </div>
-        <div id="ainicio" class=""><a href="#inicio" title="Ir al inicio" role="button" class="btn btn-outline-secondary"><span class="oi oi-arrow-thick-top"></span></a></div>
+        <div id="aportales" class=""><button type="button" class="btn btn-outline-primary" data-toggle="popover" data-container="divformularioasis">Portales</button></div>
+        <!-- <div id="ainicio" class=""><a href="#inicio" title="Ir al inicio" role="button" class="btn btn-outline-secondary"><span class="oi oi-arrow-thick-top"></span></a></div> -->
         <!-- JavaScript -->
         <?php echo f_getScripts(); ?>
   </body>

@@ -38,8 +38,8 @@ if(!$fec) {
         <div id="contenedor" class="container" style="width: 80%">
             <div class="row">
                 <div id="divlistado" class="col-sm-2 hidden-ms hidden-xs listado"><?php echo f_getVotacionesListado(); ?></div>
-                <div id="divcontenido" class="col-sm-10">
-                    <div id="divcabeceraasis">
+                <div id="contenido" class="col-sm-10">
+                    <div id="divcabecera">
                         <form id="frmvotacion" onsubmit="return false;">
                             <table class="table table-sm" style="border-bottom: 1px solid lightgray; font-size: 0.9em; margin: 0">
                                 <tbody id="datosvot">
@@ -104,7 +104,7 @@ if(!$fec) {
                                         <th class="text-right col-sm-1"><input type="text" id="sumcor" name="sumcor" class="form-control form-control-sm solonumeros" value="0" readonly="readonly"></th>
                                         <th class="text-right col-sm-1">Sincronizar</th>
                                         <td class="text-center col-sm-1"><input type="checkbox" id="sincro" name="sincro" checked="checked"></td>
-                                        <td class="text-right col-sm-1"><input type="hidden" id="oculto" name="oculto" value="N"><button class="btn btn-default btn-sm btn-block" onclick="if($('#oculto').val() === 'N'){ $('#oculto').val('S'); $('#datosvot').hide(); $('#datosvot1').hide(); $('#caret').removeClass('oi-caret-top').addClass('oi-caret-bottom');  } else { $('#oculto').val('N'); $('#datosvot').show(); $('#datosvot1').show(); $('#caret').removeClass('oi-caret-bottom').addClass('oi-caret-top'); }; js_asistentesResize();" title="Mostrar/Ocultar cabecera"><span id="caret" class="oi oi-caret-top"></span></button></td>
+                                        <td class="text-right col-sm-1"><input type="hidden" id="oculto" name="oculto" value="N"><button class="btn btn-default btn-sm btn-block" onclick="if($('#oculto').val() === 'N'){ $('#oculto').val('S'); $('#datosvot').hide(); $('#datosvot1').hide(); $('#caret').removeClass('oi-caret-top').addClass('oi-caret-bottom');  } else { $('#oculto').val('N'); $('#datosvot').show(); $('#datosvot1').show(); $('#caret').removeClass('oi-caret-bottom').addClass('oi-caret-top'); }; js_redimensionar();" title="Mostrar/Ocultar cabecera"><span id="caret" class="oi oi-caret-top"></span></button></td>
                                     </tr>
                                 <tbody id="datosvot1">
                                     <tr>
@@ -114,7 +114,7 @@ if(!$fec) {
                             </table>
                         </form>
                     </div>
-                    <div id="divformularioasis" class="listado"></div>
+                    <div id="divcontenido" class="listado"></div>
                 </div>
             </div>    
         </div>

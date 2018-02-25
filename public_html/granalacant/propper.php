@@ -41,13 +41,15 @@ if(!$iPer) {
         <div id="contenedor" class="container">
             <div class="row">
                 <div id="divlistado" class="col-sm-3 hidden-ms hidden-xs listado" style=""><?php echo f_getPropietariosListado(); ?></div>
-                <div id="divcontenido" class="col-sm-9">
-                    <div id="divformulario">
-                        <h2>Propiedades</h2>
-                        <form id="frmpropiedades"></form>
-                        <br />
+                <div id="contenido" class="col-sm-9">
+                    <div id="divcontenido">
+                        <div id="divcabecera">
+                            <h2>Propiedades</h2>
+                            <form id="frmpropiedades"></form>
+                            <br />
+                        </div>
+                        <div id="divbusqueda" class="listado"></div>
                     </div>
-                    <div id="divbusqueda" class="listado"></div>
                 </div>
             </div>    
         </div>

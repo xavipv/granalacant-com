@@ -85,51 +85,65 @@ function js_onCalendario(pag, id) {
 /**
  * Lanza el ajuste de tamaño cuando el documento se carga.
  */
-$(document).ready(js_bodyResize);
-
-/**
- * Lanza el ajuste de tamaño cuando se cambia el tamaño de la ventana.
- */
-$(window).resize(js_bodyResize);
-
-/**
- * Ajusta el tamaño del cuerpo de la pagina.
- */
-function js_bodyResize() {
-    $("#contenedor").css("height",0);
-    var altoPag = $(document).innerHeight();
-    var altoCab = $("#cabecera").outerHeight(true);
-    var altura = (altoPag - altoCab);
+$(document).ready(function() { 
+    js_redimensionar();
     
-    $("#contenedor").css("height", altura + "px");      // Contenedor principal.
-    $("#divlistado").css("height", altura + "px");      // Listados.
-    $("#divcontenido").height(altura);
-    $("#divcontenidoacta").css("height", (altura - 10) + "px");
-    setTimeout(js_busquedaResize,1000);
-    setTimeout(js_asistentesResize,1000);
+    /**
+     * Lanza el ajuste de tamaño cuando se cambia el tamaño de la ventana.
+     */
+    $(window).resize(js_redimensionar); 
+} );
+
+/**
+ * Ajusta el tamaño de la cabecera 'cabecera' y el contenedor 'contenedor' del documento.
+ * <ul>
+ * <li>cabecera - Cabecera del menu principal y submenues.</li>
+ * <li>divlistado - Listado de la parte izquierda.</li>
+ * <li>contenedor - Datos de la parte derecha.</li>
+ * </ul>
+ * Despues llama a la funcion que ajusta los contenidos.
+ */
+function js_redimensionar() {
+    $('#contenedor').height(0);
+    var altoPag = $(window).innerHeight();
+    var altoCab = $('#cabecera').outerHeight(true);
+    var altura  = altoPag - altoCab;
+    
+    $('#contenedor').outerHeight(altura);
+    if($('#divlistado').length > 0) {
+        $('#divlistado').outerHeight(altura);
+    }
+    if($('#contenido').length > 0) {
+        $('#contenido').outerHeight(altura);
+    }
+    setTimeout(js_redimensionarContenido, 100, altura);
 }
 
 /**
- * Ajusta el tamaño del DIV de busqueda.
+ * Ajusta el tamaño del contendio del documento.
+ * <ul>
+ * <li>divcabecera - Datos de la parte superior derecha del contenedor.</li>
+ * <li>divcontenido - Datos de la parte inferior derecha del contenedor.</li>
+ * <li>divbusqueda - Datos de la parte inferior derecha del contenedor (se alterna con divcontenido).</li>
+ * </ul>
+ * 
+ * @param {int} altura Altura del contenedor (sin cabecera).
  */
-function js_busquedaResize() {
+function js_redimensionarContenido(altura) {
+    $("#divcontenido").css("height",0);
     $("#divbusqueda").css("height",0);
-    var altoPag = $(document).innerHeight();
-    var altoCab = $("#cabecera").outerHeight(true);
-    var altura = (altoPag - altoCab - 16);
-    var altoFor = $("#divformulario").outerHeight(true);
-    var altura1 = (altoFor>10) ? (altura - altoFor) : (altura / 2);
-    $("#divbusqueda").css("height", altura1 + "px");    // Busquedas.
+    var divcabe = ($('#divcabecera').length > 0) ? $('#divcabecera').outerHeight(true) : 0;
+    var divcont = altura - divcabe;
+    
+    if($('#divcontenido').length > 0) {
+        $('#divcontenido').outerHeight(divcont);
+    }
+    
+    if($('#divbusqueda').length > 0) {
+        $('#divbusqueda').outerHeight(divcont);
+    }
+    //alert("Altura: "+altura+"\nDivcabe: "+divcabe+"\nDivcont: "+divcont);
 }
-
-/**
- * Redimensiona el DIV del formulario de asistentes y votaciones.
- */
-function js_asistentesResize() {
-    $("#divformularioasis").css("height",0);
-    $("#divcontenido").height($("#contenedor").height());
-    $("#divformularioasis").height($("#divcontenido").innerHeight() - $("#divcabeceraasis").outerHeight(true)); 
-} 
 
 /**
  * Suma todas las columnas.

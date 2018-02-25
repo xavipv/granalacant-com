@@ -240,7 +240,7 @@ function setApartamentosDatosForm($cod=1) {
     $response->assign("fase100", "value", $co1);
     $response->assign("bloque", "value", $cob);
     $response->assign("divbusqueda", "innerHTML", $grs);
-    $response->script("$('#portal').focus()");
+    $response->script("$('#portal').focus()"); 
     
     return $response;
 }
@@ -327,7 +327,7 @@ function setPropietariosApartamentoDatosForm($apa) {
     $oApar = new Apartamento($apa);
     $response->assign("submenu2", "innerHTML", $oApar->getApartamento());
     $response->assign("frmpropietarios", "innerHTML", f_getPropietarios($apa));
-    $response->script("js_calendario(true, false)");
+    $response->script("js_calendario(true, false); js_redimensionar()");
     return $response;
 }
 
@@ -399,7 +399,7 @@ function setPropiedadesPersonaDatosForm($per) {
     $oPer = new Persona($per);
     $response->assign("submenu2", "innerHTML", $oPer->getNombreCompleto());
     $response->assign("frmpropiedades", "innerHTML", f_getPropiedades($per));
-    $response->script("js_calendario(true, false)");
+    $response->script("js_calendario(true, false); js_redimensionar()");
     return $response;
 }
 
@@ -609,7 +609,7 @@ function getAsistentes($dat='') {
     $date = ($oJuntas->existeJunta($dat)) ? $dat : "";  // Mira si existe la fecha.
     $fecha = (!$date) ? f_getUltimaJunta() : $date;     // Saca los datos de la fecha o de la ultima junta.
     
-    $response->assign("divformularioasis", "innerHTML", f_getAsistentes($fecha));
+    $response->assign("divcontenido", "innerHTML", f_getAsistentes($fecha));
     $response->call("xajax_getAsistentesJuntaSumas", $fecha);
     
     return $response;
@@ -877,7 +877,7 @@ function setVotacionDatosForm($fecha, $num=1) {
     $script = f_convertirArrayJS($oApars->getCoeficientes());
     $response->assign("scripts", "innerHTML", $script);
     $response->call("xajax_setVotacionCabecera", $fecha, $num);
-    $response->assign("divformularioasis", "innerHTML", f_getAsistentesVotacion($fecha, $num));
+    $response->assign("divcontenido", "innerHTML", f_getAsistentesVotacion($fecha, $num));
     return $response;
 }
 
@@ -967,7 +967,7 @@ function grabarVotacion($frm) {
 function getActa($fecha='') {
     $response = new xajaxResponse();
     $response->assign("aedit", "href", "actasedit.php?fecha=$fecha");
-    $response->assign("divcontenidoacta", "innerHTML", f_getDatosActa($fecha));
+    $response->assign("divcontenido", "innerHTML", f_getDatosActa($fecha));
     return $response;
 }
 
@@ -1062,7 +1062,7 @@ function getActaDatosForm($fecha='') {
     $response->assign("fechainicial", "value", $fecha);
     $response->assign("fecha", "value", $fISO);
     $response->assign("aver", "href", "actas.php?fecha=$fecha");
-    $response->assign("divformularioasis", "innerHTML", f_getActa($fecha));
+    $response->assign("divcontenido", "innerHTML", f_getActa($fecha));
     $response->script("$('.calendario').datepicker('destroy');");
     $response->script("js_calendario(false, true)");
     $response->script("js_editor()");

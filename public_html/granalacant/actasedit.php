@@ -37,36 +37,38 @@ if(!$fec) {
             </ul>
         </div>
         <!-- Contenido -->
-        <div id="contenedor" class="container" style="width: 95%">
-            <div class="row">
-                <div id="divlistado" class="col-sm-1 hidden-ms hidden-xs listado" style=""><?php echo f_getActasListado(); ?></div>
-                <div id="divcontenido" class="col-sm-11">
-                    <form id="frmacta" onsubmit="return false;">
-                        <div id="divcabeceraasis">
-                            <br />
-                            <h1 id="titulo">Acta nueva</h1>
-                            <div class="form-group row">
-                                <label for="fecha" class="col-sm-1 col-form-label text-right">Fecha:</label>
-                                <div class="col-sm-2">
-                                    <input type="hidden" id="fechainicial" name="fechainicial" value="<?php echo $fec; ?>">
-                                    <input type="text" id="fecha" name="fecha" class="calendario form-control" style="background-color: transparent;" readonly="readonly">
+        
+            <div id="contenedor" class="container" style="width: 95%">
+                <div class="row">
+                    <div id="divlistado" class="col-sm-1 hidden-ms hidden-xs listado" style=""><?php echo f_getActasListado(); ?></div>
+                    <div id="contenido" class="col-sm-11">
+                        <form id="frmacta" onsubmit="return false;">
+                            <div id="divcabecera">
+                                <h2 id="titulo">Acta nueva</h2>
+                                <div class="row">
+                                    <label for="fecha" class="col-sm-1 col-form-label text-right">Fecha:</label>
+                                    <div class="col-sm-2">
+                                        <input type="hidden" id="fechainicial" name="fechainicial" value="<?php echo $fec; ?>">
+                                        <input type="text" id="fecha" name="fecha" class="calendario form-control" style="background-color: transparent;" readonly="readonly">
+                                    </div> 
+                                    <div class="col-sm-1 offset-6">
+                                        <button id="bograbar" class="btn btn-block btn-outline-success" onclick="xajax_grabarActa(xajax.getFormValues('frmacta'))" title="Grabar los datos"><span class="oi oi-circle-check"></span></button>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <button id="bograbar" class="btn btn-block btn-outline-warning" onclick="js_deshacerActa($('#fechainicial').val())" title="Restaurar datos originales"><span class="oi oi-loop-circular"></span></button>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <button id="bograbar" class="btn btn-block btn-outline-danger" onclick="js_eliminarActa($('#fechainicial').val())" title="Eliminar el acta actual"><span class="oi oi-circle-x"></span></button>
+                                    </div> 
                                 </div>
-                                <div class="col-sm-1 offset-6">
-                                    <button id="bograbar" class="btn btn-block btn-outline-success" onclick="xajax_grabarActa(xajax.getFormValues('frmacta'))" title="Grabar los datos"><span class="oi oi-circle-check"></span></button>
-                                </div>
-                                <div class="col-sm-1">
-                                    <button id="bograbar" class="btn btn-block btn-outline-warning" onclick="js_deshacerActa($('#fechainicial').val())" title="Restaurar datos originales"><span class="oi oi-loop-circular"></span></button>
-                                </div>
-                                <div class="col-sm-1">
-                                    <button id="bograbar" class="btn btn-block btn-outline-danger" onclick="js_eliminarActa($('#fechainicial').val())" title="Eliminar el acta actual"><span class="oi oi-circle-x"></span></button>
-                                </div>
+                                <br />
                             </div>
-                        </div>
-                        <div id="divformularioasis" class="listado"></div>
-                    </form>
+                            <div id="divcontenido" class="listado"></div>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
+        
         <div id="ainicio" class=""><a href="#inicioacta" title="Ir al inicio" role="button" class="btn btn-outline-secondary"><span class="oi oi-arrow-thick-top"></span></a></div>
         <!-- JavaScript -->
         <?php echo f_getScripts(); ?>

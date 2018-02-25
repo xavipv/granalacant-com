@@ -40,88 +40,90 @@ if(!$iApar) {
         <div id="contenedor" class="container">
             <div class="row">
                 <div id="divlistado" class="col-sm-2 hidden-ms hidden-xs listado" style=""><?php echo f_getApartamentosListado(); ?></div>
-                <div id="divcontenido" class="col-sm-10">  
-                    <div id="divformulario">
-                        <h2>Apartamento</h2>
-                        <form id="frmapartamento">
-                            <div class="row">
-                                <div class="form-group col-sm-2">
-                                    <label for="codigo">C&oacute;digo</label>
-                                    <input type="text" class="form-control solonumeros" style="background-color: transparent" id="codigo" name="codigo" value="" title="" placeholder="C&oacute;digo" readonly="readonly">
-                                </div>
-                                <div class="form-group col-sm-2">
-                                    <label for="portal">Portal</label>
-                                    <?php echo f_getSelectPortales(); ?>
-                                </div>
-                                <div class="form-group col-sm-2">
-                                    <label for="piso">Piso</label>
-                                    <?php echo f_getSelectPisos(); ?>
-                                </div>
-                                <div class="form-group col-sm-2">
-                                    <label for="letra">Letra</label>
-                                    <?php echo f_getSelectLetras(); ?>
-                                </div>
-                                <div class="form-group col-sm-2">
-                                    <label for="tipo">Tipo</label>
-                                    <?php echo f_getSelectTipos(); ?>
-                                </div>
-                                <div class="form-group col-sm-1">
-                                    <label for="fase">Fase</label>
-                                    <?php echo f_getSelectFases(); ?>
-                                </div>
-                                <div class="form-group col-sm-1">
-                                    <label for="garajes">Garajes</label>
-                                    <input type="text" class="form-control solonumeros" style="background-color: transparent" id="garajes" name="garajes" value="" placeholder="Garajes" readonly="readonly">
-                                </div>
-                            </div> 
-                            <div class="row">
-                                <div  class="form-group col-sm-2">
-                                    <label for="metros">Metros</label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control solonumeros" id="metros" name="metros" value="" placeholder="Metros">
-                                        <span class="input-group-addon">m2</span>
+                <div id="contenido" class="col-sm-10">
+                    <div id="divcabecera">  
+                        <div id="divformulario">
+                            <h2>Apartamento</h2>
+                            <form id="frmapartamento">
+                                <div class="row">
+                                    <div class="form-group col-sm-2">
+                                        <label for="codigo">C&oacute;digo</label>
+                                        <input type="text" class="form-control solonumeros" style="background-color: transparent" id="codigo" name="codigo" value="" title="" placeholder="C&oacute;digo" readonly="readonly">
+                                    </div>
+                                    <div class="form-group col-sm-2">
+                                        <label for="portal">Portal</label>
+                                        <?php echo f_getSelectPortales(); ?>
+                                    </div>
+                                    <div class="form-group col-sm-2">
+                                        <label for="piso">Piso</label>
+                                        <?php echo f_getSelectPisos(); ?>
+                                    </div>
+                                    <div class="form-group col-sm-2">
+                                        <label for="letra">Letra</label>
+                                        <?php echo f_getSelectLetras(); ?>
+                                    </div>
+                                    <div class="form-group col-sm-2">
+                                        <label for="tipo">Tipo</label>
+                                        <?php echo f_getSelectTipos(); ?>
+                                    </div>
+                                    <div class="form-group col-sm-1">
+                                        <label for="fase">Fase</label>
+                                        <?php echo f_getSelectFases(); ?>
+                                    </div>
+                                    <div class="form-group col-sm-1">
+                                        <label for="garajes">Garajes</label>
+                                        <input type="text" class="form-control solonumeros" style="background-color: transparent" id="garajes" name="garajes" value="" placeholder="Garajes" readonly="readonly">
+                                    </div>
+                                </div> 
+                                <div class="row">
+                                    <div  class="form-group col-sm-2">
+                                        <label for="metros">Metros</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control solonumeros" id="metros" name="metros" value="" placeholder="Metros">
+                                            <span class="input-group-addon">m2</span>
+                                        </div>
+                                    </div>
+                                    <div  class="form-group col-sm-2">
+                                        <label for="terraza">Terraza</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control solonumeros" id="terraza" name="terraza" value="" placeholder="Metros">
+                                            <span class="input-group-addon">m2</span>
+                                        </div>
+                                    </div>
+                                    <div  class="form-group col-sm-2">
+                                        <label for="urba">Urbanizaci&oacute;n</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control solonumeros" id="urba" name="urba" value="" placeholder="Porcentaje">
+                                            <span class="input-group-addon">m2</span>
+                                        </div>
+                                    </div>
+                                    <div  class="form-group col-sm-2">
+                                        <label for="fase200">Fase 200%</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control solonumeros" id="fase200" name="fase200" value="" onkeyup="$('#fase100').val(($(this).val()/2).toFixed(5))" placeholder="Porcentaje">
+                                            <span class="input-group-addon">%</span>
+                                        </div>
+                                    </div>
+                                    <div  class="form-group col-sm-2">
+                                        <label for="fase100">Fase 100%</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control solonumeros" style="background-color: transparent" id="fase100" name="fase100" value="" readonly="readonly" placeholder="Porcentaje">
+                                            <span class="input-group-addon">%</span>
+                                        </div>
+                                    </div>
+                                    <div  class="form-group col-sm-2">
+                                        <label for="bloque">Bloque</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control solonumeros" id="bloque" name="bloque" value="" placeholder="Porcentaje">
+                                            <span class="input-group-addon">%</span>
+                                        </div>
                                     </div>
                                 </div>
-                                <div  class="form-group col-sm-2">
-                                    <label for="terraza">Terraza</label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control solonumeros" id="terraza" name="terraza" value="" placeholder="Metros">
-                                        <span class="input-group-addon">m2</span>
-                                    </div>
-                                </div>
-                                <div  class="form-group col-sm-2">
-                                    <label for="urba">Urbanizaci&oacute;n</label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control solonumeros" id="urba" name="urba" value="" placeholder="Porcentaje">
-                                        <span class="input-group-addon">m2</span>
-                                    </div>
-                                </div>
-                                <div  class="form-group col-sm-2">
-                                    <label for="fase200">Fase 200%</label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control solonumeros" id="fase200" name="fase200" value="" onkeyup="$('#fase100').val(($(this).val()/2).toFixed(5))" placeholder="Porcentaje">
-                                        <span class="input-group-addon">%</span>
-                                    </div>
-                                </div>
-                                <div  class="form-group col-sm-2">
-                                    <label for="fase100">Fase 100%</label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control solonumeros" style="background-color: transparent" id="fase100" name="fase100" value="" readonly="readonly" placeholder="Porcentaje">
-                                        <span class="input-group-addon">%</span>
-                                    </div>
-                                </div>
-                                <div  class="form-group col-sm-2">
-                                    <label for="bloque">Bloque</label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control solonumeros" id="bloque" name="bloque" value="" placeholder="Porcentaje">
-                                        <span class="input-group-addon">%</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <button class="btn btn-success col-sm-2" type="button" onclick="xajax_grabarApartamento(xajax.getFormValues('frmapartamento'))">Guardar</button>
-                            <button class="btn btn-warning col-sm-2 float-right" type="button" onclick="xajax_setApartamentosDatosForm($('#codigo').val());">Restaurar</button>
-                        </form>
-                        <br />
+                                <button class="btn btn-success col-sm-2" type="button" onclick="xajax_grabarApartamento(xajax.getFormValues('frmapartamento'))">Guardar</button>
+                                <button class="btn btn-warning col-sm-2 float-right" type="button" onclick="xajax_setApartamentosDatosForm($('#codigo').val());">Restaurar</button>
+                            </form>
+                            <br />
+                        </div>
                     </div>
                     <div id="divbusqueda" class="listado"></div>
                 </div>

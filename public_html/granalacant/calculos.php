@@ -21,8 +21,8 @@ $aIncludes = array('config.inc.php', 'funciones.inc.php', 'funciones.xajax.php')
         <!-- Contenido -->
         <div id="contenedor" class="container" style="width: 80%">
             <div class="row">
-                <div id="divcontenido" class="col-sm-12">
-                    <div id="divformulario">
+                <div id="contenido" class="col-sm-12">
+                    <div id="divcabecera">
                         <!-- Formulario para los datos -->
                         <form id="frmdatos" onsubmit="return false;"> 
                             <div class="form-group row">

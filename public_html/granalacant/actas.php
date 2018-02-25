@@ -40,7 +40,9 @@ if(!$fec) {
         <div id="contenedor" class="container" style="width: 95%">
             <div class="row">
                 <div id="divlistado" class="col-sm-1 hidden-ms hidden-xs listado" style=""><?php echo f_getActasListado(); ?></div>
-                <div id="divcontenidoacta" class="col-sm-11"></div>
+                <div id="contenido" class="col-sm-11">
+                    <div id="divcontenido" class="listadowrap"></div>
+                </div>
             </div>
         </div>
         <div id="ainicio" class=""><a href="#inicioacta" title="Ir al inicio" role="button" class="btn btn-outline-secondary"><span class="oi oi-arrow-thick-top"></span></a></div>
