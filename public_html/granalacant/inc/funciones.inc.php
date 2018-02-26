@@ -889,9 +889,10 @@ function f_setJuntaDatosNueva($fecha) {
     } else {
         // En la nueva fecha no existe ninguna otra Junta. Busca los datos de la Junta anterior.
         $aDatos = $oJuntas->getJuntaAnterior($fecha);
+        $dat = $oJuntas->convertirFechaISOaBD($fecha);
         $fec = $fecha;
         $ori = "";
-        $tip = "E";
+        $tip = (date("m", strtotime($dat)) == "08") ? "O" : "E";
         $con = "2";
         $hor = "10:00";
         $pre = $aDatos[2];
