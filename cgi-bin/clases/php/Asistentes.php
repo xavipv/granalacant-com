@@ -46,9 +46,10 @@ class Asistentes {
      * <li>7 - Coeficiente bloque.</li>
      * <li>8 - Fase.</li>
      * <li>9 - Nombre del propietario.</li>
+     * <li>10 - Nombre del representante.</li>
      * </ul>
      * 
-     * @var array del tipo array('codapar'=>array('apartamento','codpers','nombre','repre','voto','urba','fase200','bloque','fase','propietario')...) 
+     * @var array del tipo array('codapar'=>array('apartamento','codpers','nombre','repre','voto','urba','fase200','bloque','fase','propietario','representante')...) 
      */
     private $aAsistentes;
     
@@ -97,11 +98,12 @@ class Asistentes {
      * <li>7 - Coeficiente bloque.</li>
      * <li>8 - Fase.</li>
      * <li>9 - Nombre del propietario.</li>
+     * <li>10 - Nombre del representante.</li>
      * </ul>
      * 
      * @param date $fecha Fecha en formato YYYY-MM-DD.
      * @param int $orden Orden. 0 - Por apartamento. 1 - Por propietario. 2 - Por representante.
-     * @return array del tipo array('codapar'=>array('apartamento','codpers','nombre','repre','voto','urba','fase200','bloque','fase','propietario')...)
+     * @return array del tipo array('codapar'=>array('apartamento','codpers','nombre','repre','voto','urba','fase200','bloque','fase','propietario','representante')...)
      */
     private function cargarAsistentes($fecha, $orden=0) {
         $this->cargarDatosOmision($fecha, $orden);
@@ -111,9 +113,9 @@ class Asistentes {
             default: $orden = "A.CODAPAR"; break;
         }
         if ($fecha) {
-            $rRes = $this->ejecutarSQL("SELECT A.CODAPAR,CONCAT(A.PORTAL,'-',A.PISO,A.LETRA) AS APARTAMENTO,JA.CODPERS,CONCAT(P.APELLIDOS,' ',P.NOMBRE) AS ASISTENTE,JA.REPRESENTADO,JA.VOTO,A.COEFICIENTE,A.COEFICIENTEFASE,A.COEFICIENTEBLOQ,A.FASE,IF(JA.REPRESENTADO='S',(SELECT CONCAT(PE.APELLIDOS,' ',PE.NOMBRE) AS PERSONA FROM PROPIETARIOS PR LEFT JOIN PERSONAS PE ON PR.CODPERS=PE.CODPERS WHERE PR.CODAPAR=A.CODAPAR AND IFNULL(PR.BAJA,'9999-99-99')=(SELECT MIN(IFNULL(BAJA,'9999-99-99')) FROM PROPIETARIOS WHERE CODAPAR=PR.CODAPAR AND IFNULL(BAJA,'9999-99-99')>'$fecha') ORDER BY IFNULL(PR.BAJA,'9999-99-99') DESC,PR.ORDEN LIMIT 1),'') AS PROPIETARIO FROM ASISTENTES JA LEFT JOIN APARTAMENTOS A ON A.CODAPAR=JA.CODAPAR LEFT JOIN PERSONAS P ON P.CODPERS=JA.CODPERS WHERE JA.FECHA='$fecha' ORDER BY $orden");
+            $rRes = $this->ejecutarSQL("SELECT A.CODAPAR,CONCAT(A.PORTAL,'-',A.PISO,A.LETRA) AS APARTAMENTO,JA.CODPERS,CONCAT(P.APELLIDOS,' ',P.NOMBRE) AS ASISTENTE,JA.REPRESENTADO,JA.VOTO,A.COEFICIENTE,A.COEFICIENTEFASE,A.COEFICIENTEBLOQ,A.FASE,IF(JA.REPRESENTADO='S',(SELECT CONCAT(PE.APELLIDOS,' ',PE.NOMBRE) AS PERSONA FROM PROPIETARIOS PR LEFT JOIN PERSONAS PE ON PR.CODPERS=PE.CODPERS WHERE PR.CODAPAR=A.CODAPAR AND IFNULL(PR.BAJA,'9999-99-99')=(SELECT MIN(IFNULL(BAJA,'9999-99-99')) FROM PROPIETARIOS WHERE CODAPAR=PR.CODAPAR AND IFNULL(BAJA,'9999-99-99')>'$fecha') ORDER BY IFNULL(PR.BAJA,'9999-99-99') DESC,PR.ORDEN LIMIT 1),CONCAT(P.APELLIDOS,' ',P.NOMBRE)) AS PROPIETARIO,IF(JA.REPRESENTADO='S',CONCAT(P.APELLIDOS,' ',P.NOMBRE),'') AS REPRESENTANTE FROM ASISTENTES JA LEFT JOIN APARTAMENTOS A ON A.CODAPAR=JA.CODAPAR LEFT JOIN PERSONAS P ON P.CODPERS=JA.CODPERS WHERE JA.FECHA='$fecha' ORDER BY $orden");
             while($aRow = $rRes->fetch(PDO::FETCH_ASSOC)) {
-                $this->aAsistentes[$aRow['CODAPAR']] = array($aRow['APARTAMENTO'],$aRow['CODPERS'], $aRow['ASISTENTE'], $aRow['REPRESENTADO'],$aRow['VOTO'],$aRow['COEFICIENTE'],$aRow['COEFICIENTEFASE'],$aRow['COEFICIENTEBLOQ'],$aRow['FASE'],$aRow['PROPIETARIO']);
+                $this->aAsistentes[$aRow['CODAPAR']] = array($aRow['APARTAMENTO'],$aRow['CODPERS'], $aRow['ASISTENTE'], $aRow['REPRESENTADO'],$aRow['VOTO'],$aRow['COEFICIENTE'],$aRow['COEFICIENTEFASE'],$aRow['COEFICIENTEBLOQ'],$aRow['FASE'],$aRow['PROPIETARIO'],$aRow['REPRESENTANTE']);
             }
             $rRes->closeCursor();
         }
@@ -252,9 +254,10 @@ class Asistentes {
      * <li>7 - Coeficiente bloque.</li>
      * <li>8 - Fase.</li>
      * <li>9 - Nombre del propietario.</li>
+     * <li>10 - Nombre del representante.</li>
      * </ul>
      * 
-     * @return array del tipo array('codapar'=>array('apartamento','codpers','nombre','repre','voto','urba','fase200','bloque','fase','propietario')...)
+     * @return array del tipo array('codapar'=>array('apartamento','codpers','nombre','repre','voto','urba','fase200','bloque','fase','propietario','representante')...)
      */
     public function getAsistentes() {
         return $this->aAsistentes;
