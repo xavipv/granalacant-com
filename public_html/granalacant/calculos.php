@@ -12,7 +12,7 @@ $aIncludes = array('config.inc.php', 'funciones.inc.php', 'funciones.xajax.php')
     <head>
         <?php echo f_getCabeceraHTML("C&aacute;lculos"); ?>
     </head>
-    <body>
+    <body onload="$('#cantidad').focus();">
         <div id="cabecera">
             <!-- Barra de navegacion -->
             <?php include 'menu.php'; ?>
