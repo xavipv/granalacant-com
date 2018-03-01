@@ -177,7 +177,7 @@ class Votacion {
         $aVotos = array();
         $aCoefi = array();
         if($fecha && $numvot) {
-            $rRes = $this->ejecutarSQL("SELECT V.CODAPAR,V.ASISTE,V.VOTA,V.PRESENTE,V.RESULTADO1,V.RESULTADO2,V.RESULTADO3,V.RESULTADO4,A.COEFICIENTE,A.COEFICIENTEFASE,A.COEFICIENTEBLOQ FROM VOTACIONES_VOTOS V LEFT JOIN APARTAMENTOS A ON A.CODAPAR=V.CODAPAR WHERE V.FECHA='$fecha' AND V.NUMVOT='$numvot' ORDER BY V.CODAPAR");
+            $rRes = $this->ejecutarSQL("SELECT V.CODAPAR,V.ASISTE,V.VOTA,V.PRESENTE,V.RESULTADO1,V.RESULTADO2,V.RESULTADO3,V.RESULTADO4,A.COEFICIENTE,A.COEFICIENTEFASE,A.COEFICIENTEBLOQ FROM VOTOS V LEFT JOIN APARTAMENTOS A ON A.CODAPAR=V.CODAPAR WHERE V.FECHA='$fecha' AND V.NUMVOT='$numvot' ORDER BY V.CODAPAR");
             while($aRow = $rRes->fetch(PDO::FETCH_ASSOC)) {
                 $aVotos[$aRow['CODAPAR']] = array($aRow['ASISTE'],$aRow['VOTA'],$aRow['PRESENTE'],$aRow['RESULTADO1'],$aRow['RESULTADO2'],$aRow['RESULTADO3'],$aRow['RESULTADO4']);
                 $aCoefi[$aRow['CODAPAR']] = array($aRow['COEFICIENTE'],$aRow['COEFICIENTEFASE'],$aRow['COEFICIENTEBLOQ']);
@@ -218,7 +218,7 @@ class Votacion {
         $aVo = $this->votos;    // array('apar'=>array('asis','vota','pres','res1','res2','res3','res4')
         
         // Primero borra todos los votos anteriores, despues graba los nuevos votos.
-        if ($this->ejecutarSQL("DELETE FROM VOTACIONES_VOTOS WHERE FECHA='$fec' AND NUMVOT='$vot'")) {
+        if ($this->ejecutarSQL("DELETE FROM VOTOS WHERE FECHA='$fec' AND NUMVOT='$vot'")) {
             foreach ($aVo as $apa => $aDat) {
                 $asis = $aDat[0];
                 $vota = $aDat[1];
@@ -227,7 +227,7 @@ class Votacion {
                 $res2 = $aDat[4];
                 $res3 = $aDat[5];
                 $res4 = $aDat[6];
-                $b = $this->ejecutarSQL("INSERT INTO VOTACIONES_VOTOS (FECHA,NUMVOT,CODAPAR,ASISTE,VOTA,PRESENTE,RESULTADO1,RESULTADO2,RESULTADO3,RESULTADO4) VALUES ('$fec','$vot','$apa','$asis','$vota','$pres','$res1','$res2','$res3','$res4')");
+                $b = $this->ejecutarSQL("INSERT INTO VOTOS (FECHA,NUMVOT,CODAPAR,ASISTE,VOTA,PRESENTE,RESULTADO1,RESULTADO2,RESULTADO3,RESULTADO4) VALUES ('$fec','$vot','$apa','$asis','$vota','$pres','$res1','$res2','$res3','$res4')");
                 $bOK = (!$b) ? FALSE : $bOK;
             }
             // Recarga los datos.

@@ -54,7 +54,7 @@ class Votaciones {
      * Carga los datos de las votaciones.
      */
     private function cargarVotaciones() {
-        $res = $this->ejecutarSQL("SELECT DISTINCT FECHA,DATE_FORMAT(FECHA,'%d-%m-%Y') AS FECHAISO,NUMVOT FROM VOTACIONES_VOTOS ORDER BY FECHA DESC,NUMVOT");
+        $res = $this->ejecutarSQL("SELECT DISTINCT FECHA,DATE_FORMAT(FECHA,'%d-%m-%Y') AS FECHAISO,NUMVOT FROM VOTOS ORDER BY FECHA DESC,NUMVOT");
         while($aRow = $res->fetch(PDO::FETCH_ASSOC)) {
             $this->aVotaciones[$aRow['FECHA']][$aRow['NUMVOT']] = $aRow['FECHAISO'];
         }
