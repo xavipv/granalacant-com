@@ -1,4 +1,4 @@
 # Granalacant-com
 
-Gestión de datos para una comunidad de vecinos.
+Gestión de datos para la comunidad de vecinos *Gran Alacant*.
 
