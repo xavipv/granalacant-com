@@ -22,26 +22,46 @@ class Asistentes {
     private $fecha;
     
     /**
-     * Array cuyo codigo es el codigo de apartamento y los datos un array del siguiente tipo:
+     * Controla como se ordenaran los datos de los asistentes, el orden puede ser:
+     * <ul>
+     * <li>0 - Por apartamento.</li>
+     * <li>1 - Por propietarios.</li>
+     * <li>2 - Por representantes.</li>
+     * </ul>
+     * 
+     * @var int Orden 0, 1 o 2. 
+     */
+    private $orden;
+    
+    /**
+     * Array cuyo codigo es el <b>codigo de apartamento</b> y los datos un array:
      * <ul>
      * <li>0 - Apartamento.</li>
      * <li>1 - Codigo de persona.</li>
-     * <li>2 - Nombre de persona.</li>
+     * <li>2 - Nombre del asistente.</li>
      * <li>3 - Representado, S/N.</li>
      * <li>4 - Voto, S/N.</li>
      * <li>5 - Coeficiente urbanizacion.</li>
      * <li>6 - Coeficiente fase 200%.</li>
      * <li>7 - Coeficiente bloque.</li>
+     * <li>8 - Fase.</li>
+     * <li>9 - Nombre del propietario.</li>
      * </ul>
      * 
-     * @var array del tipo array('codapar' => array('apart','codpers','nombre','repre','voto')...) 
+     * @var array del tipo array('codapar'=>array('apartamento','codpers','nombre','repre','voto','urba','fase200','bloque','fase','propietario')...) 
      */
     private $aAsistentes;
     
     //--- INSTANCIACION ------------------------------------------------------//
     
-    public function __construct($fecha) {
-        $this->cargarAsistentes($this->fechaIso_Base($fecha));
+    /**
+     * Constructor de la clase.
+     * 
+     * @param date $fecha Fecha en cualquier formato.
+     * @param int $orden Orden para los datos: 0, 1 o 2.
+     */
+    public function __construct($fecha, $orden=0) {
+        $this->cargarAsistentes($this->fechaIso_Base($fecha), $orden);
     }
     
     //--- METODOS PRIVADOS ---------------------------------------------------//
@@ -64,32 +84,51 @@ class Asistentes {
     }
     
     /**
-     * Carga los asistentes a una Junta General.
-     * Los datos se cargan en un array cuyo codigo es el codigo de apartamento y los datos un array:
+     * Carga los asistentes a una junta determinada ordenados por la opcion elegida.
+     * Devuelve un array cuyo codigo es el <b>codigo de apartamento</b> y los datos un array:
      * <ul>
      * <li>0 - Apartamento.</li>
      * <li>1 - Codigo de persona.</li>
-     * <li>2 - Nombre de persona.</li>
+     * <li>2 - Nombre del asistente.</li>
      * <li>3 - Representado, S/N.</li>
      * <li>4 - Voto, S/N.</li>
      * <li>5 - Coeficiente urbanizacion.</li>
      * <li>6 - Coeficiente fase 200%.</li>
      * <li>7 - Coeficiente bloque.</li>
+     * <li>8 - Fase.</li>
+     * <li>9 - Nombre del propietario.</li>
      * </ul>
      * 
-     * @param type $fecha
+     * @param date $fecha Fecha en formato YYYY-MM-DD.
+     * @param int $orden Orden. 0 - Por apartamento. 1 - Por propietario. 2 - Por representante.
+     * @return array del tipo array('codapar'=>array('apartamento','codpers','nombre','repre','voto','urba','fase200','bloque','fase','propietario')...)
      */
-    private function cargarAsistentes($fecha) {
-        $aDatos = array();
-        if($fecha) {
-            $rRes = $this->ejecutarSQL("SELECT J.CODAPAR,CONCAT('Portal ',PORTAL,'-',PISO,LETRA) AS APARTAMENTO,J.CODPERS,CONCAT(P.APELLIDOS,' ',P.NOMBRE) AS NOM,J.REPRESENTADO,J.VOTO,A.COEFICIENTE,A.COEFICIENTEFASE,A.COEFICIENTEBLOQ FROM ASISTENTES J LEFT JOIN APARTAMENTOS A ON A.CODAPAR=J.CODAPAR LEFT JOIN PERSONAS P ON P.CODPERS=J.CODPERS WHERE J.FECHA='$fecha' ORDER BY J.CODAPAR");
-            while($aRow = $rRes->fetch(PDO::FETCH_ASSOC)) {
-                $aDatos[$aRow['CODAPAR']] = array($aRow['APARTAMENTO'],$aRow['CODPERS'],$aRow['NOM'],$aRow['REPRESENTADO'],$aRow['VOTO'],$aRow['COEFICIENTE'],$aRow['COEFICIENTEFASE'],$aRow['COEFICIENTEBLOQ']);
-            }
-            $rRes->closeCursor(); 
+    private function cargarAsistentes($fecha, $orden=0) {
+        $this->cargarDatosOmision($fecha, $orden);
+        switch ($orden) {
+            case 1 : $orden = "PROPIETARIO, A.CODAPAR"; break;
+            case 2 : $orden = "REPRESENTANTE, A.CODAPAR"; break;
+            default: $orden = "A.CODAPAR"; break;
         }
+        if ($fecha) {
+            $rRes = $this->ejecutarSQL("SELECT A.CODAPAR,CONCAT(A.PORTAL,'-',A.PISO,A.LETRA) AS APARTAMENTO,JA.CODPERS,CONCAT(P.APELLIDOS,' ',P.NOMBRE) AS ASISTENTE,JA.REPRESENTADO,JA.VOTO,A.COEFICIENTE,A.COEFICIENTEFASE,A.COEFICIENTEBLOQ,A.FASE,IF(JA.REPRESENTADO='S',(SELECT CONCAT(PE.APELLIDOS,' ',PE.NOMBRE) AS PERSONA FROM PROPIETARIOS PR LEFT JOIN PERSONAS PE ON PR.CODPERS=PE.CODPERS WHERE PR.CODAPAR=A.CODAPAR AND IFNULL(PR.BAJA,'9999-99-99')=(SELECT MIN(IFNULL(BAJA,'9999-99-99')) FROM PROPIETARIOS WHERE CODAPAR=PR.CODAPAR AND IFNULL(BAJA,'9999-99-99')>'$fecha') ORDER BY IFNULL(PR.BAJA,'9999-99-99') DESC,PR.ORDEN LIMIT 1),'') AS PROPIETARIO FROM ASISTENTES JA LEFT JOIN APARTAMENTOS A ON A.CODAPAR=JA.CODAPAR LEFT JOIN PERSONAS P ON P.CODPERS=JA.CODPERS WHERE JA.FECHA='$fecha' ORDER BY $orden");
+            while($aRow = $rRes->fetch(PDO::FETCH_ASSOC)) {
+                $this->aAsistentes[$aRow['CODAPAR']] = array($aRow['APARTAMENTO'],$aRow['CODPERS'], $aRow['ASISTENTE'], $aRow['REPRESENTADO'],$aRow['VOTO'],$aRow['COEFICIENTE'],$aRow['COEFICIENTEFASE'],$aRow['COEFICIENTEBLOQ'],$aRow['FASE'],$aRow['PROPIETARIO']);
+            }
+            $rRes->closeCursor();
+        }
+    }
+    
+    /**
+     * Carga los datos por omision.
+     * 
+     * @param date $fecha Fecha en formato YYYY-MM-DD.
+     * @param int $orden Orden. 0 - Por apartamento. 1 - Por propietario. 2 - Por representante.
+     */
+    private function cargarDatosOmision($fecha, $orden) {
         $this->fecha = $fecha;
-        $this->aAsistentes = $aDatos;
+        $this->orden = ($orden != 0 && $orden != 1 && $orden != 2) ? 0 : $orden;
+        $this->aAsistentes = array();
     }
     
     /**
@@ -133,6 +172,20 @@ class Asistentes {
     //--- METODOS PUBLICOS ---------------------------------------------------//
     
     /**
+     * Asigna una nueva fecha.
+     * 
+     * @param date $fecha Fecha en cualquier formato.
+     */
+    public function setFecha($fecha) {
+        $date = $this->fechaIso_Base($fecha);
+        $orden = $this->orden;
+        if ($date && $date != $this->fecha) {
+            // Si cambia la fecha, recarga los datos.
+            $this->cargarAsistentes($date, $orden);
+        }
+    }
+    
+    /**
      * Obtiene la fecha de la Junta a la que se asiste.
      * 
      * @return date Fecha en formato YYYY-MM-DD.
@@ -151,19 +204,57 @@ class Asistentes {
     }
     
     /**
+     * Se asigna un nuevo orden para los datos de los asistentes.
+     * El orden puede ser:
+     * <ul>
+     * <li>0 - Por apartamento.</li>
+     * <li>1 - Por propietarios.</li>
+     * <li>2 - Por representantes.</li>
+     * </ul>
+     * 
+     * @param int $orden Tipo de orden: 0, 1 o 2.
+     */
+    public function setOrden($orden) {
+        $ord = ($orden != 0 && $orden != 1 && $orden != 2) ? 0 : $orden;
+        if ($ord != $this->orden) {
+            // Si cambia el orden, recarga los datos.
+            $fecha = $this->fecha;
+            $this->cargarAsistentes($fecha, $ord);
+        }
+    }
+    
+    /**
+     * Devuelve el orden de los datos de los asistentes.
+     * El orden puede ser:
+     * <ul>
+     * <li>0 - Por apartamento.</li>
+     * <li>1 - Por propietarios.</li>
+     * <li>2 - Por representantes.</li>
+     * </ul>
+     * 
+     * @return Tipo de orden: 0, 1 o 2.
+     */
+    public function getOrden() {
+        return $this->orden;
+    }
+    
+    /**
      * Obtiene los datos de los asistentes a una Junta.
-     * Array cuyo codigo es el codigo de apartamento y los datos un array del siguiente tipo:
+     * Array cuyo codigo es el <b>codigo de apartamento</b> y los datos un array:
      * <ul>
      * <li>0 - Apartamento.</li>
      * <li>1 - Codigo de persona.</li>
-     * <li>2 - Nombre de persona.</li>
+     * <li>2 - Nombre del asistente.</li>
      * <li>3 - Representado, S/N.</li>
      * <li>4 - Voto, S/N.</li>
      * <li>5 - Coeficiente urbanizacion.</li>
      * <li>6 - Coeficiente fase 200%.</li>
      * <li>7 - Coeficiente bloque.</li>
+     * <li>8 - Fase.</li>
+     * <li>9 - Nombre del propietario.</li>
      * </ul>
-     * @return array
+     * 
+     * @return array del tipo array('codapar'=>array('apartamento','codpers','nombre','repre','voto','urba','fase200','bloque','fase','propietario')...)
      */
     public function getAsistentes() {
         return $this->aAsistentes;

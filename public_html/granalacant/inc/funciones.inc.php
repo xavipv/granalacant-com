@@ -109,6 +109,37 @@ function f_getSelectAgrupado($aDat, $id='', $sel='', $clase='', $onch='' , $bla=
     return "$s</optgroup></select>";
 }
 
+/**
+ * Crea un select de fechas agrupadas por años.
+ * El valor se da en formato YYYY-MM-DD y los textos aparecen como DD-MM-YYYY.
+ * 
+ * @param array $aDat Array del tipo array('date'=>'fecha'...)
+ * @param string $id Identificador para el select.
+ * @param string $sel Elemento seleccionado.
+ * @param string $clase Clase para el select.
+ * @param string $onch Funcion para 'onchange'.
+ * @param boolean $bla Si es TRUE deja la primera opcion en blanco.
+ * @return string Codigo HTML del select.
+ */
+function f_getSelectAgrupadoFechas($aDat, $id='', $sel='', $clase='', $onch='' , $bla=FALSE) {
+    $sI = ($id) ? "id=\"$id\" name=\"$id\"" : "";
+    $sC = ($clase) ? "class=\"$clase\"" : "";
+    $sA = ($onch) ? "onchange=\"$onch\"" : "";
+    $s  = "<select $sI $sC $sA>"; 
+    $s .= ($bla) ? "<option value=\"\"></option>" : "";
+    $g  = "";
+    foreach ($aDat as $date => $fecha) {
+        $any = substr($date, 0, 4);
+        if ($any != $g) {
+            $s .= (!$g) ? "<optgroup label=\"$any\">" : "</optgroup><optgroup label=\"$any\">";
+            $g = $any;
+        }
+        $se = ($sel == $date) ? "selected=\"selected\"" : "";
+        $s .= "<option value=\"$date\" $se>$fecha</option>";
+    }
+    return "$s</optgroup></select>";
+}
+
 //TODO: ELIMINAR
 function f_getBotonesPortales($id) {
     $html = "";
@@ -1986,6 +2017,184 @@ function f_getListadoPropietariosUnir($aPr1, $aPr2, $ver) {
     }
     array_multisort($aAux, SORT_ASC, $aNueva);
     return $aNueva;
+}
+
+//--- LISTADO DE JUNTAS ---//
+
+/**
+ * Obtiene el listado de los asistentes a una Junta.
+ * 
+ * @param array $frm Datos del formulario.
+ * @return string Codigo HTML del listado.
+ */
+function f_getListadoJunta($frm) {
+    // Datos del formulario.
+    $fecha = $frm['fecha'];                             // Fecha de la Junta.
+    $orden = $frm['orden'];                             // 0 - Apartamentos. 1 - Propietarios. 2 - Representantes.
+    $bUrba = (isset($frm['urba'])) ? TRUE : FALSE;      // Mostrar coeficiente urbanizacion.
+    $bF200 = (isset($frm['fase200'])) ? TRUE : FALSE;   // Mostrar coeficiente fase 200%.
+    $bF100 = (isset($frm['fase100'])) ? TRUE : FALSE;   // Mostrar coeficiente fase 100%.
+    $bBloq = (isset($frm['bloque'])) ? TRUE : FALSE;    // Mostrar coeficiente bloque.
+    $bSuma = (isset($frm['sumas'])) ? TRUE : FALSE;     // Mostrar sumas (solo cuando ordena por apartamentos).
+    $bVoto = (isset($frm['votos'])) ? TRUE : FALSE;     // Mostrar si tiene voto o no.
+    $bMayu = (isset($frm['mayus'])) ? TRUE : FALSE;     // Mostrar los nombres en mayusculas.
+    
+    $tap = 0; $tre = 0; $tpr = 0; $tcu = 0; $tcf = 0; $tcr = 0; $tcb = 0; $tvo = 0; $tvn = 0;
+    $fap = 0; $fre = 0; $fpr = 0; $fcu = 0; $fcf = 0; $fcr = 0; $fcb = 0; $fvo = 0; $fvn = 0;
+    $pap = 0; $pre = 0; $ppr = 0; $pcu = 0; $pcf = 0; $pcr = 0; $pcb = 0; $pvo = 0; $pvn = 0;
+    
+    // Obtiene los datos de los asistentes a la Junta.
+    $oAsis = new Asistentes($fecha, $orden);
+    $feISO = $oAsis->convertirFechaBDaISO($fecha);
+    $html = "<table class=\"table table-condensed table-ultra\">" . f_getListadoJuntaTitulo($feISO, $orden, $bUrba, $bF200, $bF100, $bBloq, $bVoto);
+    $portal = "";
+    $fase = "";
+    foreach ($oAsis->getAsistentes() as $aAsis) {
+        // array('codapar'=>array('0 apartamento','1 codpers','2 nombre','3 repre','4 voto','5 urba','6 fase200','7 bloque','8 fase','9 propietario')...)
+        
+        $nom = ($bMayu) ? $aAsis[2] : f_primeraMayuscula($aAsis[2]);
+        $pro = ($bMayu) ? $aAsis[9] : f_primeraMayuscula($aAsis[9]);
+        $por = strstr($aAsis[0], '-', TRUE);
+        
+        if ($por != $portal) {
+            // Pone las sumas del portal.
+            $html .= ($bSuma) ? f_getListadoJuntaSumas("Portal", $portal, $bUrba, $bF200, $bF100, $bBloq, $bVoto, $pap, $pre, $ppr, $pcu, $pcf, $pcr, $pcb, $pvo, $pvn) : "";
+            $pap = 0; $pre = 0; $ppr = 0; $pcu = 0; $pcf = 0; $pcr = 0; $pcb = 0; $pvo = 0; $pvn = 0;
+            $portal = $por;
+        }
+        
+        if ($aAsis[8] != $fase) {
+            // Pone las sumas de la fase.
+            $html .= ($bSuma) ? f_getListadoJuntaSumas("Fase", $fase, $bUrba, $bF200, $bF100, $bBloq, $bVoto, $fap, $fre, $fpr, $fcu, $fcf, $fcr, $fcb, $fvo, $fvn) : "";
+            $fap = 0; $fre = 0; $fpr = 0; $fcu = 0; $fcf = 0; $fcr = 0; $fcb = 0; $fvo = 0; $fvn = 0;
+            $fase = $aAsis[8];
+        }
+        
+        // Apartamento.
+        $html .= "<tr><td>" . $aAsis[0] . "</td>";
+        $tap++; $fap++; $pap++;
+        
+        // Propietario y representante.
+        if ($aAsis[3] == 'S') {
+            // Representado.
+            $html .= "<td class=\"baja\">$pro</td><td>$nom</td>";
+            $tre++; $fre++; $pre++;
+        } else {
+            // Propietario.
+            $html .= "<td>$nom</td><td>&nbsp;</td>";
+            $tpr++; $fpr++; $ppr++;
+        }
+        
+        $clasvot = ($aAsis[4] == 'S') ? "" : "baja";
+        
+        // Coeficiente urbanizacion.
+        if ($bUrba) {
+            $html .= "<td class=\"text-right $clasvot\">" . number_format($aAsis[5],4,',','.') . "</td>";
+            $tcu += $aAsis[5]; $fcu += $aAsis[5]; $pcu += $aAsis[5];
+        }
+        
+        // Coeficiente fase 200.
+        if ($bF200) {
+            $html .= "<td class=\"text-right $clasvot\">" . number_format($aAsis[6],4,',','.') . "</td>";
+            $tcf += $aAsis[6]; $fcf += $aAsis[6]; $pcf += $aAsis[6];
+        }
+        
+        // Coeficiente fase 100.
+        if ($bF100) {
+            $html .= "<td class=\"text-right $clasvot\">" . number_format($aAsis[6]/2,5,',','.') . "</td>";
+            $tcr += $aAsis[6]/2; $fcr += $aAsis[6]/2; $pcr += $aAsis[6]/2;
+        }
+        
+        // Coeficiente bloque.
+        if ($bBloq) {
+            $html .= "<td class=\"text-right $clasvot\">" . number_format($aAsis[7],2,',','.') . "</td>";
+            $tcb += $aAsis[7]; $fcb += $aAsis[7]; $pcb += $aAsis[7];
+        }
+        
+        if ($bVoto) {
+            // Con voto.
+            if ($aAsis[4] == 'S') {
+                // Con voto.
+                $html .= "<td class=\"text-center\">S&iacute;</td></tr>";
+                $tvo++; $fvo++; $pvo++;
+            } else {
+                // Sin voto.
+                $html .= "<td class=\"text-center\">No</td></tr>";
+                $tvn++; $fvn++; $pvn++;
+            }
+        } else {
+            $html .= "</tr>";
+        }
+    }
+    // Sumas finales.
+    $html .= ($bSuma) ? f_getListadoJuntaSumas("Portal", $portal, $bUrba, $bF200, $bF100, $bBloq, $bVoto, $pap, $pre, $ppr, $pcu, $pcf, $pcr, $pcb, $pvo, $pvn) : "";
+    $html .= ($bSuma) ? f_getListadoJuntaSumas("Fase", $fase, $bUrba, $bF200, $bF100, $bBloq, $bVoto, $fap, $fre, $fpr, $fcu, $fcf, $fcr, $fcb, $fvo, $fvn) : "";
+    $html .= f_getListadoJuntaSumas("", "Total", $bUrba, $bF200, $bF100, $bBloq, $bVoto, $tap, $tre, $tpr, $tcu, $tcf, $tcr, $tcb, $tvo, $tvn);
+    return "$html</table>";
+}
+
+/**
+ * Obtiene el titulo del listado de los asistentes a una Junta.
+ * 
+ * @param date $fec Fecha en formato DD-MM-YYYY.
+ * @param int $ord Orden de los datos: 0, 1 o 2.
+ * @param boolean $bur Ver coeficiente urbanizacion.
+ * @param boolean $bf2 Ver coeficiente fase 200%.
+ * @param boolean $bf1 Ver coeficiente fase 100%.
+ * @param boolean $bbl Ver coeficiente bloque.
+ * @param boolean $bvo Ver si puede votar o no.
+ * @return string Codigo HTML del titulo.
+ */
+function f_getListadoJuntaTitulo($fec, $ord, $bur, $bf2, $bf1, $bbl, $bvo) {
+    
+    $tit = "<h4>Listado de asistentes a la Junta del $fec ordenados por ";
+    switch ($ord) {
+        case 1 : $tit .= "nombre de los propietarios."; break;
+        case 2 : $tit .= "nombre de los representantes."; break;
+        default: $tit .= "apartamentos.</h4>"; break;
+    }
+    $tit .= "<tr><th>Apartamento</th><th>Propietario</th><th>Representante</th>";
+    $tit .= ($bur) ? "<th class=\"text-right\">Urbanizaci&oacute;n</th>" : "";
+    $tit .= ($bf2) ? "<th class=\"text-right\">Fase 200%</th>" : "";
+    $tit .= ($bf1) ? "<th class=\"text-right\">Fase 100%</th>" : "";
+    $tit .= ($bbl) ? "<th class=\"text-right\">Bloque</th>" : "";
+    $tit .= ($bvo) ? "<th class=\"text-center\">Con voto</th>" : "";
+    $tit .= "</tr>";
+    return $tit;
+}
+
+/**
+ * Obtiene las sumas de los asistentes a la Junta.
+ * 
+ * @param string $tipo Tipo de suma.
+ * @param string $nom Numero de bloque, fase o total.
+ * @param boolean $bur Ver coeficiente urbanizacion.
+ * @param boolean $bf2 Ver coeficiente fase 200%.
+ * @param boolean $bf1 Ver coeficiente fase 100%.
+ * @param boolean $bbl Ver coeficiente bloque.
+ * @param boolean $bvo Ver si puede votar o no.
+ * @param int $ap Suma de apartamentos.
+ * @param int $re Suma de representados.
+ * @param int $pr Suma de propietarios.
+ * @param int $cu Suma de coeficiente de urbanizacion.
+ * @param int $cf Suma de coeficiente de fase 200%.
+ * @param int $cr Suma de coeficiente de fase 100%.
+ * @param int $cb Suma de coeficiente de bloque.
+ * @param int $vo Suma de votos si.
+ * @param int $vn Suma de votos no.
+ * @return string Codigo HTML de las sumas.
+ */
+function f_getListadoJuntaSumas($tipo, $nom, $bur, $bf2, $bf1, $bbl, $bvo, $ap, $re, $pr, $cu, $cf, $cr, $cb, $vo, $vn) {
+    $tit = "";
+    if ($nom) {
+        $tit .= "<tr><th>$tipo $nom:&nbsp;$ap</th><th>$pr</th><th>$re</th>";
+        $tit .= ($bur) ? "<th class=\"text-right\">" . number_format($cu, 4, ',', '.') . "</th>" : "";
+        $tit .= ($bf2) ? "<th class=\"text-right\">" . number_format($cf, 4, ',', '.') . "</th>" : "";
+        $tit .= ($bf1) ? "<th class=\"text-right\">" . number_format($cr, 5, ',', '.') . "</th>" : "";
+        $tit .= ($bbl) ? "<th class=\"text-right\">" . number_format($cb, 2, ',', '.') . "</th>" : "";
+        $tit .= ($bvo) ? "<th class=\"text-center\">$vo&nbsp;|&nbsp;$vn</th></tr>" : "</tr>";
+    }
+    return $tit;
 }
 
 //--- CALCULO DE CUOTA MENSUAL ---//

@@ -42,7 +42,7 @@ $activo = f_getMenuAcciones($pagina);
                     <a class="dropdown-item" href="asistentes.php">Asistentes</a>
                     <a class="dropdown-item" href="votaciones.php">Votaciones</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Listado juntas</a>
+                    <a class="dropdown-item" href="juntaslis.php">Listado</a>
                 </div>
             </li>
             <li class="nav-item dropdown">

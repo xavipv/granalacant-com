@@ -16,8 +16,22 @@ class Juntas {
     
     /**
      * Contiene los datos de todas las juntas.
+     * Array que tiene como claves las <b>fechas</b> de las Juntas y como valores:
+     * <ul>
+     * <li>0 - Fecha en formato ISO.</li>
+     * <li>1 - Tipo de junta.</li>
+     * <li>2 - Presidente.</li>
+     * <li>3 - Vicepresidente 1.</li>
+     * <li>4 - Vicepresidente 2.</li>
+     * <li>5 - Vocal 1.</li>
+     * <li>6 - Vocal 2.</li>
+     * <li>7 - Vocal 3.</li>
+     * <li>8 - Vocal 4.</li>
+     * <li>9 - Secretario.</li>
+     * <li>10 - Administracion.</li>
+     * </ul>
      * 
-     * @var array del tipo array('fecha'=>array('fechaISO','tipo')...) 
+     * @var array del tipo array('fecha'=>array('fechaISO','tipo','pres','vic1','vic2','voc1','voc2','voc3','voc4','secr','adm')...) 
      */
     private $aJuntas;
     
@@ -38,7 +52,7 @@ class Juntas {
      * @param string $sql Sentencia a ejecutar.
      * @return result Resultado de la ejecución.
      */
-    protected function ejecutarSQL($sql) {
+    private function ejecutarSQL($sql) {
         try { 
             $rRes = Base::prepare($sql);
             $rRes->execute();
@@ -139,10 +153,23 @@ class Juntas {
      * <li>10 - Administracion.</li>
      * </ul>
      * 
-     * @return array del tipo array('fecha'=>array('fechaISO','tipo')...) 
+     * @return array del tipo array('fecha'=>array('fechaISO','tipo','pres','vic1','vic2','voc1','voc2','voc3','voc4','secr','adm')...) 
      */
     public function getJuntas() {
         return $this->aJuntas;
+    }
+    
+    /**
+     * Obtiene las fechas de todas las juntas.
+     * 
+     * @return array del tipo array('date'=>'fecha'...)
+     */
+    public function getFechas() {
+        $aFechas = array();
+        foreach ($this->aJuntas as $date => $aDat) {
+            $aFechas[$date] = $aDat[0];
+        }
+        return $aFechas;
     }
     
     /**
