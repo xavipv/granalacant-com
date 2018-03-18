@@ -1439,9 +1439,9 @@ function f_getDeudas($fecha) {
         $on1 = "onkeyup=\"js_sumar($portal, this.id);\" onchange=\"js_formatear(this.id, 2);$('#boton$apa').prop('disabled',false);\"";
         $pro = $oProps->getNombreSimplePropietarioApartamentoFecha($apa, $fecha);   // Propietario en esa fecha.
         $aDe = $oDeudas->getDeudaFechaApartamento($fecha, $apa);                    // array('ordinaria', 'extraordinaria')
-        $ord = number_format($aDe[0], 2);   
-        $ext = number_format($aDe[1], 2); 
-        $sum = number_format($aDe[0] + $aDe[1], 2);
+        $ord = number_format($aDe[0], 2, ".", "");   
+        $ext = number_format($aDe[1], 2, ".", ""); 
+        $sum = number_format($aDe[0] + $aDe[1], 2, ".", ",");
         $papart++; $pdeuda += ($sum > 0) ? 1 : 0; $pordin += $ord; $pextra += $ext;
         $fapart++; $fdeuda += ($sum > 0) ? 1 : 0; $fordin += $ord; $fextra += $ext;
         $tapart++; $tdeuda += ($sum > 0) ? 1 : 0; $tordin += $ord; $textra += $ext;
@@ -1472,10 +1472,10 @@ function f_getDeudas($fecha) {
  */
 function f_getDeudasSuma($tipo, $valor, $apar, $deuda, $ordin, $extra) {
     $let = substr($tipo, 0, 1);
-    $ord = number_format($ordin, 2);   
-    $ext = number_format($extra, 2); 
-    $sum = number_format($ordin + $extra, 2);
-    $por = number_format($deuda * 100 / $apar, 2);
+    $ord = number_format($ordin, 2, ".", ",");   
+    $ext = number_format($extra, 2, ".", ","); 
+    $sum = number_format($ordin + $extra, 2, ".", ",");
+    $por = number_format($deuda * 100 / $apar, 2, ".", ",");
     return "<tr><td class=\"align-middle col-sm-1 text-center\" id=\"${let}ap$valor\">$apar</td>
             <td class=\"align-middle col-sm-1 text-right\">Deudores $tipo $valor:</td>
             <td class=\"align-middle col-sm-1 text-center\" id=\"${let}de$valor\">$deuda</td>

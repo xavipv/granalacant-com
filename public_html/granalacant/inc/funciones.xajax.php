@@ -1025,8 +1025,8 @@ function grabarDeuda($fecha, $apar, $ordin, $extra) {
  */
 function deshacerDeuda($por, $apa, $ord, $ext) {
     $response = new xajaxResponse();
-    $response->assign("or$apa", "value", number_format($ord,2));
-    $response->assign("ex$apa", "value", number_format($ext,2));
+    $response->assign("or$apa", "value", number_format($ord,2,".",""));
+    $response->assign("ex$apa", "value", number_format($ext,2,".",""));
     $response->script("js_sumar($por,'or$apa'); $('#boton$apa').prop('disabled',true)");
     return $response;
 }
