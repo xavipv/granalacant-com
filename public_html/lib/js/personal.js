@@ -50,6 +50,7 @@ function js_calendario(bBor=true, bHoy=true) {
         }); 
     });
 }
+
 /**
  * Se llama al cambiar la fecha del calendario.
  * 
@@ -166,7 +167,6 @@ function js_sumarTodos(por) {
 function js_sumarDeudas() {
     js_sumar(1, "or");
 }
-
 
 /**
  * Realiza las sumas de cada portal.
@@ -466,6 +466,11 @@ function js_existeTooltip(apa, txt) {
     } 
 }
 
+/**
+ * Oculta los tooltips que no valen.
+ * 
+ * @param {boolean} ch Si es true muestra el tooltip sino lo aculta.
+ */
 function js_eliminarTooltips(ch) {
     for (var i=0; i<=26; i++) {
         if ( ch === true ) {
@@ -512,6 +517,11 @@ function js_popoverContenido() {
 
 //--- VOTACIONES -------------------------------------------------------------//
 
+/**
+ * Pone los datos de las opciones para las votaciones.
+ * 
+ * @param {int} op Numero de opcion.
+ */
 function js_ponerEtiquetas(op) {
     // Lee los valores de la opcion.
     var o = $('#opcion' + op).val();
@@ -747,6 +757,11 @@ function js_ocultarFilas(oc) {
     return false;
 }
 
+/**
+ * Oculta o muestra los titulos de la cabecera.
+ * 
+ * @param {Boolean} oc Indica si se oculta o se muestra.
+ */
 function js_ocultarTitulos(oc) {
     var fila, filas, numfi, id, por='';
     var v=0, o=0;
@@ -800,6 +815,12 @@ function js_ocultarNoDeudores(oc) {
     return false;
 }
 
+/**
+ * Pide confirmacion antes de cambiar la fecha de votacion.
+ * 
+ * @param {date} nueva Fecha nueva.
+ * @param {date} vieja Fecha vieja.
+ */
 function js_cambiarFechaVotacion(nueva, vieja) {
     if (nueva !== vieja && nueva) {
         if (confirm("Si cambias la fecha se perderán todos los datos que no hayan sigo grabados.\n¿Seguro que quieres cambiar la fecha " + vieja + " por la nueva fecha " + nueva + "?")) {
@@ -813,6 +834,12 @@ function js_cambiarFechaVotacion(nueva, vieja) {
     }
 }
 
+/**
+ * Pide confirmacion antes de cambiar el numero de votacion.
+ * 
+ * @param {int} nuevo Numero nuevo.
+ * @param {int} viejo Numero viejo.
+ */
 function js_cambiarNumeroVotacion(nuevo, viejo) {
     if (nuevo !== viejo) {
         if (confirm("Si cambias el número de votación se perderán todos los datos que no hayan sigo grabados.\n¿Seguro que quieres cambiar la votación " + viejo + " por la nueva votación " + nuevo + "?")) {
@@ -823,24 +850,44 @@ function js_cambiarNumeroVotacion(nuevo, viejo) {
     }
 }
 
+/**
+ * Pide confirmacion antes de deshacer los cambios de un acta.
+ * 
+ * @param {date} fecha Fecha del acta.
+ */
 function js_deshacerActa(fecha) {
     if (confirm("Si deshaces todos los cambios no guardados se perderán.\n¿Seguro que quieres continuar?")) {
         xajax_getActaDatosForm(fecha);
     }
 }
 
+/**
+ * Pide confirmacion antes de eliminar un acta.
+ * 
+ * @param {date} fecha Fecha del acta.
+ */
 function js_eliminarActa(fecha) {
     if (confirm("Se va a eliminar el acta actual, los datos no se podrán recuperar.\n¿Seguro que quieres continuar?")) {
         xajax_eliminarActa(fecha);
     }
 }
 
+/**
+ * Pide confirmacion antes de eliminar los datos de una Junta.
+ * 
+ * @param {date} fecha Fecha de la Junta.
+ */
 function js_eliminarJunta(fecha) {
     if (confirm("Se van a eliminar todos los datos de la Junta actual, los datos no se podrán recuperar.\n¿Seguro que quieres continuar?")) {
         xajax_eliminarJunta(fecha);
     }
 }
 
+/**
+ * Pide confirmacion antes de eliminar los datos de los asistentes a una Junta.
+ * 
+ * @param {date} fecha Fecha de la Junta.
+ */
 function js_eliminarAsistentes(fecha) {
     if (confirm("¿Quieres eliminar también los datos de los asistentes a la Junta?\nLos datos no se podrán recuperar.")) {
         xajax_eliminarAsistentes(fecha);
@@ -861,6 +908,11 @@ function js_transformar(tab, val) {
     }
 }
 
+/**
+ * Marca o desmarca las opciones de las tablas.
+ * 
+ * @param {Boolean} val Valor para el chequeo.
+ */
 function js_transformarCheck(val) {
     for(var i=1; i<=7; i++) {
         var n = 't' + i;
@@ -870,6 +922,9 @@ function js_transformarCheck(val) {
 
 //--- LISTADOS ---------------------------------------------------------------//
 
+/**
+ * Activa o desactiva el boton de imprimir.
+ */
 function js_cuotasMensuales() {
     if($('#cantidad').val() > 0 && $('#meses').val() > 0) { 
         $('#imprimir').prop('disabled',false); 
@@ -891,6 +946,9 @@ function js_rangoPortales() {
     }
 }
 
+/**
+ * Activa o desactiva las opciones de las fechas segun lo elegido.
+ */
 function js_controlFechas() {
     // Activa y desactiva.
     $('#completo').prop('disabled', $('#actuales').prop('checked'));
