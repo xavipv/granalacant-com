@@ -1353,6 +1353,139 @@ function f_grabarVotacion($frm) {
     return $oVot->grabar();
 }
 
+//--- JUNTAS - DEUDAS --------------------------------------------------------//
+
+/**
+ * Obtiene un listado con las fechas de las Juntas distinguiendo las que tienen deudas.
+ * 
+ * @global string $pagina Nombre de la pagina.
+ * @return string Codigo HTML del listado de fechas.
+ */
+function f_getDeudasListado() {
+    global $pagina;
+    
+    // Obtiene las fechas de las deudas.
+    $oDeudas = new Deudas();
+    $aFechas = array_keys($oDeudas->getFechas());
+    
+    // Obtiene las fechas de las Juntas.
+    $oJuntas = new Juntas();
+    $aJuntas = $oJuntas->getJuntas();
+    $sJuntas = "<div><a name=\"inicio\"></a></div>";
+    $sAny = "";
+    
+    foreach ($aJuntas as $date => $aJunta) {
+        $any   = substr($date, 0, 4);
+        $fecha = $aJunta[0];
+        if (!in_array($date, $aFechas)) {
+            $clase = "baja";
+        } else {
+            $clase = "";
+        }
+        $sJuntas .= ($any != $sAny) ? "<div class=\"listado-tit\"><a name=\"any$any\" href=\"#inicio\">$any</a></div>" : "";
+        $sJuntas .= "<div class=\"listado-elem $clase\" onclick=\"xajax_reenviarFuncion('$pagina', '$fecha');\">$fecha</div>";
+        $sAny = $any;
+    } 
+    return $sJuntas;
+}
+
+/**
+ * Obtiene los datos de las deudas de los apartamentos en una fecha determinada.
+ * 
+ * @global \Apartamentos $oApars Instancia de Apartamentos.
+ * @global \Propietarios $oProps Instancia de Propietarios.
+ * @param data $fecha Fecha en cualquier formato.
+ * @return string Codigo HTML de las deudas.
+ */
+function f_getDeudas($fecha) {
+    global $oApars, $oProps;
+    $oDeudas = new Deudas();
+    
+    $aApars = $oApars->getApartamentos();
+    $papart = 0; $pdeuda = 0; $pordin = 0; $pextra = 0;
+    $fapart = 0; $fdeuda = 0; $fordin = 0; $fextra = 0;
+    $tapart = 0; $tdeuda = 0; $tordin = 0; $textra = 0;
+    $portal = "";
+    $fase   = "";
+    $tabla  = "<table class=\"table table-sm\">";
+    
+    foreach ($aApars as $apa => $aApartamento) {
+        
+        if ($aApartamento[0] != $portal) {
+            // Nuevo portal.
+            if ($portal) {
+                // No es el primer portal, pone las sumas.
+                $tabla .= f_getDeudasSuma("portal", $portal, $papart, $pdeuda, $pordin, $pextra);
+            }
+            // Pone el titulo del portal si no tiene que poner las sumas de la fase.
+            $tabla .= ($aApartamento[3] == $fase) ? "<tr><th class=\"align-middle\">&nbsp;<a name=\"ini$aApartamento[0]\">Portal $aApartamento[0]</a></th><th class=\"align-middle\" colspan=\"3\">Propietario</th><th class=\"align-middle text-center\">Ordinaria</th><th class=\"align-middle text-center\">Extraordinaria</th><th class=\"align-middle text-center\">Suma</th><th>&nbsp;</th><th>&nbsp;</th></tr>" : "";
+            $portal = $aApartamento[0];
+            $papart = 0; $pdeuda = 0; $pordin = 0; $pextra = 0;
+        }
+        
+        if ($aApartamento[3] != $fase) {
+            // Nueva fase.
+            if ($fase) {
+                // No es la primera fase, pone las sumas.
+                $tabla .= f_getDeudasSuma("fase", $fase, $fapart, $fdeuda, $fordin, $fextra);
+            }
+            // Pone el titulo de la fase.
+            $tabla .= "<tr><th class=\"align-middle\">&nbsp;<a name=\"ini$aApartamento[0]\">Portal $aApartamento[0]</a></th><th class=\"align-middle\" colspan=\"3\">Propietario</th><th class=\"align-middle text-center\">Ordinaria</th><th class=\"align-middle text-center\">Extraordinaria</th><th class=\"align-middle text-center\">Suma</th><th>&nbsp;</th><th>&nbsp;</th></tr>";
+            $fase = $aApartamento[3];
+            $fapart = 0; $fdeuda = 0; $fordin = 0; $fextra = 0;
+        }
+        
+        // Datos del apartamento.
+        $on1 = "onkeyup=\"js_sumar($portal, this.id);\" onchange=\"js_formatear(this.id, 2);$('#boton$apa').prop('disabled',false);\"";
+        $pro = $oProps->getNombreSimplePropietarioApartamentoFecha($apa, $fecha);   // Propietario en esa fecha.
+        $aDe = $oDeudas->getDeudaFechaApartamento($fecha, $apa);                    // array('ordinaria', 'extraordinaria')
+        $ord = number_format($aDe[0], 2);   
+        $ext = number_format($aDe[1], 2); 
+        $sum = number_format($aDe[0] + $aDe[1], 2);
+        $papart++; $pdeuda += ($sum > 0) ? 1 : 0; $pordin += $ord; $pextra += $ext;
+        $fapart++; $fdeuda += ($sum > 0) ? 1 : 0; $fordin += $ord; $fextra += $ext;
+        $tapart++; $tdeuda += ($sum > 0) ? 1 : 0; $tordin += $ord; $textra += $ext;
+        $tabla .= "<tr><td class=\"align-middle col-sm-1\"><div id=\"apartamento$apa\">&nbsp;" . $aApartamento[0] . "-" . $aApartamento[1] . $aApartamento[2] . "</div></td>
+                   <td class=\"align-middle col-sm-3\" colspan=\"3\">$pro</td>
+                   <td class=\"align-middle col-sm-2\">" . f_getCoeficientesInput("or$apa", $ord, "€", $on1, TRUE). "</td>
+                   <td class=\"align-middle col-sm-2\">" . f_getCoeficientesInput("ex$apa", $ext, "€", $on1, TRUE). "</td>
+                   <td class=\"align-middle col-sm-2\">" . f_getCoeficientesInput("su$apa", $sum, "€", "tabindex=\"-1\"", FALSE). "</td>
+                   <td class=\"align-middle col-sm-1 text-center\"><button class=\"btn btn-warning\" type=\"button\" onclick=\"xajax_deshacerDeuda($portal, $apa, $ord, $ext)\" title=\"Deshacer\"><span class=\"oi oi-loop-circular\"></span></button></td>
+                   <td class=\"align-middle col-sm-1 text-center\"><button id=\"boton$apa\" class=\"btn btn-success\" type=\"button\" onclick=\"xajax_grabarDeuda('$fecha','$apa',$('#or$apa').val(),$('#ex$apa').val())\" title=\"Guardar\" disabled=\"disabled\"><span class=\"oi oi-hard-drive\"></span></button></td></tr>";
+    }
+    $tabla .= f_getDeudasSuma("portal", $portal, $papart, $pdeuda, $pordin, $pextra);
+    $tabla .= f_getDeudasSuma("fase", $fase, $fapart, $fdeuda, $fordin, $fextra);
+    $tabla .= f_getDeudasSuma("total", "", $tapart, $tdeuda, $tordin, $textra);
+    return "$tabla</table>";
+}
+
+/**
+ * Obtiene las sumas de las deudas.
+ * 
+ * @param string $tipo Tipo de suma a realizar: portal, fase, total.
+ * @param string $valor Valor del portal o la fase.
+ * @param int $apar Codigo de apartamento.
+ * @param int $deuda Numero de deudores.
+ * @param int $ordin Deuda ordinaria.
+ * @param int $extra Deuda extraordinaria.
+ * @return string Codigo HTML de las sumas.
+ */
+function f_getDeudasSuma($tipo, $valor, $apar, $deuda, $ordin, $extra) {
+    $let = substr($tipo, 0, 1);
+    $ord = number_format($ordin, 2);   
+    $ext = number_format($extra, 2); 
+    $sum = number_format($ordin + $extra, 2);
+    $por = number_format($deuda * 100 / $apar, 2);
+    return "<tr><td class=\"align-middle col-sm-1 text-center\" id=\"${let}ap$valor\">$apar</td>
+            <td class=\"align-middle col-sm-1 text-right\">Deudores $tipo $valor:</td>
+            <td class=\"align-middle col-sm-1 text-center\" id=\"${let}de$valor\">$deuda</td>
+            <td class=\"align-middle col-sm-1\" id=\"${let}po$valor\">($por %)</td>
+            <td class=\"align-middle col-sm-2\">" . f_getCoeficientesInput("${let}or$valor", $ord, "€", "tabindex=\"-1\"", FALSE). "</td>
+            <td class=\"align-middle col-sm-2\">" . f_getCoeficientesInput("${let}ex$valor", $ext, "€", "tabindex=\"-1\"", FALSE). "</td>
+            <td class=\"align-middle col-sm-2\">" . f_getCoeficientesInput("${let}su$valor", $sum, "€", "tabindex=\"-1\"", FALSE). "</td>
+            <td class=\"align-middle col-sm-2\">&nbsp;</td></tr>";
+}
+
 //--- ACTAS VISUALIZAR -------------------------------------------------------//
 
 function f_getActasAnyos() {
@@ -2405,3 +2538,4 @@ function f_transformarClaves($tabla) {
     }
     return $aCla;
 }
+

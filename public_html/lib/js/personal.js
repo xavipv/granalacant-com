@@ -145,6 +145,8 @@ function js_redimensionarContenido(altura) {
     //alert("Altura: "+altura+"\nDivcabe: "+divcabe+"\nDivcont: "+divcont);
 }
 
+//--- SUMAS Y CALCULOS -------------------------------------------------------//
+
 /**
  * Suma todas las columnas.
  * 
@@ -168,25 +170,23 @@ function js_sumar(por, id) {
     var col = id.substr(0, 2);
     var fas = (por > 15) ? "II" : "I";
     var spo = "p" + col + por;
-    
-    var sto = "t" + col;
     var apa = js_apartPortal(por);
     var ain = apa[0];
     var afi = apa[1];
-    var dec = 4;
     var sup = 0;
     var sur = 0;
     var nom;
+    var dec = (col === "me" || col === "te" || col === "cb" || col === "or" || col === "ex" || col === "su") ? 2 : 4;
     
-    if (col === "me" || col === "te" || col === "cb") {
-        dec = 2;
-    }
-    
+    // Obtiene la suma del portal.
     for(i=ain; i<=afi; i++) {
         nom = col + i;
         sup += parseFloat($('#'+nom).val());
         if(col === "cf") {
             sur += parseFloat($('#cr'+i).val());
+        }
+        if (col === "or" || col === "ex") {
+            $('#su'+i).val((parseFloat($('#or'+i).val()) + parseFloat($('#ex'+i).val())).toFixed(2));
         }
     }
     
@@ -196,6 +196,12 @@ function js_sumar(por, id) {
         $('#pcr'+por).val(sur.toFixed(5));
     }
     js_sumarFase(col, fas);
+    
+    if (col === "or" || col === "ex") {
+        js_sumar(por, "su");
+        js_ponerDeudores();
+        js_copiarTotal();
+    }
 }
 
 /**
@@ -210,7 +216,7 @@ function js_sumarFase(col, fas) {
     var nom;
     var suf = 0;
     var sur = 0;
-    var dec = (col === "me" || col === "te" || col === "cb") ? 2 : 4;
+    var dec = (col === "me" || col === "te" || col === "cb" || col === "or" || col === "ex" || col === "su") ? 2 : 4;
     
     for(i=a[0]; i<=a[1]; i++) {
         nom = "p" + col + i;
@@ -236,7 +242,7 @@ function js_sumarFase(col, fas) {
 function js_sumarTotal(col) {
     var f1 = "f" + col + "I";
     var f2 = "f" + col + "II";
-    var dec = (col === "me" || col === "te" || col === "cb") ? 2 : 4;
+    var dec = (col === "me" || col === "te" || col === "cb" || col === "or" || col === "ex" || col === "su") ? 2 : 4;
     var sut = parseFloat($('#'+f1).val()) + parseFloat($('#'+f2).val());
     
     $('#t'+col).val(sut.toFixed(dec));
@@ -245,6 +251,70 @@ function js_sumarTotal(col) {
         var sur = parseFloat($('#fcrI').val()) + parseFloat($('#fcrII').val());
         $('#tcr').val(sur.toFixed(5));
     }
+}
+
+/**
+ * Copia los resultados del final de las deudas en la cabecera de la pagina.
+ */
+function js_copiarTotal() {
+    $('#tdordi').html($('#tor').val() + " €");
+    $('#tdextr').html($('#tex').val() + " €");
+    $('#tdsuma').html($('#tsu').val() + " €");
+}
+
+/**
+ * Actualiza el numero de deudores y calcula el porcentaje.
+ */
+function js_ponerDeudores() {
+    //var sfa = "f" + col + fas;
+    //var a = (fas === "I") ? [1, 15] : [16, 26];
+    var sumf = 0;
+    var sumt = 0;
+    
+    for(var p=1; p<=26; p++) {
+        var aps = js_apartPortal(p);
+        var apa = parseInt($('#pap'+p).html());
+        var deu = 0;
+        for(var i=aps[0]; i<=aps[1]; i++) {
+            var nom1 = "or" + i;
+            var nom2 = "ex" + i;
+            deu += (parseFloat($('#'+nom1).val()) > 0 || parseFloat($('#'+nom2).val()) > 0) ? 1 : 0;
+        }
+        var por = deu * 100 / apa;
+        $('#pde'+p).html(deu);
+        $('#ppo'+p).html("(" + por.toFixed(2) + " %)");
+        sumf += deu;
+        sumt += deu;
+        if (p === 15) {
+            var fapa = parseInt($('#fapI').html());
+            var fpor = sumf * 100 / fapa;
+            $('#fdeI').html(sumf);
+            $('#fpoI').html("(" + fpor.toFixed(2) + " %)");
+            sumf = 0;
+        }
+    }
+    fapa = parseInt($('#fapII').html());
+    fpor = sumf * 100 / fapa;
+    $('#fdeII').html(sumf);
+    $('#fpoII').html("(" + fpor.toFixed(2) + " %)");
+    
+    fapa = parseInt($('#tap').html());
+    fpor = sumt * 100 / fapa;
+    $('#tde').html(sumt);
+    $('#tdapar').html(sumt);
+    $('#tpo').html("(" + fpor.toFixed(2) + " %)");
+    $('#tdporc').html(fpor.toFixed(2) + " %");
+}
+
+/**
+ * Formatea un numero ajustandolo a los decimales indicados.
+ * 
+ * @param {string} id Identificador del elemento.
+ * @param {int} dec Numero de decimales.
+ */
+function js_formatear(id, dec) {
+    var val = parseFloat($('#'+id).val());
+    $('#'+id).val(val.toFixed(dec));
 }
 
 /**
@@ -290,10 +360,19 @@ function js_apartPortal(por) {
 //--- UTILIDADES -------------------------------------------------------------//
 
 /**
- * Hace que todos los INPUT que sean de clase 'solonumeros' solo permitan el uso
- * de numeros y el punto decimal (una vez), los otros caracteres seran ignorados.
+ * Ejecuta la funcion js_soloNumeros() de forma automatica.
  */
 $(function () {
+    js_soloNumeros();
+});
+
+/**
+ * Hace que todos los INPUT que sean de clase 'solonumeros' solo permitan el uso
+ * de numeros y el punto decimal (una vez), los otros caracteres seran ignorados.
+ * Al recibir el foco se seleccionara el todo el texto.
+ */
+function js_soloNumeros() {
+    // Solo permite numeros y el punto no repetido.
     $(".solonumeros").keydown(function (event) {
         if (event.shiftKey === true) {
             event.preventDefault();
@@ -309,12 +388,20 @@ $(function () {
             event.preventDefault();
         }
     });
-});
+    
+    // Selecciona el contenido cuando recibe el foco.
+    $(".solonumeros").focus(function () { $(this).select(); });
+}
 
+/**
+ * Comprueba que no hay ningun boton activado, esto significa que falta algo por grabar.
+ * 
+ * @returns {Boolean} Devuelve true si hay algun dato por grabar, sino devuelve false.
+ */
 function js_comprobarBotones() {
     for (var i=0; i<=26; i++) {
         if ( $('#boton' + i) && $('#boton' + i).prop('disabled') === false ) {
-            if (confirm("El asistente " + i + " no se ha guardado. ¿Quieres grabarlo?") === true) {
+            if (confirm("El dato número " + i + " no se ha guardado. ¿Quieres grabarlo?") === true) {
                 $('#boton' + i).focus();
                 return false;
             }

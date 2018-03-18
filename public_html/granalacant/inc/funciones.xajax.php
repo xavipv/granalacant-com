@@ -36,6 +36,7 @@ $xajax->register(XAJAX_FUNCTION, 'buscar');
 $xajax->register(XAJAX_FUNCTION, 'busquedaActas');
 $xajax->register(XAJAX_FUNCTION, 'busquedaAyuda');
 $xajax->register(XAJAX_FUNCTION, 'confirmarVotacionCambios');
+$xajax->register(XAJAX_FUNCTION, 'deshacerDeuda');
 $xajax->register(XAJAX_FUNCTION, 'eliminarActa');
 $xajax->register(XAJAX_FUNCTION, 'eliminarAsistentes');
 $xajax->register(XAJAX_FUNCTION, 'eliminarJunta');
@@ -64,6 +65,7 @@ $xajax->register(XAJAX_FUNCTION, 'grabarApartamento');
 $xajax->register(XAJAX_FUNCTION, 'grabarActa');
 $xajax->register(XAJAX_FUNCTION, 'grabarAsistente');
 $xajax->register(XAJAX_FUNCTION, 'grabarAsistenteMulti');
+$xajax->register(XAJAX_FUNCTION, 'grabarDeuda');
 $xajax->register(XAJAX_FUNCTION, 'grabarJunta');
 $xajax->register(XAJAX_FUNCTION, 'grabarPersona');
 $xajax->register(XAJAX_FUNCTION, 'grabarPropiedad');
@@ -74,6 +76,7 @@ $xajax->register(XAJAX_FUNCTION, 'setApartamentosDatosForm');
 $xajax->register(XAJAX_FUNCTION, 'setAsistente');
 $xajax->register(XAJAX_FUNCTION, 'setAsistenteMulti');
 $xajax->register(XAJAX_FUNCTION, 'setDatosCoeficientes');
+$xajax->register(XAJAX_FUNCTION, 'setDeudaDatosForm');
 $xajax->register(XAJAX_FUNCTION, 'setJuntaDatosForm');
 $xajax->register(XAJAX_FUNCTION, 'setPersonasDatosForm');
 $xajax->register(XAJAX_FUNCTION, 'setPropiedadesPersonaDatosForm');
@@ -126,6 +129,7 @@ function reenviarFuncion($pagina, $cod, $cod1='') {
         case 'apartamentos.php' : $response->call("xajax_setApartamentosDatosForm", $cod); break;
         case 'propietarios.php' : $response->call("xajax_setPropietariosApartamentoDatosForm", $cod); break;
         case 'juntas.php' : $response->call("xajax_setJuntaDatosForm", $cod, $cod); break;
+        case 'deudas.php' : $response->script("if (js_comprobarBotones()) { xajax_setDeudaDatosForm('$cod'); }"); break;
         case 'asistentes.php' : $response->script("if (js_comprobarBotones()) { xajax_getAsistentes('$cod'); }"); break;
         case 'votaciones.php' : $response->call("xajax_setVotacionDatosForm", $cod, $cod1); break;
         case 'actas.php' : $response->call("xajax_getActa", $cod); break;
@@ -954,6 +958,65 @@ function grabarVotacion($frm) {
         $msg = "ERROR: no se han podido guardar los datos de la votación.";
     }
     $response->alert($msg); 
+    return $response;
+}
+
+//--- JUNTAS - DEUDORES ------------------------------------------------------//
+
+/**
+ * Pone los datos de las deudas en una fecha determinada.
+ * Como fechas de referencia se usan las de las Juntas.
+ * 
+ * @global Juntas $oJuntas Instancia de Juntas.
+ * @param date $fecha Fecha en cualquier formato.
+ * @return \xajaxResponse
+ */
+function setDeudaDatosForm($fecha) {
+    global $oJuntas;
+    $response = new xajaxResponse();
+    $response->assign("divcontenido", "innerHTML", f_getDeudas($fecha));
+    $response->assign("btnfechair", "innerHTML", "<div class=\"btn btn-outline-primary\" title=\"Fecha de la deuda\"><span class=\"oi oi-calendar\"></span>&nbsp;&nbsp;" . $oJuntas->convertirFechaBDaISO($fecha) . "</div>");
+    $response->script("js_soloNumeros();");
+    return $response;
+}
+
+/**
+ * Graba los datos de la deuda del apartamento en la fecha indicada.
+ * 
+ * @param date $fecha Fecha en cualquier formato.
+ * @param int $apar Codigo del apartamento.
+ * @param int $ordin Deuda ordinaria.
+ * @param int $extra Deuda extraordinaria.
+ * @return \xajaxResponse
+ */
+function grabarDeuda($fecha, $apar, $ordin, $extra) {
+    $response = new xajaxResponse();
+    $oDeuda = new Deuda($fecha, $apar);
+    $oDeuda->setOrdinaria($ordin);
+    $oDeuda->setExtraordinaria($extra);
+    if ($oDeuda->grabar()) {
+        $response->assign("divlistado", "innerHTML", f_getDeudasListado());
+        $response->script("$('#boton$apar').prop('disabled',true)");
+    } else {
+        $response->alert("Error, no se han podido grabar los datos de la deuda del $fecha para el apartamento $apar.");
+    }
+    return $response;
+}
+
+/**
+ * Deshace los cambios realizados y deja la deuda original del apartamento en una fecha determinada.
+ * 
+ * @param int $por Numero de portal.
+ * @param int $apa Codigo de apartamento.
+ * @param int $ord Deuda ordinaria original.
+ * @param int $ext Deuda extraordinaria original.
+ * @return \xajaxResponse
+ */
+function deshacerDeuda($por, $apa, $ord, $ext) {
+    $response = new xajaxResponse();
+    $response->assign("or$apa", "value", number_format($ord,2));
+    $response->assign("ex$apa", "value", number_format($ext,2));
+    $response->script("js_sumar($por,'or$apa'); $('#boton$apa').prop('disabled',true)");
     return $response;
 }
 

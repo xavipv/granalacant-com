@@ -461,6 +461,10 @@ class Propietarios {
         return key($this->getPropietarioApartamentoFecha($apa, $fecha));    // Clave del primer propietario.
     }
     
+    public function getNombreSimplePropietarioApartamentoFecha($apa, $fecha='') {
+        return array_values($this->getPropietarioApartamentoFecha($apa, $fecha))[0][0];    
+    }
+    
     /**
      * Obtiene las propiedades del primer propietario de un apartamento en una fecha determinada.
      * Se devuelve un array cuya clave es el <b>codigo de apartamento</b> y cuyos valores son los siguientes:
