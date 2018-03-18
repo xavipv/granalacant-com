@@ -1418,7 +1418,7 @@ function f_getDeudas($fecha) {
                 $tabla .= f_getDeudasSuma("portal", $portal, $papart, $pdeuda, $pordin, $pextra);
             }
             // Pone el titulo del portal si no tiene que poner las sumas de la fase.
-            $tabla .= ($aApartamento[3] == $fase) ? "<tr><th class=\"align-middle\">&nbsp;<a name=\"ini$aApartamento[0]\">Portal $aApartamento[0]</a></th><th class=\"align-middle\" colspan=\"3\">Propietario</th><th class=\"align-middle text-center\">Ordinaria</th><th class=\"align-middle text-center\">Extraordinaria</th><th class=\"align-middle text-center\">Suma</th><th>&nbsp;</th><th>&nbsp;</th></tr>" : "";
+            $tabla .= ($aApartamento[3] == $fase) ? "<tr><th class=\"align-middle\">&nbsp;<a name=\"ini$aApartamento[0]\">Portal $aApartamento[0]</a></th><th class=\"align-middle\" colspan=\"3\">Propietario</th><th class=\"align-middle text-center\">Ordinaria</th><th class=\"align-middle text-center\">Extraordinaria</th><th class=\"align-middle text-center\">Suma</th><th>&nbsp;</th></tr>" : "";
             $portal = $aApartamento[0];
             $papart = 0; $pdeuda = 0; $pordin = 0; $pextra = 0;
         }
@@ -1430,7 +1430,7 @@ function f_getDeudas($fecha) {
                 $tabla .= f_getDeudasSuma("fase", $fase, $fapart, $fdeuda, $fordin, $fextra);
             }
             // Pone el titulo de la fase.
-            $tabla .= "<tr><th class=\"align-middle\">&nbsp;<a name=\"ini$aApartamento[0]\">Portal $aApartamento[0]</a></th><th class=\"align-middle\" colspan=\"3\">Propietario</th><th class=\"align-middle text-center\">Ordinaria</th><th class=\"align-middle text-center\">Extraordinaria</th><th class=\"align-middle text-center\">Suma</th><th>&nbsp;</th><th>&nbsp;</th></tr>";
+            $tabla .= "<tr><th class=\"align-middle\">&nbsp;<a name=\"ini$aApartamento[0]\">Portal $aApartamento[0]</a></th><th class=\"align-middle\" colspan=\"3\">Propietario</th><th class=\"align-middle text-center\">Ordinaria</th><th class=\"align-middle text-center\">Extraordinaria</th><th class=\"align-middle text-center\">Suma</th><th>&nbsp;</th></tr>";
             $fase = $aApartamento[3];
             $fapart = 0; $fdeuda = 0; $fordin = 0; $fextra = 0;
         }
@@ -1450,8 +1450,8 @@ function f_getDeudas($fecha) {
                    <td class=\"align-middle col-sm-2\">" . f_getCoeficientesInput("or$apa", $ord, "€", $on1, TRUE). "</td>
                    <td class=\"align-middle col-sm-2\">" . f_getCoeficientesInput("ex$apa", $ext, "€", $on1, TRUE). "</td>
                    <td class=\"align-middle col-sm-2\">" . f_getCoeficientesInput("su$apa", $sum, "€", "tabindex=\"-1\"", FALSE). "</td>
-                   <td class=\"align-middle col-sm-1 text-center\"><button class=\"btn btn-warning\" type=\"button\" onclick=\"xajax_deshacerDeuda($portal, $apa, $ord, $ext)\" title=\"Deshacer\"><span class=\"oi oi-loop-circular\"></span></button></td>
-                   <td class=\"align-middle col-sm-1 text-center\"><button id=\"boton$apa\" class=\"btn btn-success\" type=\"button\" onclick=\"xajax_grabarDeuda('$fecha','$apa',$('#or$apa').val(),$('#ex$apa').val())\" title=\"Guardar\" disabled=\"disabled\"><span class=\"oi oi-hard-drive\"></span></button></td></tr>";
+                   <td class=\"align-middle col-sm-2 text-right\"><button class=\"btn btn-warning\" type=\"button\" onclick=\"xajax_deshacerDeuda($portal, $apa, $ord, $ext)\" title=\"Deshacer\"><span class=\"oi oi-loop-circular\"></span></button>&nbsp;
+                   <button id=\"boton$apa\" class=\"btn btn-success\" type=\"button\" onclick=\"xajax_grabarDeuda('$fecha','$apa',$('#or$apa').val(),$('#ex$apa').val())\" title=\"Guardar\" disabled=\"disabled\"><span class=\"oi oi-hard-drive\"></span></button></td></tr>";
     }
     $tabla .= f_getDeudasSuma("portal", $portal, $papart, $pdeuda, $pordin, $pextra);
     $tabla .= f_getDeudasSuma("fase", $fase, $fapart, $fdeuda, $fordin, $fextra);

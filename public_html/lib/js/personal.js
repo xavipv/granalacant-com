@@ -181,12 +181,12 @@ function js_sumar(por, id) {
     // Obtiene la suma del portal.
     for(i=ain; i<=afi; i++) {
         nom = col + i;
-        sup += parseFloat($('#'+nom).val());
+        sup += js_esNumeroCero(parseFloat($('#'+nom).val()));
         if(col === "cf") {
-            sur += parseFloat($('#cr'+i).val());
+            sur += js_esNumeroCero(parseFloat($('#cr'+i).val()));
         }
         if (col === "or" || col === "ex") {
-            $('#su'+i).val((parseFloat($('#or'+i).val()) + parseFloat($('#ex'+i).val())).toFixed(2));
+            $('#su'+i).val((js_esNumeroCero(parseFloat($('#or'+i).val())) + js_esNumeroCero(parseFloat($('#ex'+i).val()))).toFixed(2));
         }
     }
     
@@ -220,9 +220,9 @@ function js_sumarFase(col, fas) {
     
     for(i=a[0]; i<=a[1]; i++) {
         nom = "p" + col + i;
-        suf += parseFloat($('#'+nom).val());
+        suf += js_esNumeroCero(parseFloat($('#'+nom).val()));
         if(col === "cf") {
-            sur += parseFloat($('#pcr'+i).val());
+            sur += js_esNumeroCero(parseFloat($('#pcr'+i).val()));
         }
     }
     
@@ -243,12 +243,12 @@ function js_sumarTotal(col) {
     var f1 = "f" + col + "I";
     var f2 = "f" + col + "II";
     var dec = (col === "me" || col === "te" || col === "cb" || col === "or" || col === "ex" || col === "su") ? 2 : 4;
-    var sut = parseFloat($('#'+f1).val()) + parseFloat($('#'+f2).val());
+    var sut = js_esNumeroCero(parseFloat($('#'+f1).val())) + js_esNumeroCero(parseFloat($('#'+f2).val()));
     
     $('#t'+col).val(sut.toFixed(dec));
     
     if(col === "cf") {
-        var sur = parseFloat($('#fcrI').val()) + parseFloat($('#fcrII').val());
+        var sur = js_esNumeroCero(parseFloat($('#fcrI').val())) + js_esNumeroCero(parseFloat($('#fcrII').val()));
         $('#tcr').val(sur.toFixed(5));
     }
 }
@@ -278,7 +278,7 @@ function js_ponerDeudores() {
         for(var i=aps[0]; i<=aps[1]; i++) {
             var nom1 = "or" + i;
             var nom2 = "ex" + i;
-            deu += (parseFloat($('#'+nom1).val()) > 0 || parseFloat($('#'+nom2).val()) > 0) ? 1 : 0;
+            deu += (js_esNumeroCero(parseFloat($('#'+nom1).val())) > 0 || js_esNumeroCero(parseFloat($('#'+nom2).val())) > 0) ? 1 : 0;
         }
         var por = deu * 100 / apa;
         $('#pde'+p).html(deu);
@@ -313,8 +313,21 @@ function js_ponerDeudores() {
  * @param {int} dec Numero de decimales.
  */
 function js_formatear(id, dec) {
-    var val = parseFloat($('#'+id).val());
-    $('#'+id).val(val.toFixed(dec));
+    var valor = js_esNumeroCero(parseFloat($('#'+id).val()));
+    $('#'+id).val(valor.toFixed(dec));
+}
+
+/**
+ * Si el valor pasado no es un numero valido lo convierte en 0.
+ * 
+ * @param {mixed} num Valor a comprobar.
+ * @returns {Number} El numero o 0.
+ */
+function js_esNumeroCero(num) {
+    if (isNaN(num)) {
+        num = 0;
+    }
+    return num;
 }
 
 /**

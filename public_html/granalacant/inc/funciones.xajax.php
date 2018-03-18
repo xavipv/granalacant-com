@@ -994,11 +994,22 @@ function grabarDeuda($fecha, $apar, $ordin, $extra) {
     $oDeuda = new Deuda($fecha, $apar);
     $oDeuda->setOrdinaria($ordin);
     $oDeuda->setExtraordinaria($extra);
-    if ($oDeuda->grabar()) {
-        $response->assign("divlistado", "innerHTML", f_getDeudasListado());
-        $response->script("$('#boton$apar').prop('disabled',true)");
+    
+    // Si los valores de la deuda son 0, lo que hace es eliminarla.
+    if (intval($ordin) == 0 && intval($extra) == 0) {
+        if ($oDeuda->eliminar()) {
+            $response->assign("divlistado", "innerHTML", f_getDeudasListado());
+            $response->script("$('#boton$apar').prop('disabled',true)");
+        } else {
+            $response->alert("Error, no se ha podido eliminar la deuda del $fecha para el apartamento $apar.");
+        }
     } else {
-        $response->alert("Error, no se han podido grabar los datos de la deuda del $fecha para el apartamento $apar.");
+        if ($oDeuda->grabar()) {
+            $response->assign("divlistado", "innerHTML", f_getDeudasListado());
+            $response->script("$('#boton$apar').prop('disabled',true)");
+        } else {
+            $response->alert("Error, no se han podido grabar los datos de la deuda del $fecha para el apartamento $apar.");
+        }
     }
     return $response;
 }
