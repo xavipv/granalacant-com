@@ -42,7 +42,12 @@ if(!$fec) {
                         <div id="btnfechair"></div>
                         <table class="table table-sm" style="border-bottom: 1px solid lightgray; margin: 0; padding: 0">
                             <tr>
-                                <th class="col-sm-2 text-right align-middle">&nbsp;</th>
+                                <td class="col-sm-2 align-middle text-center">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" onchange="js_ocultarNoDeudores($(this).prop('checked'));" value="" id="vernodeudores">
+                                        <label class="form-check-label" for="vernodeudores">Ver solo deudores</label>
+                                    </div>
+                                </td>
                                 <th class="col-sm-2 text-right align-middle">Deudores</th>
                                 <th class="col-sm-2 text-right align-middle">Ordinaria</th>
                                 <th class="col-sm-2 text-right align-middle">Extraordinaria</th>

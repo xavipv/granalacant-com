@@ -1445,7 +1445,7 @@ function f_getDeudas($fecha) {
         $papart++; $pdeuda += ($sum > 0) ? 1 : 0; $pordin += $ord; $pextra += $ext;
         $fapart++; $fdeuda += ($sum > 0) ? 1 : 0; $fordin += $ord; $fextra += $ext;
         $tapart++; $tdeuda += ($sum > 0) ? 1 : 0; $tordin += $ord; $textra += $ext;
-        $tabla .= "<tr><td class=\"align-middle col-sm-1\"><div id=\"apartamento$apa\">&nbsp;" . $aApartamento[0] . "-" . $aApartamento[1] . $aApartamento[2] . "</div></td>
+        $tabla .= "<tr id=\"fila$apa\"><td class=\"align-middle col-sm-1\"><div id=\"apartamento$apa\">&nbsp;" . $aApartamento[0] . "-" . $aApartamento[1] . $aApartamento[2] . "</div></td>
                    <td class=\"align-middle col-sm-3\" colspan=\"3\">$pro</td>
                    <td class=\"align-middle col-sm-2\">" . f_getCoeficientesInput("or$apa", $ord, "€", $on1, TRUE). "</td>
                    <td class=\"align-middle col-sm-2\">" . f_getCoeficientesInput("ex$apa", $ext, "€", $on1, TRUE). "</td>

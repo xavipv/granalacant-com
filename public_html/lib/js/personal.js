@@ -314,7 +314,12 @@ function js_ponerDeudores() {
     $('#tdporc').html(fpor.toFixed(2) + " %");
 }
 
-
+/**
+ * Obtiene un numero float y si no es correcto pone 0.
+ * 
+ * @param {string} valor Valor a convertir.
+ * @returns {Number} Numero float.
+ */
 function js_aFloat(valor) {
     return js_esNumeroCero(parseFloat(valor.toString().replace(/[,]/,'')));
 }
@@ -766,6 +771,33 @@ function js_ocultarTitulos(oc) {
             $(fila).show();
         }
     }
+}
+
+/**
+ * Oculta o muestra las filas de los no deudores.
+ * 
+ * @param {Boolean} oc Indica si se oculta o se muestra.
+ * @returns {Boolean} false.
+ */
+function js_ocultarNoDeudores(oc) {
+    var fila, opc1, opc2;
+
+    for(var i=1; i<=373; i++) {
+        fila = $("#fila"+i);
+        opc1 = js_aFloat($("#or"+i).val());
+        opc2 = js_aFloat($("#ex"+i).val());
+        if (oc === true) {
+            if(opc1 > 0 || opc2 > 0) {
+                fila.show();
+            } else {
+                fila.hide();
+            } 
+        } else {
+            fila.show();
+        }
+    } 
+    js_ocultarTitulos(oc);
+    return false;
 }
 
 function js_cambiarFechaVotacion(nueva, vieja) {
