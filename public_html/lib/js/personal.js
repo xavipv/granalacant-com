@@ -161,6 +161,13 @@ function js_sumarTodos(por) {
 }
 
 /**
+ * Fuerza la suma de las deudas.
+ */
+function js_sumarDeudas() {
+    js_sumar(1, "or");
+}
+
+/**
  * Realiza las sumas de cada portal.
  * 
  * @param {int} por Numero de portal.

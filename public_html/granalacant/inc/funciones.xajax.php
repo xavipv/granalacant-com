@@ -976,7 +976,7 @@ function setDeudaDatosForm($fecha) {
     $response = new xajaxResponse();
     $response->assign("divcontenido", "innerHTML", f_getDeudas($fecha));
     $response->assign("btnfechair", "innerHTML", "<div class=\"btn btn-outline-primary\" title=\"Fecha de la deuda\"><span class=\"oi oi-calendar\"></span>&nbsp;&nbsp;" . $oJuntas->convertirFechaBDaISO($fecha) . "</div>");
-    $response->script("js_soloNumeros();");
+    $response->script("js_soloNumeros(); js_sumarDeudas();");
     return $response;
 }
 
