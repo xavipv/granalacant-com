@@ -45,6 +45,7 @@ if(!$fec) {
                                 <td class="col-sm-2 align-middle text-center">
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" onchange="js_ocultarNoDeudores($(this).prop('checked'));" value="" id="vernodeudores">
+                                        <input type="hidden" id="ultimofoco" value="">
                                         <label class="form-check-label" for="vernodeudores">Ver solo deudores</label>
                                     </div>
                                 </td>

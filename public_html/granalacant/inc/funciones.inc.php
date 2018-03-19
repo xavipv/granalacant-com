@@ -1436,7 +1436,7 @@ function f_getDeudas($fecha) {
         }
         
         // Datos del apartamento.
-        $on1 = "onkeyup=\"js_sumar($portal, this.id);\" onchange=\"js_formatear(this.id, 2);$('#boton$apa').prop('disabled',false);\"";
+        $on1 = "onkeyup=\"js_sumar($portal, this.id);\" onchange=\"js_formatear(this.id, 2);$('#boton$apa').prop('disabled',false);\" onfocus=\"$('#ultimofoco').val($(this).attr('id'));\"";
         $pro = $oProps->getNombreSimplePropietarioApartamentoFecha($apa, $fecha);   // Propietario en esa fecha.
         $aDe = $oDeudas->getDeudaFechaApartamento($fecha, $apa);                    // array('ordinaria', 'extraordinaria')
         $ord = number_format($aDe[0], 2, ".", "");   
