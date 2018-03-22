@@ -182,3 +182,7 @@
     width: 32px;
     padding: 5px 0;
 }
+
+.negrita {
+    font-weight: bold;
+}

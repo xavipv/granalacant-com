@@ -535,6 +535,47 @@ class Apartamentos {
     }
     
     /**
+     * Obtiene el numero de apartamentos que tiene un portal.
+     * 
+     * @param int $por Numero de portal. Si es 0 se devolvera el total de apartamentos.
+     * @return int Numero de apartamentos.
+     */
+    public function getNumApartamentosPortal($por=0) {
+        //array('codigo'=>array(portal,piso,letra,fase,tipo,finca,metros,terraza,coefurb,coeffase,coefbloq,numgar)...)
+        $aApar = $this->getApartamentos();
+        $num = 0;
+        if (!$por) {
+            $num = count($aApar);
+        } else {
+            foreach ($aApar as $aDatos) {
+                $num += ($aDatos[0] == $por) ? 1 : 0;
+            }
+        }
+        return $num;
+    }
+    
+    /**
+     * Obtiene el numero de apartamentos que tiene una fase.
+     * 
+     * @param string $fas Numero de fase. Si es 0 o vacio se devolvera el total de apartamentos.
+     * @return int Numero de apartamentos.
+     */
+    public function getNumApartamentosFase($fas='') {
+        //array('codigo'=>array(portal,piso,letra,fase,tipo,finca,metros,terraza,coefurb,coeffase,coefbloq,numgar)...)
+        $aApar = $this->getApartamentos();
+        $num = 0;
+        if (!$fas) {
+            $num = count($aApar);
+        } else {
+            $fas = strtoupper($fas);
+            foreach ($aApar as $aDatos) {
+                $num += ($aDatos[3] == $fas) ? 1 : 0;
+            }
+        }
+        return $num;
+    }
+    
+    /**
      * Busca apartamentos.
      * 
      * @param string $busqueda Dato a buscar.

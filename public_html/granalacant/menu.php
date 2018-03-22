@@ -44,7 +44,8 @@ $activo = f_getMenuAcciones($pagina);
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="deudas.php">Deudas</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="juntaslis.php">Listado</a>
+                    <a class="dropdown-item" href="juntaslis.php">Listado juntas</a>
+                    <a class="dropdown-item" href="deudaslis.php">Listado deudas</a>
                 </div>
             </li>
             <li class="nav-item dropdown">
