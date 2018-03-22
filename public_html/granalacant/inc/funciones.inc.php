@@ -2590,7 +2590,7 @@ function f_getCalculos($frm) {
         // Coeficiente escalera 100%
         if(isset($frm['coeblo'])) {
             $cuotab = ($aApar[10] * $can) / ($mes * 100);
-            $fApa .= "<td class=\"text-right\">" . number_format($aApar[10],5,',','.') . "</td><td class=\"text-right successcolor\">" . number_format($cuotab,2,',','.') . "</td>";
+            $fApa .= "<td class=\"text-right\">" . number_format($aApar[10],2,',','.') . "</td><td class=\"text-right successcolor\">" . number_format($cuotab,2,',','.') . "</td>";
             $bloCob += $aApar[10]; $bloEub += $cuotab; $fasCob += $aApar[10]; $fasEub += $cuotab; $sumCob += $aApar[10]; $sumEub += $cuotab;
         }
         
@@ -2666,7 +2666,7 @@ function f_getCalculosSumas($frm, $txt, $apa, $me2, $coe, $eue, $cof, $cor, $euf
     $fTit .= (isset($frm['dife'])) ? "<th class=\"text-right dangercolor\">" . number_format($res,2,',','.') . "</th>" : "";
     // La suma de coeficientes y cuotas de portales solo se pone en la suma de portales.
     if (substr($txt, 0, 1) == "P") {
-        $fTit .= (isset($frm['coeblo'])) ? "<th class=\"text-right\">" . number_format($cob,4,',','.') . "</th><th class=\"text-right successcolor\">" . number_format($eub,2,',','.') . "</th>" : "";
+        $fTit .= (isset($frm['coeblo'])) ? "<th class=\"text-right\">" . number_format($cob,2,',','.') . "</th><th class=\"text-right successcolor\">" . number_format($eub,2,',','.') . "</th>" : "";
     } else {
         $fTit .= (isset($frm['coeblo'])) ? "<th>&nbsp;</th><th>&nbsp;</th>" : "";
     }
