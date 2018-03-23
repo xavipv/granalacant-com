@@ -2550,47 +2550,47 @@ function f_getCalculos($frm) {
         
         // Metros cuadrados.
         if(isset($frm['metros'])) {
-            $fApa .= "<td class=\"text-right\">" . number_format($aApar[6],2,',','.') . "</td>";
+            $fApa .= "<td class=\"text-right\">" . number_format($aApar[6],2,',','.') . " m<sup>2</sup></td>";
             $bloMe2 += $aApar[6]; $fasMe2 += $aApar[6]; $sumMe2 += $aApar[6];
         }
         
         // Coeficiente urbanizacion 100% + Cuota urbanizacion.
         if(isset($frm['coeur'])) {
             $cuotau = ($aApar[8] * $can) / ($mes * 100);
-            $fApa .= "<td class=\"text-right\">" . number_format($aApar[8],4,',','.') . "</td><td class=\"text-right successcolor\">" . number_format($cuotau,2,',','.') . "</td>";
+            $fApa .= "<td class=\"text-right\">" . number_format($aApar[8],4,',','.') . " %</td><td class=\"text-right successcolor\">" . number_format($cuotau,2,',','.') . " €</td>";
             $bloCoe += $aApar[8]; $bloEue += $cuotau; $fasCoe += $aApar[8]; $fasEue += $cuotau; $sumCoe += $aApar[8]; $sumEue += $cuotau;
         }
         
         // Coeficiente fase 200%
         if(isset($frm['coef200'])) {
-            $fApa .= "<td class=\"text-right\">" . number_format($aApar[9],4,',','.') . "</td>";
+            $fApa .= "<td class=\"text-right\">" . number_format($aApar[9],4,',','.') . " %</td>";
             $bloCof += $aApar[9]; $fasCof += $aApar[9]; $sumCof += $aApar[9];
         }
         
         // Coeficiente fase 100%
         if(isset($frm['coef100'])) {
-            $fApa .= "<td class=\"text-right\">" . number_format($aApar[9]/2,5,',','.') . "</td>";
+            $fApa .= "<td class=\"text-right\">" . number_format($aApar[9]/2,5,',','.') . " %</td>";
             $bloCor += $aApar[9] / 2; $fasCor += $aApar[9] / 2; $sumCor += $aApar[9] / 2;
         }
         
         // Cuota fase.
         if(isset($frm['coef200']) || isset($frm['coef100'])) {
             $cuotaf = ($aApar[9] * $can) / ($mes * 200);
-            $fApa .= "<td class=\"text-right successcolor\">" . number_format($cuotaf,2,',','.') . "</td>";
+            $fApa .= "<td class=\"text-right successcolor\">" . number_format($cuotaf,2,',','.') . " €</td>";
             $bloEuf += $cuotaf; $fasEuf += $cuotaf; $sumEuf += $cuotaf;
         }
         
         // Diferencias.
         if (isset($frm['dife'])) {
             $resta = $cuotau - $cuotaf;
-            $fApa .= "<td class=\"text-right dangercolor\">" . number_format($resta,2,',','.') . "</td>";
+            $fApa .= "<td class=\"text-right dangercolor\">" . number_format($resta,2,',','.') . " €</td>";
             $bloRes += $resta; $fasRes += $resta; $sumRes += $resta;
         }
         
         // Coeficiente escalera 100%
         if(isset($frm['coeblo'])) {
             $cuotab = ($aApar[10] * $can) / ($mes * 100);
-            $fApa .= "<td class=\"text-right\">" . number_format($aApar[10],2,',','.') . "</td><td class=\"text-right successcolor\">" . number_format($cuotab,2,',','.') . "</td>";
+            $fApa .= "<td class=\"text-right\">" . number_format($aApar[10],2,',','.') . " %</td><td class=\"text-right successcolor\">" . number_format($cuotab,2,',','.') . " €</td>";
             $bloCob += $aApar[10]; $bloEub += $cuotab; $fasCob += $aApar[10]; $fasEub += $cuotab; $sumCob += $aApar[10]; $sumEub += $cuotab;
         }
         
@@ -2599,7 +2599,7 @@ function f_getCalculos($frm) {
             $oApar = new Apartamento($apa);
             $coega = $oApar->getGarajesCoeficiente();
             $cuotag = ($coega) ? ($coega * $can) / ($mes * 100) : 0;
-            $fApa .= ($cuotag) ? "<td class=\"text-right\">" . number_format($coega,4,',','.') . "</td><td class=\"text-right successcolor\">" . number_format($cuotag,2,',','.') . "</td>" : "<td>&nbsp;</td><td>&nbsp;</td>";
+            $fApa .= ($cuotag) ? "<td class=\"text-right\">" . number_format($coega,4,',','.') . " %</td><td class=\"text-right successcolor\">" . number_format($cuotag,2,',','.') . " €</td>" : "<td>&nbsp;</td><td>&nbsp;</td>";
             $bloCog += $coega; $bloEug += $cuotag; $fasCog += $coega; $fasEug += $cuotag; $sumCog += $coega; $sumEug += $cuotag;
         }
         
@@ -2625,13 +2625,13 @@ function f_getCalculosTitulo($frm) {
     $fTit .= "<th>Apart.</th>";
     $fTit .= (isset($frm['fase'])) ? "<th>Fase</th>" : "";
     $fTit .= (isset($frm['metros'])) ? "<th class=\"text-right\">Metros</th>" : "";
-    $fTit .= (isset($frm['coeur'])) ? "<th class=\"text-right\">% Urbanizaci&oacute;n</th><th class=\"text-right\">Cuota</th>" : "";
-    $fTit .= (isset($frm['coef200'])) ? "<th class=\"text-right\">Fase 200%</th>" : "";
-    $fTit .= (isset($frm['coef100'])) ? "<th class=\"text-right\">Fase 100%</th>" : "";
+    $fTit .= (isset($frm['coeur'])) ? "<th class=\"text-right\">Urbanizaci&oacute;n</th><th class=\"text-right\">Cuota</th>" : "";
+    $fTit .= (isset($frm['coef200'])) ? "<th class=\"text-right\">Fase 200</th>" : "";
+    $fTit .= (isset($frm['coef100'])) ? "<th class=\"text-right\">Fase 100</th>" : "";
     $fTit .= (isset($frm['coef200']) || isset($frm['coef100'])) ? "<th class=\"text-right\">Cuota</th>" : "";
     $fTit .= (isset($frm['dife'])) ? "<th class=\"text-right\">Resta</th>" : "";
-    $fTit .= (isset($frm['coeblo'])) ? "<th class=\"text-right\">% Bloque</th><th class=\"text-right\">Cuota</th>" : "";
-    $fTit .= (isset($frm['coegar'])) ? "<th class=\"text-right\">% Garaje</th><th class=\"text-right\">Cuota</th>" : "";
+    $fTit .= (isset($frm['coeblo'])) ? "<th class=\"text-right\">Bloque</th><th class=\"text-right\">Cuota</th>" : "";
+    $fTit .= (isset($frm['coegar'])) ? "<th class=\"text-right\">Garaje</th><th class=\"text-right\">Cuota</th>" : "";
     return "$fTit</tr>";    
 }
 
@@ -2658,19 +2658,19 @@ function f_getCalculosSumas($frm, $txt, $apa, $me2, $coe, $eue, $cof, $cor, $euf
     $fTit = "<tr>";
     $fTit .= (isset($frm['codigo'])) ? "<th colspan=\"2\">$txt$apa</th>" : "<th>$txt$apa</th>";
     $fTit .= (isset($frm['fase'])) ? "<th>&nbsp;</th>" : "";
-    $fTit .= (isset($frm['metros'])) ? "<th class=\"text-right\">" . number_format($me2,2,',','.') . "</th>" : "";
-    $fTit .= (isset($frm['coeur'])) ? "<th class=\"text-right\">" . number_format($coe,4,',','.') . "</th><th class=\"text-right successcolor\">" . number_format($eue,2,',','.') . "</th>" : "";
-    $fTit .= (isset($frm['coef200'])) ? "<th class=\"text-right\">" . number_format($cof,4,',','.') . "</th>" : "";
-    $fTit .= (isset($frm['coef100'])) ? "<th class=\"text-right\">" . number_format($cor,5,',','.') . "</th>" : "";
-    $fTit .= (isset($frm['coef200']) || isset($frm['coef100'])) ? "<th class=\"text-right successcolor\">" . number_format($euf,2,',','.') . "</th>" : "";
+    $fTit .= (isset($frm['metros'])) ? "<th class=\"text-right\">" . number_format($me2,2,',','.') . " m<sup>2</sup></th>" : "";
+    $fTit .= (isset($frm['coeur'])) ? "<th class=\"text-right\">" . number_format($coe,4,',','.') . " %</th><th class=\"text-right successcolor\">" . number_format($eue,2,',','.') . " €</th>" : "";
+    $fTit .= (isset($frm['coef200'])) ? "<th class=\"text-right\">" . number_format($cof,4,',','.') . " %</th>" : "";
+    $fTit .= (isset($frm['coef100'])) ? "<th class=\"text-right\">" . number_format($cor,5,',','.') . " %</th>" : "";
+    $fTit .= (isset($frm['coef200']) || isset($frm['coef100'])) ? "<th class=\"text-right successcolor\">" . number_format($euf,2,',','.') . " €</th>" : "";
     $fTit .= (isset($frm['dife'])) ? "<th class=\"text-right dangercolor\">" . number_format($res,2,',','.') . "</th>" : "";
     // La suma de coeficientes y cuotas de portales solo se pone en la suma de portales.
     if (substr($txt, 0, 1) == "P") {
-        $fTit .= (isset($frm['coeblo'])) ? "<th class=\"text-right\">" . number_format($cob,2,',','.') . "</th><th class=\"text-right successcolor\">" . number_format($eub,2,',','.') . "</th>" : "";
+        $fTit .= (isset($frm['coeblo'])) ? "<th class=\"text-right\">" . number_format($cob,2,',','.') . " %</th><th class=\"text-right successcolor\">" . number_format($eub,2,',','.') . " €</th>" : "";
     } else {
         $fTit .= (isset($frm['coeblo'])) ? "<th>&nbsp;</th><th>&nbsp;</th>" : "";
     }
-    $fTit .= (isset($frm['coegar'])) ? "<th class=\"text-right\">" . number_format($cog,4,',','.') . "</th><th class=\"text-right successcolor\">" . number_format($eug,2,',','.') . "</th>" : "";
+    $fTit .= (isset($frm['coegar'])) ? "<th class=\"text-right\">" . number_format($cog,4,',','.') . " %</th><th class=\"text-right successcolor\">" . number_format($eug,2,',','.') . " €</th>" : "";
     return "$fTit</tr>";
 }
 
