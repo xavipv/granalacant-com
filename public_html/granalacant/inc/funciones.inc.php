@@ -2499,7 +2499,6 @@ function f_getCalculos($frm) {
     $can = $frm['cantidad'];
     $mes = $frm['meses'];
     $meses = ($mes == 1) ? "$mes mes" : "$mes meses";
-    $fTit = f_getCalculosTitulo($frm);
     
     // Inicializa las sumas.
     $bloApa = 0; $bloMe2 = 0; $bloCoe = 0; $bloEue = 0; $bloCof = 0; $bloCor = 0; $bloEuf = 0; $bloRes = 0; $bloCob = 0; $bloEub = 0; $bloCog = 0; $bloEug = 0;
@@ -2520,15 +2519,15 @@ function f_getCalculos($frm) {
             $bloApa = 0; $bloMe2 = 0; $bloCoe = 0; $bloEue = 0; $bloCof = 0; $bloCor = 0; $bloEuf = 0; $bloRes = 0; $bloCob = 0; $bloEub = 0; $bloCog = 0; $bloEug = 0;
             $fApa .= ($portal) ? $fSumb : "";
             $portal = $aApar[0];
-        }
-        
-        // Mira si hay cambio de fase.
-        if ($fase != $aApar[3] && $frm['sumas']) {
-            // Pone las sumas.
-            $fSumf = f_getCalculosSumas($frm, "Fase $fase: ", $fasApa, $fasMe2, $fasCoe, $fasEue, $fasCof, $fasCor, $fasEuf, $fasRes, $fasCob, $fasEub, $fasCog, $fasEug);
-            $fasApa = 0; $fasMe2 = 0; $fasCoe = 0; $fasEue = 0; $fasCof = 0; $fasCor = 0; $fasEuf = 0; $fasRes = 0; $fasCob = 0; $fasEub = 0; $fasCog = 0; $fasEug = 0;
-            $fApa .= ($fase) ? $fSumf : "";
-            $fase = $aApar[3];
+            // Mira si hay cambio de fase.
+            if ($fase != $aApar[3] && $frm['sumas']) {
+                // Pone las sumas.
+                $fSumf = f_getCalculosSumas($frm, "Fase $fase: ", $fasApa, $fasMe2, $fasCoe, $fasEue, $fasCof, $fasCor, $fasEuf, $fasRes, $fasCob, $fasEub, $fasCog, $fasEug);
+                $fasApa = 0; $fasMe2 = 0; $fasCoe = 0; $fasEue = 0; $fasCof = 0; $fasCor = 0; $fasEuf = 0; $fasRes = 0; $fasCob = 0; $fasEub = 0; $fasCog = 0; $fasEug = 0;
+                $fApa .= ($fase) ? $fSumf : "";
+                $fase = $aApar[3];
+            }
+            $fApa .= f_getCalculosTitulo($aApar[0], $frm);
         }
         
         // Inicia la fila del apartamento.
@@ -2610,19 +2609,19 @@ function f_getCalculos($frm) {
     $fApa .= ($frm['sumas']) ? f_getCalculosSumas($frm, "Portal $portal: ", $bloApa, $bloMe2, $bloCoe, $bloEue, $bloCof, $bloCor, $bloEuf, $bloRes, $bloCob, $bloEub, $bloCog, $bloEug) : "";
     $fApa .= ($frm['sumas']) ? f_getCalculosSumas($frm, "Fase $fase: ", $fasApa, $fasMe2, $fasCoe, $fasEue, $fasCof, $fasCor, $fasEuf, $fasRes, $fasCob, $fasEub, $fasCog, $fasEug) : "";
     $fApa .= ($frm['sumas']) ? f_getCalculosSumas($frm, "Total: ", $sumApa, $sumMe2, $sumCoe, $sumEue, $sumCof, $sumCor, $sumEuf, $sumRes, $sumCob, $sumEub, $sumCog, $sumEug) : "";
-    return "<h4><a name=\"inicio\"></a>Cuotas mensuales para pagar la cantidad de " . number_format($can,2,',','.') . " € en un plazo de $meses.</h4><table class=\"table table-condensed table-ultra\">$fTit$fApa</table>";
+    return "<h4><a name=\"inicio\"></a>Cuotas mensuales para pagar la cantidad de " . number_format($can,2,',','.') . " € en un plazo de $meses.</h4><table class=\"table table-condensed table-ultra\">$fApa</table>";
 }
 
 /**
- * Obtiene el titulo para los calculos seleccionados.
+ * Obtiene los titulos del portal.
  * 
+ * @param int $por Numero de portal.
  * @param array $frm Datos del formulario.
  * @return string Codigo HTML del titulo.
  */
-function f_getCalculosTitulo($frm) {
+function f_getCalculosTitulo($por, $frm) {
     $fTit = "<tr>";
-    $fTit .= (isset($frm['codigo'])) ? "<th>C&oacute;digo</th>" : "";
-    $fTit .= "<th>Apart.</th>";
+    $fTit .= (isset($frm['codigo'])) ? "<th colspan=\"2\">Portal $por</th>" : "<th>Portal $por</th>";
     $fTit .= (isset($frm['fase'])) ? "<th>Fase</th>" : "";
     $fTit .= (isset($frm['metros'])) ? "<th class=\"text-right\">Metros</th>" : "";
     $fTit .= (isset($frm['coeur'])) ? "<th class=\"text-right\">Urbanizaci&oacute;n</th><th class=\"text-right\">Cuota</th>" : "";
@@ -2656,30 +2655,43 @@ function f_getCalculosTitulo($frm) {
  */
 function f_getCalculosSumas($frm, $txt, $apa, $me2, $coe, $eue, $cof, $cor, $euf, $res, $cob, $eub, $cog, $eug) {
     $fTit = "<tr>";
-    $fTit .= (isset($frm['codigo'])) ? "<th colspan=\"2\">$txt$apa</th>" : "<th>$txt$apa</th>";
-    $fTit .= (isset($frm['fase'])) ? "<th>&nbsp;</th>" : "";
-    $fTit .= (isset($frm['metros'])) ? "<th class=\"text-right\">" . number_format($me2,2,',','.') . " m<sup>2</sup></th>" : "";
-    $fTit .= (isset($frm['coeur'])) ? "<th class=\"text-right\">" . number_format($coe,4,',','.') . " %</th><th class=\"text-right successcolor\">" . number_format($eue,2,',','.') . " €</th>" : "";
-    $fTit .= (isset($frm['coef200'])) ? "<th class=\"text-right\">" . number_format($cof,4,',','.') . " %</th>" : "";
-    $fTit .= (isset($frm['coef100'])) ? "<th class=\"text-right\">" . number_format($cor,5,',','.') . " %</th>" : "";
-    $fTit .= (isset($frm['coef200']) || isset($frm['coef100'])) ? "<th class=\"text-right successcolor\">" . number_format($euf,2,',','.') . " €</th>" : "";
-    $fTit .= (isset($frm['dife'])) ? "<th class=\"text-right dangercolor\">" . number_format($res,2,',','.') . "</th>" : "";
+    $fTit .= (isset($frm['codigo'])) ? "<td colspan=\"2\" class=\"tit text-left\">$apa</td>" : "<td class=\"tit text-left\">$apa</td>";
+    $fTit .= (isset($frm['fase'])) ? "<td  class=\"tit\">&nbsp;</td>" : "";
+    $fTit .= (isset($frm['metros'])) ? "<td class=\"tit text-right\">" . number_format($me2,2,',','.') . " m<sup>2</sup></td>" : "";
+    $fTit .= (isset($frm['coeur'])) ? "<td class=\"tit text-right\">" . number_format($coe,4,',','.') . " %</td><td class=\"tit text-right successcolor\">" . number_format($eue,2,',','.') . " €</td>" : "";
+    $fTit .= (isset($frm['coef200'])) ? "<td class=\"tit text-right\">" . number_format($cof,4,',','.') . " %</td>" : "";
+    $fTit .= (isset($frm['coef100'])) ? "<td class=\"tit text-right\">" . number_format($cor,5,',','.') . " %</td>" : "";
+    $fTit .= (isset($frm['coef200']) || isset($frm['coef100'])) ? "<td class=\"tit text-right successcolor\">" . number_format($euf,2,',','.') . " €</td>" : "";
+    $fTit .= (isset($frm['dife'])) ? "<td class=\"tit text-right dangercolor\">" . number_format($res,2,',','.') . "</td>" : "";
     // La suma de coeficientes y cuotas de portales solo se pone en la suma de portales.
     if (substr($txt, 0, 1) == "P") {
-        $fTit .= (isset($frm['coeblo'])) ? "<th class=\"text-right\">" . number_format($cob,2,',','.') . " %</th><th class=\"text-right successcolor\">" . number_format($eub,2,',','.') . " €</th>" : "";
+        $fTit .= (isset($frm['coeblo'])) ? "<td class=\"tit text-right\">" . number_format($cob,2,',','.') . " %</td><td class=\"tit text-right successcolor\">" . number_format($eub,2,',','.') . " €</td>" : "";
     } else {
-        $fTit .= (isset($frm['coeblo'])) ? "<th>&nbsp;</th><th>&nbsp;</th>" : "";
+        $fTit .= (isset($frm['coeblo'])) ? "<td>&nbsp;</td><td>&nbsp;</td>" : "";
     }
-    $fTit .= (isset($frm['coegar'])) ? "<th class=\"text-right\">" . number_format($cog,4,',','.') . " %</th><th class=\"text-right successcolor\">" . number_format($eug,2,',','.') . " €</th>" : "";
+    $fTit .= (isset($frm['coegar'])) ? "<td class=\"tit text-right\">" . number_format($cog,4,',','.') . " %</td><td class=\"tit text-right successcolor\">" . number_format($eug,2,',','.') . " €</td>" : "";
     return "$fTit</tr>";
 }
 
 //--- TRANSFORMAR TEXTOS -----------------------------------------------------//
 
+/**
+ * Cambia el color de las etiquetas de las tablas.
+ * 
+ * @param string $tabla Nombre de tabla.
+ * @param boolean $resul Resultado verdadero o falso.
+ * @return string Codigo HTML del nombre de la tabla.
+ */
 function f_transformarLabel($tabla, $resul) {
     return ($resul) ? "<b style=\"color:green\">$tabla</b>&nbsp;<span class=\"oi oi-check\"></span>" : "<b style=\"color:red\">$tabla</b>&nbsp;<span class=\"oi oi-x\"></span>";
 }
 
+/**
+ * Obtiene las claves primarias de las tablas a modificar.
+ * 
+ * @param string $tabla Nombre de la tabla.
+ * @return array Con las claves primarias de la tabla.
+ */
 function f_transformarClaves($tabla) {
     $aCla = array();
     switch ($tabla) {
@@ -2693,4 +2705,3 @@ function f_transformarClaves($tabla) {
     }
     return $aCla;
 }
-
