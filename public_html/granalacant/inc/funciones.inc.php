@@ -382,6 +382,12 @@ function f_buscarApartamentos($texto, $func) {
     return $html;
 } 
 
+/**
+ * Obtiene una lista con los portales de los apartamentos.
+ * 
+ * @global \Apartamentos $oApars Instancia de Apartamentos.
+ * @return string Codigo HTML de la lista.
+ */
 function f_getApartamentosIniciales() {
     global $oApars;
     $aIni = $oApars->getPortalesLista();
@@ -392,6 +398,13 @@ function f_getApartamentosIniciales() {
     return $sIni;
 }
 
+/**
+ * Obtiene un listado con los apartamentos existentes.
+ * 
+ * @global string $pagina Nombre de la pagina.
+ * @global \Apartamentos $oApars Instancia de Apartamentos.
+ * @return string Codigo HTML del listado.
+ */
 function f_getApartamentosListado() {
     global $pagina, $oApars;
     $aApar = $oApars->getNombresCompletos();
@@ -407,38 +420,98 @@ function f_getApartamentosListado() {
     return $sApa;
 }
 
+/**
+ * Obtiene un select para elegir un portal.
+ * 
+ * @global \Apartamentos $oApars Instancia de Apartamentos.
+ * @param string $id Identificador del select.
+ * @param int $sel Elemento seleccionado.
+ * @param string $clase Clase CSS.
+ * @param string $onch Funcion para el evento onChange.
+ * @param boolean $bla Si es TRUE se deja una opcion en blanco, si es FALSE no se deja.
+ * @return string Codigo HTML del select.
+ */
 function f_getSelectPortales($id='portal', $sel='', $clase='form-control', $onch='', $bla=FALSE) {
     global $oApars;
     $aDat = $oApars->getPortalesDistintos();
     return f_getSelectSimple($aDat, $id, $sel, $clase, $onch, $bla);
 } 
 
+/**
+ * Obtiene un select para elegir un piso.
+ * 
+ * @global \Apartamentos $oApars Instancia de Apartamentos.
+ * @param string $id Identificador del select.
+ * @param int $sel Elemento seleccionado.
+ * @param string $clase Clase CSS.
+ * @param string $onch Funcion para el evento onChange.
+ * @param boolean $bla Si es TRUE se deja una opcion en blanco, si es FALSE no se deja.
+ * @return string Codigo HTML del select.
+ */
 function f_getSelectPisos($id='piso', $sel='', $clase='form-control', $onch='', $bla=FALSE) {
     global $oApars;
     $aDat = $oApars->getPisosDistintos();
     return f_getSelectSimple($aDat, $id, $sel, $clase, $onch, $bla);
 }
 
+/**
+ * Obtiene un select para elegir una letra.
+ * 
+ * @global \Apartamentos $oApars Instancia de Apartamentos.
+ * @param string $id Identificador del select.
+ * @param int $sel Elemento seleccionado.
+ * @param string $clase Clase CSS.
+ * @param string $onch Funcion para el evento onChange.
+ * @param boolean $bla Si es TRUE se deja una opcion en blanco, si es FALSE no se deja.
+ * @return string Codigo HTML del select.
+ */
 function f_getSelectLetras($id='letra', $sel='', $clase='form-control', $onch='', $bla=FALSE) {
     global $oApars;
     $aDat = $oApars->getLetrasDistintas();
     return f_getSelectSimple($aDat, $id, $sel, $clase, $onch, $bla);
 }
 
+/**
+ * Obtiene un select para elegir una fase.
+ * 
+ * @global \Apartamentos $oApars Instancia de Apartamentos.
+ * @param string $id Identificador del select.
+ * @param int $sel Elemento seleccionado.
+ * @param string $clase Clase CSS.
+ * @param string $onch Funcion para el evento onChange.
+ * @param boolean $bla Si es TRUE se deja una opcion en blanco, si es FALSE no se deja.
+ * @return string Codigo HTML del select.
+ */
 function f_getSelectFases($id='fase', $sel='', $clase='form-control', $onch='', $bla=FALSE) {
     global $oApars;
     $aDat = $oApars->getFasesDistintas();
     return f_getSelectSimple($aDat, $id, $sel, $clase, $onch, $bla);
 }
 
+/**
+ * Obtiene un select para elegir un tipo de apartamento.
+ * 
+ * @global \Apartamentos $oApars Instancia de Apartamentos.
+ * @param string $id Identificador del select.
+ * @param int $sel Elemento seleccionado.
+ * @param string $clase Clase CSS.
+ * @param string $onch Funcion para el evento onChange.
+ * @param boolean $bla Si es TRUE se deja una opcion en blanco, si es FALSE no se deja.
+ * @return string Codigo HTML del select.
+ */
 function f_getSelectTipos($id='tipo', $sel='', $clase='form-control', $onch='', $bla=FALSE) { 
     global $oApars;
     $aDat = $oApars->getTiposDistintos();
     return f_getSelectSimple($aDat, $id, $sel, $clase, $onch, $bla);
 }
 
+/**
+ * Obtiene el plano de las plazas de garaje.
+ * 
+ * @param \Apartamento $oApa Instancia de Apartamento.
+ * @return string Codigo HTML del plano.
+ */
 function f_getGarajesPlano($oApa) {
-    //$oApa = new Apartamento($cod);
     $aGar = $oApa->getGarajesApartamento();
     $aGarCorte = array(21,42,67,92,117);    // Números de las plazas de garaje donde termina cada fila.
     $aGarDoble = array(67,117);             // Números de las plazas de garaje con separación doble entre filas.
@@ -465,6 +538,12 @@ function f_getGarajesPlano($oApa) {
     return $gar;
 }
 
+/**
+ * Obtiene los datos de los coeficientes de los apartamentos.
+ * 
+ * @global \Apartamentos $oApars Instancia de Apartamentos.
+ * @return string Codigo HTML de los apartamentos.
+ */
 function f_getDatosApartamentos() {
     global $oApars;
     // array(portal,piso,letra,fase,tipo,finca,metros,terraza,coefurb,coeffase,coefbloq)
@@ -508,6 +587,22 @@ function f_getDatosApartamentos() {
     return $sTabla . "</table>";
 }
 
+/**
+ * Obtiene los datos de los coeficientes.
+ * 
+ * @param int $cod Codigo de apartamento.
+ * @param int $por Numero de portal.
+ * @param string $pis Numero de piso.
+ * @param string $let Letra.
+ * @param string $tip Tipo de apartamento.
+ * @param int $met Metros cuadrados del piso.
+ * @param int $ter Metros cuadrados de la terraza.
+ * @param int $cou Coeficiente urbanizacion.
+ * @param int $cof Coeficiente fase 200%.
+ * @param int $cor Coeficiente fase 100%.
+ * @param int $cob Coeficiente bloque.
+ * @return string Codigo HTML de los datos.
+ */
 function f_getCoeficientesNuevoApartamento($cod, $por, $pis, $let, $tip, $met, $ter, $cou, $cof, $cor, $cob) {
     $o1 = "onchange=\"$('#boton$cod').prop('disabled',false);\"";
     $o2 = "onkeyup=\"js_sumar($por, this.id);\"";
@@ -607,6 +702,12 @@ function f_grabarCoeficientes($cod, $met, $ter, $cou, $cof, $cob) {
 
 //--- PROPIETARIOS -----------------------------------------------------------//
 
+/**
+ * Obtiene los propietarios de un apartamento.
+ * 
+ * @param int $cod Codigo de apartamento.
+ * @return string Codigo HTML de los propietarios.
+ */
 function f_getPropietarios($cod) { 
     $oPro = new Propiedad($cod);
     $aPro = $oPro->getPopietarios();
@@ -623,6 +724,17 @@ function f_getPropietarios($cod) {
     return "$tabla</table>";
 }
 
+/**
+ * Obtiene los datos de un  propietario del apartamento.
+ * 
+ * @param int $cod Codigo del apartamento.
+ * @param int $per Codigo de persona.
+ * @param string $nom Nombre del propietario.
+ * @param date $dat Fecha de baja en formato YYYY-MM-DD.
+ * @param date $fec Fecha de baja en formato DD-MM-YYYY.
+ * @param int $ord Numero de orden.
+ * @return string Codigo HTML del propietario.
+ */
 function f_getPropietario($cod, $per, $nom, $dat, $fec, $ord) {
     if($dat) {
         // Propietario de baja.
@@ -646,6 +758,14 @@ function f_getPropietario($cod, $per, $nom, $dat, $fec, $ord) {
             <td class=\"col-sm-1 align-middle\"><button type=\"button\" id=\"borra$per\" onclick=\"xajax_eliminarPropietarioPregunta($cod, $per)\" class=\"btn btn-danger\" title=\"Eliminar\"><span class=\"oi oi-trash\"></span></button></td></tr>";
 }
 
+/**
+ * Obtiene el formulario para seleccionar un nuevo propietario.
+ * 
+ * @global \Personas $oPers Instancia de Personas.
+ * @param array $aPro Datos de los propietarios.
+ * @param int $apa Codigo de apartamento.
+ * @return string Codigo HTML del formulario.
+ */
 function f_getPropietarioNuevo($aPro, $apa) {
     global $oPers;
     
@@ -663,17 +783,40 @@ function f_getPropietarioNuevo($aPro, $apa) {
             <td class=\"col-sm-1 align-middle\">&nbsp;</td></tr>";
 }
 
+/**
+ * Obtiene el contenido para el boton de grabar.
+ * 
+ * @param int $apa Codigo de apartamento.
+ * @param int $per Codigo de persona.
+ * @return string Propiedades del boton.
+ */
 function f_getPropietarioBoton($apa, $per) {
     $perso = ($per) ? $per : "$('#nombre$per').val()";
     return "xajax_grabarPropietario($apa, $perso, $('#orden$per').val(), $('#fecha$per').val())";
 }
 
+/**
+ * Graba los datos de un propietario.
+ * 
+ * @param int $apa Codigo de apartamento.
+ * @param int $per Codigo de persona.
+ * @param int $ord Numero de orden.
+ * @param date $baj Fecha de baja.
+ * @return boolean Devuelve TRUE si todo es correcto o FALSE si falla algo.
+ */
 function f_grabarPropietario($apa, $per, $ord, $baj) {
     $oPro = new Propiedad($apa);
     $oPro->setPropietario($per, $baj, $ord);
     return $oPro->grabarPropietarios();
 }
 
+/**
+ * Elimina los datos de un propietario.
+ * 
+ * @param int $apa Codigo de apartamento.
+ * @param int $per Codigo de persona.
+ * @return boolean Devuelve TRUE si todo es correcto o FALSE si falla algo.
+ */
 function f_eliminarPropietario($apa, $per) {
     $oPro = new Propiedad($apa);
     return $oPro->eliminarPropietario($per);
@@ -681,10 +824,15 @@ function f_eliminarPropietario($apa, $per) {
 
 //--- PROPIEDADES ------------------------------------------------------------//
 
+/**
+ * Obtiene un listado de propietarios.
+ * 
+ * @global string $pagina Nombre de la pagina.
+ * @global \Propietarios $oProps Instancia de Propietarios.
+ * @return string Codigo HTML del listado.
+ */
 function f_getPropietariosListado() {
     global $pagina, $oProps; //$oPers;
-    //$aPer = $oPers->getPropietarosNumPropiedadesAltaBaja();
-    //$aPer = $oProps->getPropietarosNumPropiedadesAltaBaja();
     $aPer = $oProps->getPropietariosNumeroPropiedades(TRUE);
     $sIni = "";
     $sPer = "<div><a name=\"inicio\"></a></div>";
@@ -702,6 +850,19 @@ function f_getPropietariosListado() {
     return $sPer;
 }
 
+/**
+ * Obtiene la clase CSS aplicable a un propietario.
+ * <ul>
+ * <li>listado-elem-des Sin propiedades.</li>
+ * <li>listado-elem Tiene alguna propiedad de alta.</li>
+ * <li>listado-elem-baja Tiene propiedades, pero de baja todas.</li>
+ * </ul>
+ * 
+ * @param int $num Numero de propiedades.
+ * @param int $alt Numero de propiedades de alta.
+ * @param int $baj Numero de propiedades de baja.
+ * @return string Clase CSS.
+ */
 function f_getPropietariosClase($num, $alt, $baj) {
     if (!$num) {
         // No tiene propiedades.
@@ -716,11 +877,15 @@ function f_getPropietariosClase($num, $alt, $baj) {
     return $cla;
 }
 
+/**
+ * Obtiene las propiedades de una persona.
+ * 
+ * @global \Propietarios $oProps Instancia de Propietarios.
+ * @param int $per Codigo de persona.
+ * @return string Codigo HTML de las propiedades.
+ */
 function f_getPropiedades($per) { 
     global $oProps;
-    //global $oPers;
-    //$aPro = $oPers->getPropiedades($per);
-    //$aPro = $oProps->getPropiedades($per);
     $aPro = $oProps->getPropiedadesPersona($per);
     $tabla = "<table class=\"table table-sm col-sm-12\"><tr><th class=\"col-sm-1\">&nbsp;</th><th class=\"col-sm-6\">Propiedad</th><th class=\"col-sm-1\">Orden</th><th class=\"col-sm-2\">Fecha baja</th><th class=\"col-sm-1\">&nbsp;</th><th class=\"col-sm-1\">&nbsp;</th></tr>";
     foreach ($aPro as $apa => $aDat) {
@@ -735,6 +900,17 @@ function f_getPropiedades($per) {
     return "$tabla</table>"; 
 }
 
+/**
+ * Obtiene el formulario para una propiedad.
+ * 
+ * @param int $per Codigo de persona.
+ * @param int $apa Codigo de apartamento.
+ * @param string $nom Nombre del propietario.
+ * @param date $dat Fecha de baja en formato YYYY-MM-DD.
+ * @param date $fec Fecha de baja en formato DD-MM-YYYY.
+ * @param int $ord Numero de orden.
+ * @return string Codigo HTML del formulario.
+ */
 function f_getPropiedad($per, $apa, $nom, $dat, $fec, $ord) {
     if($dat) {
         // Propiedad de baja.
@@ -758,9 +934,14 @@ function f_getPropiedad($per, $apa, $nom, $dat, $fec, $ord) {
             <td class=\"col-sm-1 align-middle\"><button type=\"button\" id=\"borra$apa\" onclick=\"xajax_eliminarPropiedadPregunta($per, $apa)\" class=\"btn btn-danger\" title=\"Eliminar\"><span class=\"oi oi-trash\"></span></button></td></tr>";
 }
 
+/**
+ * Obtiene el formulario para elegir una propiedad nueva.
+ * 
+ * @param array $aPro Nombres de los propietarios.
+ * @param int $per Codigo de persona.
+ * @return string Codigo HTML del formulario.
+ */
 function f_getPropiedadNueva($aPro, $per) {
-    
-    
     // Lista de todas las personas menos los propietarios.
     $aApar = f_getApartamentosConPortal($aPro);
     $on = "if($('#nombre0').val() == '') { $('#boton0').prop('disabled',true); } else { $('#boton0').prop('disabled',false); }";
@@ -775,6 +956,13 @@ function f_getPropiedadNueva($aPro, $per) {
             <td class=\"col-sm-1 align-middle\">&nbsp;</td></tr>";
 }
 
+/**
+ * Obtiene una lista de propiedades.
+ * 
+ * @global \Apartamentos $oApars Instancia de Apartamentos.
+ * @param array $aPro Nombres de los propietarios.
+ * @return string Codigo HTML del formulario.
+ */
 function f_getApartamentosConPortal($aPro) {
     global $oApars;
     $aDat  = array();
@@ -785,17 +973,40 @@ function f_getApartamentosConPortal($aPro) {
     return $aDat;
 }
 
+/**
+ * Obtiene el boton para grabar.
+ * 
+ * @param int $per Codigo de persona.
+ * @param int $apa Codigo de apartamento.
+ * @return string Valor del boton.
+ */
 function f_getPropiedadBoton($per, $apa) {
     $apart = ($apa) ? $apa : "$('#nombre$apa').val()";
     return "xajax_grabarPropiedad($per, $apart, $('#orden$apa').val(), $('#fecha$apa').val())";
 }
 
+/**
+ * Graba los datos de una propiedad.
+ * 
+ * @param int $per Codigo de persona.
+ * @param int $apa Codigo de apartamento.
+ * @param int $ord Numero de orden.
+ * @param date $baj Fecha de baja.
+ * @return boolean Devuelve TRUE si todo es correcto o FALSE si ha fallado algo.
+ */
 function f_grabarPropiedad($per, $apa, $ord, $baj) {
     $oPro = new Propietario($per);
     $oPro->setPropiedad($apa, $baj, $ord);
     return $oPro->grabarPropiedades();
 }
 
+/**
+ * Elimina una propiedad.
+ * 
+ * @param int $per Codigo de persona.
+ * @param int $apa Codigo de apartamento.
+ * @return boolean Devuelve TRUE si todo es correcto o FALSE si ha fallado algo.
+ */
 function f_eliminarPropiedad($per, $apa) {
     $oPro = new Propietario($per);
     return $oPro->eliminarPropiedad($apa);
@@ -803,6 +1014,11 @@ function f_eliminarPropiedad($per, $apa) {
 
 //--- JUNTAS - DATOS ---------------------------------------------------------//
 
+/**
+ * Obtiene los años de las juntas.
+ * 
+ * @return string Codigo HTML de los años de las juntas.
+ */
 function f_getJuntasAnyos() {
     $oJuntas = new Juntas();
     $aAnys = $oJuntas->getJuntasAnyos();
@@ -813,7 +1029,12 @@ function f_getJuntasAnyos() {
     return $sAnys;
 }
 
-
+/**
+ * Obtiene un listado con las fechas de las juntas.
+ * 
+ * @global string $pagina Nombre de la pagina actual.
+ * @return string Codigo HTML de las juntas.
+ */
 function f_getJuntasListado() {
     global $pagina;
     $oJuntas = new Juntas();
@@ -839,6 +1060,12 @@ function f_getJuntasListado() {
     return $sJuntas;
 }
 
+/**
+ * Obtiene la ultima Junta guardada.
+ * 
+ * @global Juntas $oJuntas Instancia de Juntas.
+ * @return date Fecha de la ultima Junta.
+ */
 function f_getUltimaJunta() {
     global $oJuntas;
     return $oJuntas->getUltimaJunta();
@@ -952,6 +1179,13 @@ function f_getAsistentesSumas($fecha='') {
     return $aSumas;
 }
 
+/**
+ * Graba los datos de una Junta.
+ * 
+ * @global Juntas $oJuntas Instancia de Juntas.
+ * @param array $frm Datos del formulario.
+ * @return boolean Devuelve TRUE si todo es correcto o FALSE si falla algo.
+ */
 function f_grabarJunta($frm) {
     global $oJuntas;
     
@@ -996,6 +1230,13 @@ function f_grabarJunta($frm) {
 
 //--- JUNTA - ASISTENTES -----------------------------------------------------//
 
+/**
+ * Obtiene los asistentes a una Junta.
+ * 
+ * @global \Apartamentos $oApars Instancia de Apartamentos.
+ * @param date $fecha Fecha de la Junta.
+ * @return string Codigo HTML de los asistentes.
+ */
 function f_getAsistentes($fecha) { 
     global $oApars;
     $oAsist = new Asistentes($fecha);
@@ -1029,8 +1270,6 @@ function f_getAsistentes($fecha) {
             $voto = "N";
         }
         
-        
-        
         $chk1 = ($voto == "S") ? "checked=\"checked\"" : "";
         $chk2 = ($repr == "S") ? "checked=\"checked\"" : "";
         $onCh = "xajax_setAsistenteMulti('$fecha', '$apa', $('#nombre$apa').val(), $('#voto$apa').prop('checked'), $('#repr$apa').prop('checked'), $('#multiples').prop('checked'));";
@@ -1042,21 +1281,25 @@ function f_getAsistentes($fecha) {
                    <td class=\"align-middle col-sm-7\" id=\"selec$apa\">$sele</td>
                    <td class=\"align-middle col-sm-1 text-center\"><button class=\"btn btn-warning\" type=\"button\" onclick=\"xajax_setAsistente('$fecha','$apa')\" title=\"Deshacer\"><span class=\"oi oi-loop-circular\"></span></button></td>
                    <td class=\"align-middle col-sm-1 text-center\"><button id=\"boton$apa\" class=\"btn btn-success\" type=\"button\" onclick=\"xajax_grabarAsistenteMulti('$fecha', '$apa', $('#nombre$apa').val(), $('#repr$apa').prop('checked'), $('#voto$apa').prop('checked'), $('#multiples').prop('checked'))\" title=\"Guardar\" disabled=\"disabled\"><span class=\"oi oi-hard-drive\"></span></button></td></tr>";
-   
-        
         }
     return "$tabla</table><a name=\"final\"></a>";
 }
 
+/**
+ * Obtiene un select con los nombres de los propietarios o los representantes.
+ * 
+ * @global \Propietarios $oProps Instancia de Propietarios.
+ * @param int $apa Codigo de apartamento.
+ * @param date $fecha Fecha de la Junta.
+ * @param int $sel Codigo de la persona a seleccionar.
+ * @param string $repr Representado 'S' o propietario 'N'.
+ * @param string $onCh Cadena para el evento onchange del select.
+ * @return string Codigo HTML del select.
+ */
 function f_getPropietariosRepresentantes($apa, $fecha, $sel='', $repr='N', $onCh='') {
     global $oProps;
-    //global $oPers;
-    //$aPro = ($repr == 'S') ? $oPers->getRepresentantes($apa, $fecha) : $oPers->getPropietariosEnFecha($apa, $fecha, FALSE);
-    //$aPro = ($repr == 'S') ? $oProps->getRepresentantes($apa, $fecha) : $oProps->getPropietariosEnFecha($apa, $fecha, FALSE);
     $aPro = ($repr == 'S') ? $oProps->getRepresentantes($apa, $fecha) : $oProps->getNombresPropietariosApartamentoFecha($apa, $fecha);
     $func = "$('#boton$apa').prop('disabled',false); if(!this.value){ $('#voto$apa').prop('checked',false); } else { $('#voto$apa').prop('checked',true); }; $onCh";
-
-    //return f_getSelect($aPro, "nombre$apa", $sel, "form-control", $func, TRUE);
     return f_getSelect($aPro, "nombre$apa", $sel, "form-control", $func, TRUE);
 }
 
@@ -1476,6 +1719,11 @@ function f_getDeudasSuma($tipo, $valor, $apar, $deuda, $ordin, $extra) {
 
 //--- ACTAS VISUALIZAR -------------------------------------------------------//
 
+/**
+ * Obtiene los años de las actas.
+ * 
+ * @return string Codigo HTML de la lista de años.
+ */
 function f_getActasAnyos() {
     $oActas = new Actas();
     $aAnys = $oActas->getActasAnyos();
@@ -1486,6 +1734,12 @@ function f_getActasAnyos() {
     return $sAnys;
 }
 
+/**
+ * Obtiene un listado con las fechas de las actas.
+ * 
+ * @global string $pagina Nombre de la pagina actual.
+ * @return string Codigo HTML del listado.
+ */
 function f_getActasListado() {
     global $pagina;
     $oActas = new Actas();
@@ -1503,6 +1757,13 @@ function f_getActasListado() {
     return $sActas;
 }
 
+/**
+ * Obtiene los datos del acta.
+ * 
+ * @global Juntas $oJuntas Instancia de Juntas.
+ * @param date $fecha Fecha del acta.
+ * @return string Codigo HTML del acta.
+ */
 function f_getDatosActa($fecha) {
     global $oJuntas;
     $oJunta = new Junta();
@@ -1519,6 +1780,12 @@ function f_getDatosActa($fecha) {
     return $html;
 }
 
+/**
+ * Obtiene el indice de los puntos del acta.
+ * 
+ * @param array $aIndi Puntos del acta.
+ * @return string Codigo HTML del indice.
+ */
 function f_getDatosActaIndice($aIndi) {
     $html = "";
     if ($aIndi && count($aIndi) > 0) {
@@ -1611,6 +1878,12 @@ function f_getActasDatosBusqueda($lista, $tipo) {
 
 //--- ACTAS EDITAR -----------------------------------------------------------//
 
+/**
+ * Obtiene los datos de un acta para editarlos.
+ * 
+ * @param date $fecha Fecha del acta.
+ * @return string Codigo HTML del acta.
+ */
 function f_getActa($fecha='') {
     $html = "<a name=\"inicioacta\"></a><div id=\"accordion\" role=\"tablist\">";
     $oActa = new Acta($fecha);
@@ -1629,6 +1902,13 @@ function f_getActa($fecha='') {
     return "$html</div>";
 }
 
+/**
+ * Obtiene los aparatados de un acta.
+ * 
+ * @param int $iPun Punto del acta.
+ * @param array $aAps Apartados del punto.
+ * @return string Codigo HTML de los apartados.
+ */
 function f_getActaApartados($iPun, $aAps) {
     $html .= "<div id=\"p$iPun\" class=\"collapse\" role=\"tabpanel\" aria-labelledby=\"c$iPun\" data-parent=\"#accordion\"><div class=\"card-body\">";
     $iNue = 0;
@@ -1645,6 +1925,14 @@ function f_getActaApartados($iPun, $aAps) {
     return "$html</div></div>";
 }
 
+/**
+ * Obtiene la cabecera del punto del acta.
+ * 
+ * @param int $iPun Codigo del punto.
+ * @param string $sPun Numero del punto.
+ * @param string $sTit Titulo del punto.
+ * @return string Codigo HTML de la cabecera.
+ */
 function f_getActaCabecera($iPun, $sPun, $sTit) {
     return "<div class=\"card-header\" role=\"tab\" id=\"c$iPun\">
                 <div class=\"row\">
@@ -1655,6 +1943,16 @@ function f_getActaCabecera($iPun, $sPun, $sTit) {
             </div>";
 }
 
+/**
+ * Obtiene el cuerpo del punto del acta.
+ * 
+ * @param int $iPun Codigo del punto.
+ * @param int $iApa Codigo del apartado.
+ * @param string $sApa Numero del apartado.
+ * @param string $sSub Titulo del apartado.
+ * @param string $sTxt Texto de apartado.
+ * @return string Codigo HTML del cuerpo.
+ */
 function f_getActaCuerpo($iPun, $iApa, $sApa, $sSub, $sTxt) {
     return "<div class=\"row\">
                 <div class=\"col-sm-1\"><input type=\"text\" id=\"apa$iPun-$iApa\" name=\"apa[$iPun][$iApa]\" class=\"form-control\" value=\"$sApa\" placeholder=\"Apartado\"></div>
@@ -1665,6 +1963,12 @@ function f_getActaCuerpo($iPun, $iApa, $sApa, $sSub, $sTxt) {
             </div>";
 }
 
+/**
+ * Graba los datos del acta.
+ * 
+ * @param array $frm Datos del formulario.
+ * @return boolean Devuelve TRUE si el correcto o FASE si ha fallado algo.
+ */
 function f_grabarActa($frm) {
     $fini = $frm['fechainicial'];   // Fecha inicial del acta.
     $fnew = $frm['fecha'];          // Fecha actual a guardar.
@@ -2025,6 +2329,12 @@ function f_getListadoApartamentosFiltros($frm) {
 
 //--- LISTADOS DE PROPIETARIOS ---//
 
+/**
+ * Obtiene el listado de propietarios.
+ * 
+ * @param array $frm Datos del formulario.
+ * @return string Codigo HTML del listado.
+ */
 function f_getListadoPropietarios($frm) {
     
     $int = (isset($frm['intervalo']) && $frm['intervalo'] == 0) ? FALSE : TRUE; // Fechas puntuales : Intervalo completo.
@@ -2034,12 +2344,21 @@ function f_getListadoPropietarios($frm) {
     $que = ($frm['verque'] == 1) ? TRUE : FALSE;    // Tambien bajas : Solo actuales.
     $dis = ($frm['distintos']) ? TRUE : FALSE;      // Solo distintos : Todos.
     $may = ($frm['mayusculas']) ? TRUE : FALSE;     // Mayusculas : Minusculas.
-    
     $lis = ($int) ? f_getListadoPropietariosCompleto($din, $dfi, $ver, $que, $may) : f_getListadoPropietariosFechas($din, $dfi, $ver, $dis, $may);
-    
     return f_getListadoPropietariosTitulo($int, $din, $dfi, $ver, $que, $dis) . $lis;
 }
 
+/**
+ * Obtiene el titulo para el listado de propietarios.
+ * 
+ * @param boolean $int Fechas puntuales (false) o intervalo completo de fechas (true).
+ * @param date $din Fecha inicial o primera.
+ * @param date $dfi Fecha final o segunda.
+ * @param boolean $ver Mostrar por personas (true) o por apartamentos (false).
+ * @param boolean $que Mostrar tambien las bajas (true) o solo los propietarios actuales (false).
+ * @param boolean $dis Mostrar solo propietarios distintos (true) o todos (false).
+ * @return string Codigo HTML del listado.
+ */
 function f_getListadoPropietariosTitulo($int, $din, $dfi, $ver, $que, $dis) {
     $ti0 = ($int) ? "Listado de propietarios entre el d&iacute;a $din y el $dfi " : "Listado de propietarios el d&iacute;a $din y el d&iacute;a $dfi ";
     $tit = ($que) ? $ti0 : "Listado de propietarios actuales ";
@@ -2048,6 +2367,17 @@ function f_getListadoPropietariosTitulo($int, $din, $dfi, $ver, $que, $dis) {
     return "<h4><a name=\"inicio\"></a>$tit</h4>";
 }
 
+/**
+ * Obtiene el listado de propietarios entre dos fechas.
+ * 
+ * @global \Propietarios $oProps Instancia de Propietarios.
+ * @param date $din Fecha inicial o primera.
+ * @param date $dfi Fecha final o segunda.
+ * @param boolean $ver Mostrar por personas (true) o por apartamentos (false).
+ * @param boolean $que Mostrar tambien las bajas (true) o solo los propietarios actuales (false).
+ * @param boolean $may Mostrar los nombres en mayusculas (true) o no (false).
+ * @return string Codigo HTML del listado.
+ */
 function f_getListadoPropietariosCompleto($din, $dfi, $ver, $que, $may) {
     global $oProps;
     //array('0 codapa','1 apartamento','2 codpers','3 persona','4 date','5 fecha','6 orden')
@@ -2078,6 +2408,17 @@ function f_getListadoPropietariosCompleto($din, $dfi, $ver, $que, $may) {
     return "$html<tr><td>$dato</td><td>$cuer</td></tr></table>";
 }
 
+/**
+ * Obtiene el listado de propietarios para dos fechas puntuales.
+ * 
+ * @global \Propietarios $oProps Instancia de Propietarios.
+ * @param date $din Fecha inicial o primera.
+ * @param date $dfi Fecha final o segunda.
+ * @param boolean $ver Mostrar por personas (true) o por apartamentos (false).
+ * @param boolean $dis Mostrar solo propietarios distintos (true) o todos (false).
+ * @param boolean $may Mostrar los nombres en mayusculas (true) o no (false).
+ * @return string Codigo HTML del listado.
+ */
 function f_getListadoPropietariosFechas($din, $dfi, $ver, $dis, $may) {
     global $oProps;
     $aPr1 = f_getListadoPropietariosAgrupar($oProps->getPropietariosFecha($din, $ver), $ver, $may);
@@ -2096,6 +2437,14 @@ function f_getListadoPropietariosFechas($din, $dfi, $ver, $dis, $may) {
     return "$html</table>";
 }
 
+/**
+ * Agrupa los nombres de los propietarios.
+ * 
+ * @param array $aPro Datos de los propietarios.
+ * @param boolean $ver Mostrar por personas (true) o por apartamentos (false).
+ * @param boolean $may Mostrar los nombres en mayusculas (true) o no (false).
+ * @return array con los datos agrupados.
+ */
 function f_getListadoPropietariosAgrupar($aPro, $ver, $may) {
     //array('0 codapa','1 apartamento','2 codpers','3 persona','4 date','5 fecha','6 orden')
     $aDatos = array();
@@ -2124,6 +2473,14 @@ function f_getListadoPropietariosAgrupar($aPro, $ver, $may) {
     return $aDatos;
 }
 
+/**
+ * Unde datos de los propietarios.
+ * 
+ * @param array $aPr1 Datos de propietarios.
+ * @param array $aPr2 Datos de propietarios.
+ * @param boolean $ver Mostrar por personas (true) o por apartamentos (false).
+ * @return array con los datos unidos y ordenados.
+ */
 function f_getListadoPropietariosUnir($aPr1, $aPr2, $ver) {
     $aNueva = array();
     foreach ($aPr1 as $key => $aPro) {
@@ -2438,6 +2795,15 @@ function f_getListadoDeudas($frm) {
     return "$html</table>";
 }
 
+/**
+ * Obtiene los titulos de los deudores por apartamentos.
+ * 
+ * @param string $apart Apartamento.
+ * @param int $ordin Deuda ordinaria.
+ * @param int $extra Deuda extraordinaria.
+ * @param int $total Deuda total.
+ * @return string Codigo HTML del titulo.
+ */
 function f_getListadoDeudasTituloApartamentos($apart, $ordin, $extra, $total) {
     $html .= "<tr><td class=\"tit text-left\">Portal $apart</td><td class=\"tit text-left\">Propietario</td>";
     $html .= ($ordin) ? "<td class=\"tit text-right\">Ordinaria</td>" : "";
@@ -2447,6 +2813,15 @@ function f_getListadoDeudasTituloApartamentos($apart, $ordin, $extra, $total) {
     return $html;
 }
 
+/**
+ * Obtiene los titulos de los deudores por fechas.
+ * 
+ * @param int $portal Numero del portal.
+ * @param int $ordin Deuda ordinaria.
+ * @param int $extra Deuda extraordinaria.
+ * @param int $total Deuda total.
+ * @return string Codigo HTML del titulo.
+ */
 function f_getListadoDeudasTituloPortal($portal, $ordin, $extra, $total) {
     if ($portal) {
         $html .= "<tr><td class=\"tit text-left\">Portal $portal</td><td class=\"tit\">Fase</td><td class=\"tit text-left\">Propietario</td>";
@@ -2458,6 +2833,14 @@ function f_getListadoDeudasTituloPortal($portal, $ordin, $extra, $total) {
     return $html;
 }
 
+/**
+ * Obtiene los titulos de los deudores por cantidad de deuda.
+ * 
+ * @param int $ordin Deuda ordinaria.
+ * @param int $extra Deuda extraordinaria.
+ * @param int $total Deuda total.
+ * @return string Codigo HTML del titulo.
+ */
 function f_getListadoDeudasTituloDeudas($ordin, $extra, $total) {
     $html .= "<tr><td class=\"tit text-left\">Apartamento</td><td class=\"tit\">Fase</td><td class=\"tit text-left\">Propietario</td>";
     $html .= ($ordin) ? "<td class=\"tit text-right\">Ordinaria</td>" : "";
@@ -2467,6 +2850,22 @@ function f_getListadoDeudasTituloDeudas($ordin, $extra, $total) {
     return $html;
 }
 
+/**
+ * Obtiene las sumas de las deudas por portal, fase o total.
+ * 
+ * @global \Apartamentos $oApars Instancia de Apartamentos.
+ * @param string $tipo Tipo de suma p, f o t.
+ * @param string $portal Numero de portal o fase.
+ * @param int $ordin Deuda ordinaria.
+ * @param int $extra Deuda extraordinaria.
+ * @param int $total Deuda total.
+ * @param boolean $bSuma Indica si se muestran las sumas o no.
+ * @param int $pap Numero de apartamentos.
+ * @param int $por Total de deuda ordinaria.
+ * @param int $pex Total de deuda extraordinaria.
+ * @param int $psu Total de suma de deudas.
+ * @return string Codigo HTML de las sumas.
+ */
 function f_getListadoDeudasSumaPortal($tipo, $portal, $ordin, $extra, $total, $bSuma, $pap, $por, $pex, $psu) {
     global $oApars;
     if ($bSuma && $portal) {
