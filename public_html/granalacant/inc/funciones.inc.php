@@ -588,7 +588,7 @@ function f_getDatosApartamentos() {
 }
 
 /**
- * Obtiene los datos de los coeficientes.
+ * Obtiene el formulario para los coeficientes de un apartamento.
  * 
  * @param int $cod Codigo de apartamento.
  * @param int $por Numero de portal.
@@ -620,6 +620,19 @@ function f_getCoeficientesNuevoApartamento($cod, $por, $pis, $let, $tip, $met, $
     return "<tr><td style=\"width:10%\" class=\"align-middle\"><input type=\"hidden\" id=\"po$cod\" value=\"$por\">Portal $por-$pis$let</td><td style=\"width:4%\" class=\"align-middle\">$tip</td><td style=\"width:13%\">$i1</td><td style=\"width:13%\">$i2</td><td style=\"width:13%\">$i3</td><td style=\"width:13%\">$i4</td><td style=\"width:13%\">$i5</td><td style=\"width:13%\">$i6</td><td style=\"width:4%\">$b1</td><td style=\"width:4%\">$b2</td></tr>"; 
 }
 
+/**
+ * Obtiene el formulario las sumas de los datos del portal.
+ * 
+ * @param int $por Numero de portal.
+ * @param int $pap Suma de apartamentos del portal.
+ * @param int $pm2 Suma de metros cuadrados de los apartamentos.
+ * @param int $pt2 Suma de metros cuadrados de las terrazas.
+ * @param int $pcu Suma de los coeficientes de la urbanizacion.
+ * @param int $pcf Suma de los coeficientes de fase al 200%.
+ * @param int $pcr Suma de los coeficientes de fase al 100%.
+ * @param int $pcb Suma de los coeficientes de los bloques.
+ * @return string Codigo HTML de los datos.
+ */
 function f_getCoeficientesNuevoPortal($por, $pap, $pm2, $pt2, $pcu, $pcf, $pcr, $pcb) {
     $i1 = f_getCoeficientesInput("pme$por", number_format($pm2,2,'.',''), "m2", "", FALSE);
     $i2 = f_getCoeficientesInput("pte$por", number_format($pt2,2,'.',''), "m2", "", FALSE);
@@ -631,6 +644,19 @@ function f_getCoeficientesNuevoPortal($por, $pap, $pm2, $pt2, $pcu, $pcf, $pcr, 
     return "<tr><th class=\"align-middle\">Portal $por</th><th class=\"align-middle\">$pap</th><th>$i1</th><th>$i2</th><th>$i3</th><th>$i4</th><th>$i5</th><th>$i6</th><th>&nbsp;</th><th>&nbsp;</th></tr>"; 
 }
 
+/**
+ * Obtiene el formulario las sumas de los datos de la fase.
+ * 
+ * @param int $fas Numero de la fase.
+ * @param int $fap Suma de apartamentos de la fase.
+ * @param int $fm2 Suma de metros cuadrados de los apartamentos.
+ * @param int $ft2 Suma de metros cuadrados de las terrazas.
+ * @param int $fcu Suma de los coeficientes de la urbanizacion.
+ * @param int $fcf Suma de los coeficientes de fase al 200%.
+ * @param int $fcr Suma de los coeficientes de fase al 100%.
+ * @param int $fcb Suma de los coeficientes de los bloques.
+ * @return string Codigo HTML de los datos.
+ */
 function f_getCoeficientesNuevaFase($fas, $fap, $fm2, $ft2, $fcu, $fcf, $fcr, $fcb) {
     $i1 = f_getCoeficientesInput("fme$fas", number_format($fm2,2,'.',''), "m2", "", FALSE);
     $i2 = f_getCoeficientesInput("fte$fas", number_format($ft2,2,'.',''), "m2", "", FALSE);
@@ -642,6 +668,18 @@ function f_getCoeficientesNuevaFase($fas, $fap, $fm2, $ft2, $fcu, $fcf, $fcr, $f
     return "<tr><th class=\"align-middle\">Fase $fas</th><th class=\"align-middle\">$fap</th><th>$i1</th><th>$i2</th><th>$i3</th><th>$i4</th><th>$i5</th><th>$i6</th><th>&nbsp;</th><th>&nbsp;</th></tr>";
 }
 
+/**
+ * Obtiene el formulario las sumas de los datos totales.
+ * 
+ * @param int $tap Suma de apartamentos de la urbanizacion.
+ * @param int $tm2 Suma de metros cuadrados de los apartamentos.
+ * @param int $tt2 Suma de metros cuadrados de las terrazas.
+ * @param int $tcu Suma de los coeficientes de la urbanizacion.
+ * @param int $tcf Suma de los coeficientes de fase al 200%.
+ * @param int $tcr Suma de los coeficientes de fase al 100%.
+ * @param int $tcb Suma de los coeficientes de los bloques.
+ * @return string Codigo HTML de los datos.
+ */
 function f_getCoeficientesNuevaUrbanizacion($tap, $tm2, $tt2, $tcu, $tcf, $tcr, $tcb) {
     $i1 = f_getCoeficientesInput("tme", number_format($tm2,2,'.',''), "m2", "", FALSE);
     $i2 = f_getCoeficientesInput("tte", number_format($tt2,2,'.',''), "m2", "", FALSE);
@@ -653,8 +691,17 @@ function f_getCoeficientesNuevaUrbanizacion($tap, $tm2, $tt2, $tcu, $tcf, $tcr, 
     return "<tr><th class=\"align-middle\">Urbanizaci&oacute;n</th><th class=\"align-middle\">$tap</th><th>$i1</th><th>$i2</th><th>$i3</th><th>$i4</th><th>$i5</th><th>$i6</th><th>&nbsp;</th><th>&nbsp;</th></tr>";
 }
 
+/**
+ * Obtiene un INPUT para los coeficientes.
+ * 
+ * @param string $id Identificador.
+ * @param type $val Valor.
+ * @param string $sim Simbolo.
+ * @param string $on Funciones on.
+ * @param string $act Activado o no.
+ * @return string Codigo HTML del INPUT.
+ */
 function f_getCoeficientesInput($id, $val, $sim, $on='', $act=TRUE) {
-    //$onchange = ($onch) ? "onchange=\"$onch\"" : "";
     $readonly = (!$act) ? "readonly=\"readonly\"" : "";
     return "<div class=\"input-group\">
                 <input type=\"text\" id=\"$id\" name=\"$id\" class=\"form-control solonumeros\" value=\"$val\" $on $readonly>
@@ -662,6 +709,12 @@ function f_getCoeficientesInput($id, $val, $sim, $on='', $act=TRUE) {
             </div>";
 }
 
+/**
+ * Graba los datos del apartamento.
+ * 
+ * @param array $frm Datos del formulario.
+ * @return string Mensaje de error o de todo correcto.
+ */
 function f_grabarApartamento($frm) {
     $cod = $frm['codigo'];
     $por = $frm['portal'];
@@ -690,6 +743,17 @@ function f_grabarApartamento($frm) {
     return ($oApa->grabar()) ? "Los datos del apartamento se han guardado correctamente." : "Error al guardar los datos del apartamento.";
 }
 
+/**
+ * Graba los datos de los metros cuadrados y los coeficientes del apartamento.
+ * 
+ * @param int $cod Codigo del apartamento.
+ * @param int $met Metros cuadrados.
+ * @param int $ter Metros cuadrados de terraza.
+ * @param int $cou Coeficiente de urbanizacion.
+ * @param int $cof Coeficiente de fase.
+ * @param int $cob Coeficiente de bloque.
+ * @return string Mensaje de error o de todo correcto.
+ */
 function f_grabarCoeficientes($cod, $met, $ter, $cou, $cof, $cob) {
     $oApa = new Apartamento($cod);
     $oApa->setMetros($met);
@@ -1281,7 +1345,7 @@ function f_getAsistentes($fecha) {
                    <td class=\"align-middle col-sm-7\" id=\"selec$apa\">$sele</td>
                    <td class=\"align-middle col-sm-1 text-center\"><button class=\"btn btn-warning\" type=\"button\" onclick=\"xajax_setAsistente('$fecha','$apa')\" title=\"Deshacer\"><span class=\"oi oi-loop-circular\"></span></button></td>
                    <td class=\"align-middle col-sm-1 text-center\"><button id=\"boton$apa\" class=\"btn btn-success\" type=\"button\" onclick=\"xajax_grabarAsistenteMulti('$fecha', '$apa', $('#nombre$apa').val(), $('#repr$apa').prop('checked'), $('#voto$apa').prop('checked'), $('#multiples').prop('checked'))\" title=\"Guardar\" disabled=\"disabled\"><span class=\"oi oi-hard-drive\"></span></button></td></tr>";
-        }
+    }
     return "$tabla</table><a name=\"final\"></a>";
 }
 
