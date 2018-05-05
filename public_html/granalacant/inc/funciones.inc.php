@@ -2761,7 +2761,7 @@ function f_getListadoDeudas($frm) {
     $bSuma = (isset($frm['sumas'])) ? TRUE : FALSE; // Mostrar sumas (solo cuando ordena por fechas).
     
     // Columnas.
-    $c = 6;
+    $c  = 9;
     $c -= ($ordin) ? 0 : 1;
     $c -= ($extra) ? 0 : 1;
     $c -= ($total) ? 0 : 1;
@@ -2774,10 +2774,11 @@ function f_getListadoDeudas($frm) {
     $oDeu = new Deudas();
     $oDeu->setOrden($orden);
     $oDeu->setFiltro($fecha);
+    $sSumDeu = $oDeu->getSumasFechas();
     $html = "<a name=\"inicio\"></a><table class=\"table table-condensed table-ultra\">";
     $portal = "";
     $fase = "";
-    $dato  = "";
+    $dato = "";
     foreach ($oDeu->getFiltradas() as $aDeuda) {
         // array('fecha','apartamento','portal','piso','letra','fase','ordinaria','extraordinaria','suma','fechaiso')
         
@@ -2795,7 +2796,11 @@ function f_getListadoDeudas($frm) {
         $ord = $aDeuda[6];
         $ext = $aDeuda[7];
         $tot = $aDeuda[8];
-        
+         
+        if(!$dato) {
+            $aSum = $sSumDeu[$fec];
+        }
+
         switch ($orden) {
             case 1 :    // Ordenado por apartamentos -------------------------//
                 if ($fase != $fas) {
@@ -2806,33 +2811,37 @@ function f_getListadoDeudas($frm) {
                     $html .= f_getListadoDeudasTituloApartamentos($apa, $ordin, $extra, $total);
                     $dato = $cod;
                 }
+                $aSum = $sSumDeu[$fec];
                 $html .= "<tr><td>$iso</td><td>$pro</td>";
                 break;
             case 2 :    // Ordenado por fechas y suma de deudas --------------//
                 if ($dato != $fec) {
-                    $html .= f_getListadoDeudasSumaPortal("t", $dato, $ordin, $extra, $total, $bSuma, $tap, $tor, $tex, $tsu);
+                    $html .= f_getListadoDeudasSumaPortal("t", $dato, $ordin, $extra, $total, $bSuma, $tap, $tor, $tex, $tsu, $aSum);
                     $tap = 0; $tor = 0; $tex = 0; $tsu = 0;
                     $html .= "<tr><th colspan=\"$c\" class=\"text-center\">Deudas del $iso</th></tr>";
                     $html .= f_getListadoDeudasTituloDeudas($ordin, $extra, $total);
                     $dato = $fec;
+                    $aSum = $sSumDeu[$fec];
                 }
                 $html .= "<tr><td>$apa</td><td class=\"text-center\">$fas</td><td>$pro</td>";
                 break;
             default:    // Ordenado por fechas -------------------------------//
                 if ($dato != $fec) {
                     // Cambia de fecha.
-                    $html .= f_getListadoDeudasSumaPortal("p", $portal, $ordin, $extra, $total, $bSuma, $pap, $por, $pex, $psu);
-                    $html .= f_getListadoDeudasSumaPortal("f", $fase, $ordin, $extra, $total, $bSuma, $fap, $for, $fex, $fsu);
-                    $html .= f_getListadoDeudasSumaPortal("t", $dato, $ordin, $extra, $total, $bSuma, $tap, $tor, $tex, $tsu);
+                    $html .= f_getListadoDeudasSumaPortal("p", $portal, $ordin, $extra, $total, $bSuma, $pap, $por, $pex, $psu, $aSum);
+                    $html .= f_getListadoDeudasSumaPortal("f", $fase, $ordin, $extra, $total, $bSuma, $fap, $for, $fex, $fsu, $aSum);
+                    $html .= f_getListadoDeudasSumaPortal("t", $dato, $ordin, $extra, $total, $bSuma, $tap, $tor, $tex, $tsu, $aSum);
                     $html .= "<tr><th colspan=\"$c\" class=\"text-center\">Deudas del $iso</th></tr>";
                     $tap = 0; $tor = 0; $tex = 0; $tsu = 0;
                     $dato = $fec; $portal = ""; $fase = "";
+                    //$aSum = $oDeu->getSumas($fec);
+                    $aSum = $sSumDeu[$fec];
                 }
                 if ($portal != $aDeuda[2]) {
                     // Cambia de portal.
-                    $html .= f_getListadoDeudasSumaPortal("p", $portal, $ordin, $extra, $total, $bSuma, $pap, $por, $pex, $psu);
+                    $html .= f_getListadoDeudasSumaPortal("p", $portal, $ordin, $extra, $total, $bSuma, $pap, $por, $pex, $psu, $aSum);
                     if ($fase != $fas) {
-                        $html .= f_getListadoDeudasSumaPortal("f", $fase, $ordin, $extra, $total, $bSuma, $fap, $for, $fex, $fsu);
+                        $html .= f_getListadoDeudasSumaPortal("f", $fase, $ordin, $extra, $total, $bSuma, $fap, $for, $fex, $fsu, $aSum);
                         $fap = 0; $for = 0; $fex = 0; $fsu = 0;
                         $fase = $fas;
                     }
@@ -2843,9 +2852,13 @@ function f_getListadoDeudas($frm) {
                 $html .= "<tr><td class=\"text-left\">$apa</td><td class=\"text-center\">$fas</td><td>$pro</td>";
                 break;
         }
-        $html .= ($ordin) ? "<td class=\"text-right\">" . number_format($ord, 2, ",", ".") . " €</td>" : "";
-        $html .= ($extra) ? "<td class=\"text-right\">" . number_format($ext, 2, ",", ".") . " €</td>" : "";
-        $html .= ($total) ? "<td class=\"text-right\">" . number_format($tot, 2, ",", ".") . " €</td>" : "";
+        $p1 = ($aSum[0]) ? $ord * 100 / $aSum[0] : 0;
+        $p2 = ($aSum[1]) ? $ext * 100 / $aSum[1] : 0;
+        $p3 = ($aSum[2]) ? $tot * 100 / $aSum[2] : 0;
+        $html .= ($ordin) ? "<td class=\"text-right\">" . number_format($ord, 2, ",", ".") . " €</td><td class=\"text-right\">" . number_format($p1, 3, ",", ".") . "%</td>" : "";
+        $html .= ($extra) ? "<td class=\"text-right\">" . number_format($ext, 2, ",", ".") . " €</td><td class=\"text-right\">" . number_format($p2, 3, ",", ".") . "%</td>" : "";
+        $html .= ($total) ? "<td class=\"text-right\">" . number_format($tot, 2, ",", ".") . " €</td><td class=\"text-right\">" . number_format($p3, 3, ",", ".") . "%</td>" : "";
+
         $html .= "</tr>";
         
         $pap++; $por += $ord; $pex += $ext; $psu += $tot;
@@ -2853,9 +2866,9 @@ function f_getListadoDeudas($frm) {
         $tap++; $tor += $ord; $tex += $ext; $tsu += $tot;
     }
     // Sumas finales.
-    $html .= f_getListadoDeudasSumaPortal("p", $portal, $ordin, $extra, $total, $bSuma, $pap, $por, $pex, $psu);
-    $html .= f_getListadoDeudasSumaPortal("f", $fase, $ordin, $extra, $total, $bSuma, $fap, $for, $fex, $fsu);
-    $html .= f_getListadoDeudasSumaPortal("t", "total", $ordin, $extra, $total, $bSuma, $tap, $tor, $tex, $tsu);
+    $html .= f_getListadoDeudasSumaPortal("p", $portal, $ordin, $extra, $total, $bSuma, $pap, $por, $pex, $psu, $aSum);
+    $html .= f_getListadoDeudasSumaPortal("f", $fase, $ordin, $extra, $total, $bSuma, $fap, $for, $fex, $fsu, $aSum);
+    $html .= f_getListadoDeudasSumaPortal("t", "total", $ordin, $extra, $total, $bSuma, $tap, $tor, $tex, $tsu, $aSum);
     return "$html</table>";
 }
 
@@ -2869,10 +2882,10 @@ function f_getListadoDeudas($frm) {
  * @return string Codigo HTML del titulo.
  */
 function f_getListadoDeudasTituloApartamentos($apart, $ordin, $extra, $total) {
-    $html .= "<tr><td class=\"tit text-left\">Portal $apart</td><td class=\"tit text-left\">Propietario</td>";
-    $html .= ($ordin) ? "<td class=\"tit text-right\">Ordinaria</td>" : "";
-    $html .= ($extra) ? "<td class=\"tit text-right\">Extraordinaria</td>" : "";
-    $html .= ($total) ? "<td class=\"tit text-right\">Total deuda</td>" : "";
+    $html .= "<tr><td class=\"tit text-left\">Portal $apart</td><td class=\"tit\">Propietario</td>";
+    $html .= ($ordin) ? "<td class=\"tit text-right\">Ordinaria</td><td class=\"tit text-right\">%</td>" : "";
+    $html .= ($extra) ? "<td class=\"tit text-right\">Extraordinaria</td><td class=\"tit text-right\">%</td>" : "";
+    $html .= ($total) ? "<td class=\"tit text-right\">Total deuda</td><td class=\"tit text-right\">%</td>" : "";
     $html .= "</tr>";
     return $html;
 }
@@ -2888,10 +2901,10 @@ function f_getListadoDeudasTituloApartamentos($apart, $ordin, $extra, $total) {
  */
 function f_getListadoDeudasTituloPortal($portal, $ordin, $extra, $total) {
     if ($portal) {
-        $html .= "<tr><td class=\"tit text-left\">Portal $portal</td><td class=\"tit\">Fase</td><td class=\"tit text-left\">Propietario</td>";
-        $html .= ($ordin) ? "<td class=\"tit text-right\">Ordinaria</td>" : "";
-        $html .= ($extra) ? "<td class=\"tit text-right\">Extraordinaria</td>" : "";
-        $html .= ($total) ? "<td class=\"tit text-right\">Total deuda</td>" : "";
+        $html .= "<tr><td class=\"tit text-left\">Portal $portal</td><td class=\"tit\">Fase</td><td class=\"tit\">Propietario</td>";
+        $html .= ($ordin) ? "<td class=\"tit text-right\">Ordinaria</td><td class=\"tit text-right\">%</td>" : "";
+        $html .= ($extra) ? "<td class=\"tit text-right\">Extraordinaria</td><td class=\"tit text-right\">%</td>" : "";
+        $html .= ($total) ? "<td class=\"tit text-right\">Total deuda</td><td class=\"tit text-right\">%</td>" : "";
         $html .= "</tr>";
     }
     return $html;
@@ -2906,10 +2919,10 @@ function f_getListadoDeudasTituloPortal($portal, $ordin, $extra, $total) {
  * @return string Codigo HTML del titulo.
  */
 function f_getListadoDeudasTituloDeudas($ordin, $extra, $total) {
-    $html .= "<tr><td class=\"tit text-left\">Apartamento</td><td class=\"tit\">Fase</td><td class=\"tit text-left\">Propietario</td>";
-    $html .= ($ordin) ? "<td class=\"tit text-right\">Ordinaria</td>" : "";
-    $html .= ($extra) ? "<td class=\"tit text-right\">Extraordinaria</td>" : "";
-    $html .= ($total) ? "<td class=\"tit text-right\">Total deuda</td>" : "";
+    $html .= "<tr><td class=\"tit text-left\">Apartamento</td><td class=\"tit\">Fase</td><td class=\"tit\">Propietario</td>";
+    $html .= ($ordin) ? "<td class=\"tit text-right\">Ordinaria</td><td class=\"tit text-right\">%</td>" : "";
+    $html .= ($extra) ? "<td class=\"tit text-right\">Extraordinaria</td><td class=\"tit text-right\">%</td>" : "";
+    $html .= ($total) ? "<td class=\"tit text-right\">Total deuda</td><td class=\"tit text-right\">%</td>" : "";
     $html .= "</tr>";
     return $html;
 }
@@ -2928,9 +2941,10 @@ function f_getListadoDeudasTituloDeudas($ordin, $extra, $total) {
  * @param int $por Total de deuda ordinaria.
  * @param int $pex Total de deuda extraordinaria.
  * @param int $psu Total de suma de deudas.
+ * @param array $aSum Suma ordinaria, extraordinaria y total.
  * @return string Codigo HTML de las sumas.
  */
-function f_getListadoDeudasSumaPortal($tipo, $portal, $ordin, $extra, $total, $bSuma, $pap, $por, $pex, $psu) {
+function f_getListadoDeudasSumaPortal($tipo, $portal, $ordin, $extra, $total, $bSuma, $pap, $por, $pex, $psu, $aSum=null) {
     global $oApars;
     if ($bSuma && $portal) {
         switch ($tipo) {
@@ -2939,10 +2953,13 @@ function f_getListadoDeudasSumaPortal($tipo, $portal, $ordin, $extra, $total, $b
             default : $num = $oApars->getNumApartamentosPortal(); $t = "total"; $portal = ""; break;        // Total.
         }
         $prc = ($num) ? $pap * 100 / $num : 0;
+        $pro = ($aSum[0]) ? $por * 100 / $aSum[0] : 0;
+        $pre = ($aSum[1]) ? $pex * 100 / $aSum[1] : 0;
+        $prt = ($aSum[2]) ? $psu * 100 / $aSum[2] : 0;
         $html .= "<tr><td class=\"text-right\">Suma $t $portal:</td><td class=\"negrita text-center\">$num</td><td class=\"negrita text-left\">$pap deudores (" . number_format($prc, 2, ",", ".") . " %)</td>";
-        $html .= ($ordin) ? "<td class=\"negrita text-right\">" . number_format($por, 2, ",", ".") . " €</td>" : "";
-        $html .= ($extra) ? "<td class=\"negrita text-right\">" . number_format($pex, 2, ",", ".") . " €</td>" : "";
-        $html .= ($total) ? "<td class=\"negrita text-right\">" . number_format($psu, 2, ",", ".") . " €</td>" : "";
+        $html .= ($ordin) ? "<td class=\"negrita text-right\">" . number_format($por, 2, ",", ".") . " €</td><td class=\"negrita text-right\">" . number_format($pro, 3, ",", ".") . " %</td>" : "";
+        $html .= ($extra) ? "<td class=\"negrita text-right\">" . number_format($pex, 2, ",", ".") . " €</td><td class=\"negrita text-right\">" . number_format($pre, 3, ",", ".") . " %</td>" : "";
+        $html .= ($total) ? "<td class=\"negrita text-right\">" . number_format($psu, 2, ",", ".") . " €</td><td class=\"negrita text-right\">" . number_format($prt, 3, ",", ".") . " %</td>" : "";
         $html .= "</tr>";
     }
     return $html;
