@@ -101,7 +101,7 @@ class Deudas {
      */
     private function cargar() {
         $this->cargarOmision();
-        $rRes = $this->ejecutarSQL("SELECT D.FECHA,D.CODAPAR,A.PORTAL,A.PISO,A.LETRA,A.FASE,D.ORDINARIA,D.EXTRAORDINARIA,D.ORDINARIA+D.EXTRAORDINARIA AS SUMA,DATE_FORMAT(D.FECHA,'%d-%m-%Y') AS FECHAISO FROM DEUDAS D LEFT JOIN APARTAMENTOS A ON A.CODAPAR=D.CODAPAR ORDER BY D.FECHA,A.CODAPAR");
+        $rRes = $this->ejecutarSQL("SELECT D.FECHA,D.CODAPAR,A.PORTAL,A.PISO,A.LETRA,A.FASE,D.ORDINARIA,D.EXTRAORDINARIA,D.ORDINARIA+D.EXTRAORDINARIA AS SUMA,DATE_FORMAT(D.FECHA,'%d-%m-%Y') AS FECHAISO FROM DEUDAS D LEFT JOIN APARTAMENTOS A ON A.CODAPAR=D.CODAPAR ORDER BY D.FECHA DESC,A.CODAPAR");
         while($aRow = $rRes->fetch(PDO::FETCH_ASSOC)) {
             $this->aDeudas[$aRow['FECHA']][$aRow['CODAPAR']] = array($aRow['PORTAL'],$aRow['PISO'],$aRow['LETRA'],$aRow['FASE'],$aRow['ORDINARIA'],$aRow['EXTRAORDINARIA'],$aRow['SUMA'],$aRow['FECHAISO']);
             $this->aFiltrado[] = array($aRow['FECHA'],$aRow['CODAPAR'],$aRow['PORTAL'],$aRow['PISO'],$aRow['LETRA'],$aRow['FASE'],$aRow['ORDINARIA'],$aRow['EXTRAORDINARIA'],$aRow['SUMA'],$aRow['FECHAISO']);
@@ -316,6 +316,27 @@ class Deudas {
             }
         }
         return array($sumao, $sumae, $sumas);
+    }
+    
+    /**
+     * Obtiene un array cuyas son las fechas y los valores las sumas de las deudas ordinarias, extraordinarias y las totales.
+     * 
+     * @return array del tipo array('fecha'=>array(suma ordinarias, suma extraordinarias, suma de ambas)...)
+     */
+    public function getSumasFechas() {
+        $aSumas = array();
+        foreach ($this->aDeudas as $fec => $aDeudas) {
+            $sumao = 0;
+            $sumae = 0;
+            $sumas = 0;
+            foreach ($aDeudas as $aDatos) {
+                $sumao += $aDatos[4];
+                $sumae += $aDatos[5];
+                $sumas += $aDatos[6];
+            }
+            $aSumas[$fec] = array($sumao, $sumae, $sumas);
+        }
+        return $aSumas;
     }
     
     /**
