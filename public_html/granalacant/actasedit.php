@@ -38,7 +38,7 @@ if(!$fec) {
         </div>
         <!-- Contenido -->
         
-            <div id="contenedor" class="container" style="width: 95%">
+            <div id="contenedor" class="container col-sm-11">
                 <div class="row">
                     <div id="divlistado" class="col-sm-1 hidden-ms hidden-xs listado" style=""><?php echo f_getActasListado(); ?></div>
                     <div id="contenido" class="col-sm-11">

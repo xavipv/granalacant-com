@@ -35,10 +35,10 @@ if(!$fec) {
             </ul>
         </div>
         <!-- Contenido -->
-        <div id="contenedor" class="container" style="width: 80%">
+        <div id="contenedor" class="container col-sm-10">
             <div class="row">
-                <div id="divlistado" class="col-sm-2 hidden-ms hidden-xs listado"><?php echo f_getVotacionesListado(); ?></div>
-                <div id="contenido" class="col-sm-10">
+                <div id="divlistado" class="col-sm-1 hidden-ms hidden-xs listado"><?php echo f_getVotacionesListado(); ?></div>
+                <div id="contenido" class="col-sm-11">
                     <div id="divcabecera">
                         <form id="frmvotacion" onsubmit="return false;">
                             <table class="table table-sm" style="border-bottom: 1px solid lightgray; font-size: 0.9em; margin: 0">

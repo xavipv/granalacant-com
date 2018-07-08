@@ -38,7 +38,7 @@ if(!$iPer) {
             </ul>
         </div>
         <!-- Contenido -->
-        <div id="contenedor" class="container">
+        <div id="contenedor" class="container col-sm-9">
             <div class="row">
                 <div id="divlistado" class="col-sm-3 hidden-ms hidden-xs listado" style=""><?php echo f_getPropietariosListado(); ?></div>
                 <div id="contenido" class="col-sm-9">

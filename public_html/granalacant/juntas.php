@@ -35,10 +35,10 @@ $oJ = new Junta();
             </ul>
         </div>
         <!-- Contenido -->
-        <div id="contenedor" class="container">
+        <div id="contenedor" class="container col-sm-10">
             <div class="row">
-                <div id="divlistado" class="col-sm-2 hidden-ms hidden-xs listado" style=""><?php echo f_getJuntasListado(); ?></div>
-                <div id="contenido" class="col-sm-10">
+                <div id="divlistado" class="col-sm-1 hidden-ms hidden-xs listado" style=""><?php echo f_getJuntasListado(); ?></div>
+                <div id="contenido" class="col-sm-11">
                     <div id="divcontenido">
                         <h2 id="titulo1">Juntas</h2>
                         <hr />

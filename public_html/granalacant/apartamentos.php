@@ -37,7 +37,7 @@ if(!$iApar) {
             </ul>
         </div>
         <!-- Contenido -->
-        <div id="contenedor" class="container">
+        <div id="contenedor" class="container col-sm-9">
             <div class="row">
                 <div id="divlistado" class="col-sm-2 hidden-ms hidden-xs listado" style=""><?php echo f_getApartamentosListado(); ?></div>
                 <div id="contenido" class="col-sm-10">

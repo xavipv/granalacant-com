@@ -34,10 +34,10 @@ if(!$fec) {
             </ul>
         </div>
         <!-- Contenido -->
-        <div id="contenedor" class="container" style="width: 80%">
+        <div id="contenedor" class="container col-sm-10">
             <div class="row">
-                <div id="divlistado" class="col-sm-2 hidden-ms hidden-xs listado"><?php echo f_getJuntasListado(); ?></div>
-                <div id="contenido"  class="col-sm-10">
+                <div id="divlistado" class="col-sm-1 hidden-ms hidden-xs listado"><?php echo f_getJuntasListado(); ?></div>
+                <div id="contenido"  class="col-sm-11">
                     <div id="divcabecera">
                         <div id="btnfechair"></div>
                         <table class="table table-sm" style="border-bottom: 1px solid lightgray; margin: 0; padding: 0">
