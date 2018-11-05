@@ -94,7 +94,7 @@ if(!$iApar) {
                                         <label for="urba">Urbanizaci&oacute;n</label>
                                         <div class="input-group">
                                             <input type="text" class="form-control solonumeros" id="urba" name="urba" value="" placeholder="Porcentaje">
-                                            <span class="input-group-addon">m2</span>
+                                            <span class="input-group-addon">%</span>
                                         </div>
                                     </div>
                                     <div  class="form-group col-sm-2">
