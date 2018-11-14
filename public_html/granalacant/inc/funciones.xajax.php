@@ -232,7 +232,7 @@ function setApartamentosDatosForm($cod=1) {
     
     $response->assign("submenu2", "innerHTML", $apa);
     $response->assign("codigo", "value", $cdi);
-    $response->assign("codigo", "title", "Finca $fin de la Fase $fas");
+    $response->assign("finca", "value", $fin);
     $response->assign("fase", "value", $fas);
     $response->assign("portal", "value", $por);
     $response->assign("piso", "value", $pis);

@@ -45,10 +45,21 @@ if(!$iApar) {
                         <div id="divformulario">
                             <h2>Apartamento</h2>
                             <form id="frmapartamento">
-                                <div class="row">
+                                <div class="row"><!--
                                     <div class="form-group col-sm-2">
+                                        <label for="codigo">C&oacute;digo | Finca</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control solonumeros" style="background-color: transparent" id="codigo" name="codigo" value="" title="" placeholder="C&oacute;digo" readonly="readonly">
+                                            <span class="input-group-addon" id="finca">&nbsp;</span>
+                                        </div>
+                                    </div> -->
+                                    <div class="form-group col-sm-1">
                                         <label for="codigo">C&oacute;digo</label>
-                                        <input type="text" class="form-control solonumeros" style="background-color: transparent" id="codigo" name="codigo" value="" title="" placeholder="C&oacute;digo" readonly="readonly">
+                                        <input type="text" class="form-control solonumeros readonly" id="codigo" name="codigo" value="" title="" placeholder="C&oacute;digo" readonly="readonly" onfocus="setTimeout(function() { $('#portal').focus(); $('#portal').select(); }, 5);">
+                                    </div>
+                                    <div class="form-group col-sm-1">
+                                        <label for="codigo">Finca</label>
+                                        <input type="text" class="form-control solonumeros readonly" id="finca" name="finca" value="" title="" placeholder="Finca" readonly="readonly" onfocus="setTimeout(function() { $('#portal').focus(); $('#portal').select(); }, 5);">
                                     </div>
                                     <div class="form-group col-sm-2">
                                         <label for="portal">Portal</label>
@@ -72,7 +83,7 @@ if(!$iApar) {
                                     </div>
                                     <div class="form-group col-sm-1">
                                         <label for="garajes">Garajes</label>
-                                        <input type="text" class="form-control solonumeros" style="background-color: transparent" id="garajes" name="garajes" value="" placeholder="Garajes" readonly="readonly">
+                                        <input type="text" class="form-control solonumeros readonly" id="garajes" name="garajes" value="" placeholder="Garajes" readonly="readonly" onfocus="setTimeout(function() { $('#metros').focus(); $('#metros').select(); }, 5);">
                                     </div>
                                 </div> 
                                 <div class="row">
@@ -107,7 +118,7 @@ if(!$iApar) {
                                     <div  class="form-group col-sm-2">
                                         <label for="fase100">Fase 100%</label>
                                         <div class="input-group">
-                                            <input type="text" class="form-control solonumeros" style="background-color: transparent" id="fase100" name="fase100" value="" readonly="readonly" placeholder="Porcentaje">
+                                            <input type="text" class="form-control solonumeros readonly" id="fase100" name="fase100" value="" readonly="readonly" placeholder="Porcentaje" onfocus="setTimeout(function() { $('#bloque').focus(); $('#bloque').select(); }, 5);">
                                             <span class="input-group-addon">%</span>
                                         </div>
                                     </div>

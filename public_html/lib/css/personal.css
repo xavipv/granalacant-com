@@ -186,3 +186,7 @@
 .negrita {
     font-weight: bold;
 }
+
+.readonly {
+    background-color: #F8F8F8 !important;
+}
