@@ -41,17 +41,17 @@ if(!$fec) {
                 <div id="contenido" class="col-sm-11">
                     <div id="divcabecera">
                         <form id="frmvotacion" onsubmit="return false;">
-                            <table class="table table-sm" style="border-bottom: 1px solid lightgray; font-size: 0.9em; margin: 0">
+                            <table class="table table-sm" style="width:100%; border-bottom: 1px solid lightgray; font-size: 0.9em; margin: 0">
                                 <tbody id="datosvot">
                                     <tr>
-                                        <th class="col-sm-3 text-left align-middle" colspan="2">Opciones para la votaci&oacute;n</th>
-                                        <th class="col-sm-1 text-right align-middle">Votos</th>
-                                        <th class="col-sm-1 text-right align-middle">Urbaniza.</th>
-                                        <th class="col-sm-1 text-right align-middle">Fase&nbsp;200%</th>
-                                        <th class="col-sm-1 text-right align-middle">Fase&nbsp;100%</th>
-                                        <th class="col-sm-1 text-right align-middle">&nbsp;</th>
-                                        <th class="col-sm-1 text-right align-middle">&nbsp;</th>
-                                        <th class="col-sm-1 text-right align-middle">&nbsp;</th>
+                                        <th class="text-left align-middle" colspan="2">Opciones para la votaci&oacute;n</th>
+                                        <th class="text-right align-middle">Votos</th>
+                                        <th class="text-right align-middle">Urbaniza.</th>
+                                        <th class="text-right align-middle">Fase&nbsp;200%</th>
+                                        <th class="text-right align-middle">Fase&nbsp;100%</th>
+                                        <th class="text-right align-middle">&nbsp;</th>
+                                        <th class="text-right align-middle">&nbsp;</th>
+                                        <th class="text-right align-middle">&nbsp;</th>
                                     </tr>
                                     <tr>
                                         <td class="text-left" colspan="2"><input type="text" id="opcion1" name="opcion1" class="form-control form-control-sm" value="Sí" onkeyup="js_ponerEtiquetas(1);"></td>
@@ -96,15 +96,15 @@ if(!$fec) {
                                     </tr>
                                 </tbody>
                                     <tr>
-                                        <td class="text-left" col-sm-2 title="Junta"><input type="hidden" id="fechainicial" value=""><input type="text" id="fecha" name="fecha" class="form-control form-control-sm calendario" style="background-color:transparent" value="" readonly="readonly"></td>
-                                        <td class="text-left" col-sm-1 title="Votaci&oacute;n"><input type="hidden" id="votacioninicial" value=""><div id="selecvotacion"></div></td>
-                                        <th class="text-right col-sm-1"><input type="text" id="sumvotos" name="sumvotos" class="form-control form-control-sm solonumeros" value="0" readonly="readonly"></th>
-                                        <th class="text-right col-sm-1"><input type="text" id="sumcoe" name="sumcoe" class="form-control form-control-sm solonumeros" value="0" readonly="readonly"></th>
-                                        <th class="text-right col-sm-1"><input type="text" id="sumcof" name="sumcof" class="form-control form-control-sm solonumeros" value="0" readonly="readonly"></th>
-                                        <th class="text-right col-sm-1"><input type="text" id="sumcor" name="sumcor" class="form-control form-control-sm solonumeros" value="0" readonly="readonly"></th>
-                                        <th class="text-right col-sm-1">Sincronizar</th>
-                                        <td class="text-center col-sm-1"><input type="checkbox" id="sincro" name="sincro" checked="checked"></td>
-                                        <td class="text-right col-sm-1"><input type="hidden" id="oculto" name="oculto" value="N"><button class="btn btn-default btn-sm btn-block" onclick="if($('#oculto').val() === 'N'){ $('#oculto').val('S'); $('#datosvot').hide(); $('#datosvot1').hide(); $('#caret').removeClass('oi-caret-top').addClass('oi-caret-bottom');  } else { $('#oculto').val('N'); $('#datosvot').show(); $('#datosvot1').show(); $('#caret').removeClass('oi-caret-bottom').addClass('oi-caret-top'); }; js_redimensionar();" title="Mostrar/Ocultar cabecera"><span id="caret" class="oi oi-caret-top"></span></button></td>
+                                        <td class="text-left" style="width: 20%" title="Junta"><input type="hidden" id="fechainicial" value=""><input type="text" id="fecha" name="fecha" class="form-control form-control-sm calendario" style="background-color:transparent" value="" readonly="readonly"></td>
+                                        <td class="text-left" style="width: 20%" title="Votaci&oacute;n"><input type="hidden" id="votacioninicial" value=""><div id="selecvotacion"></div></td>
+                                        <th class="text-right" style="width: 10%"><input type="text" id="sumvotos" name="sumvotos" class="form-control form-control-sm solonumeros" value="0" readonly="readonly"></th>
+                                        <th class="text-right" style="width: 10%"><input type="text" id="sumcoe" name="sumcoe" class="form-control form-control-sm solonumeros" value="0" readonly="readonly"></th>
+                                        <th class="text-right" style="width: 10%"><input type="text" id="sumcof" name="sumcof" class="form-control form-control-sm solonumeros" value="0" readonly="readonly"></th>
+                                        <th class="text-right" style="width: 10%"><input type="text" id="sumcor" name="sumcor" class="form-control form-control-sm solonumeros" value="0" readonly="readonly"></th>
+                                        <th class="text-right" style="width: 10%">Sincronizar</th>
+                                        <td class="text-center" style="width: 5%"><input type="checkbox" id="sincro" name="sincro" checked="checked"></td>
+                                        <td class="text-right" style="width: 5%"><input type="hidden" id="oculto" name="oculto" value="N"><button class="btn btn-default btn-sm btn-block" onclick="if($('#oculto').val() === 'N'){ $('#oculto').val('S'); $('#datosvot').hide(); $('#datosvot1').hide(); $('#caret').removeClass('oi-caret-top').addClass('oi-caret-bottom');  } else { $('#oculto').val('N'); $('#datosvot').show(); $('#datosvot1').show(); $('#caret').removeClass('oi-caret-bottom').addClass('oi-caret-top'); }; js_redimensionar();" title="Mostrar/Ocultar cabecera"><span id="caret" class="oi oi-caret-top"></span></button></td>
                                     </tr>
                                 <tbody id="datosvot1">
                                     <tr>

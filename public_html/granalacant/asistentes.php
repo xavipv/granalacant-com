@@ -40,17 +40,17 @@ if(!$fec) {
                 <div id="contenido"  class="col-sm-11">
                     <div id="divcabecera">
                         <div id="btnfechair"></div>
-                        <table class="table table-sm" style="border-bottom: 1px solid lightgray; margin: 0; padding: 0">
+                        <table class="table table-sm" style="width:100%; border-bottom: 1px solid lightgray; margin: 0; padding: 0">
                             <tbody id="datosvot">
                             <tr>
-                                <td colspan="2" class="col-sm-2"><input type="checkbox" id="multiples" checked="checked" onclick="js_eliminarTooltips(this.checked);" title="Marcar usuario con varios apartamentos."><label class="form-check-label" for="multiples">Sincronizar</label></td>
-                                <th class="col-sm-1 text-right align-middle">Apart.</th>
-                                <th class="col-sm-1 text-right align-middle">Personas</th>
-                                <th class="col-sm-1 text-right align-middle">Con&nbsp;voto</th>
-                                <th class="col-sm-1 text-right align-middle">Sin&nbsp;voto</th>
-                                <th class="col-sm-2 text-right align-middle">Urbanizacion</th>
-                                <th class="col-sm-2 text-right align-middle">Fase&nbsp;200%</th>
-                                <th class="col-sm-2 text-right align-middle">Fase&nbsp;100%</th>
+                                <td colspan="2" style="width:15%"><input type="checkbox" id="multiples" checked="checked" onclick="js_eliminarTooltips(this.checked);" title="Marcar usuario con varios apartamentos."><label class="form-check-label" for="multiples">Sincronizar</label></td>
+                                <th class="text-right align-middle" style="width:10%">Apart.</th>
+                                <th class="text-right align-middle" style="width:10%">Personas</th>
+                                <th class="text-right align-middle" style="width:10%">Con&nbsp;voto</th>
+                                <th class="text-right align-middle" style="width:10%">Sin&nbsp;voto</th>
+                                <th class="text-right align-middle" style="width:15%">Urbanizacion</th>
+                                <th class="text-right align-middle" style="width:15%">Fase&nbsp;200%</th>
+                                <th class="text-right align-middle" style="width:15%">Fase&nbsp;100%</th>
                             </tr>
                             <tr>
                                 <th colspan="2" class="text-right">Asistentes</th>
@@ -74,15 +74,15 @@ if(!$fec) {
                             </tr>
                             </tbody>
                             <tr>
-                                <th class="col-sm-1 text-left"><input type="hidden" id="oculto" name="oculto" value="N"><button class="btn btn-default btn-sm btn-block" onclick="if($('#oculto').val() === 'N'){ $('#oculto').val('S'); $('#datosvot').hide(); $('#caret').removeClass('oi-caret-top').addClass('oi-caret-bottom');  } else { $('#oculto').val('N'); $('#datosvot').show(); $('#caret').removeClass('oi-caret-bottom').addClass('oi-caret-top'); }; js_redimensionar();" title="Mostrar/Ocultar cabecera"><span id="caret" class="oi oi-caret-top"></span></button></th>
-                                <th class="col-sm-1 text-right">Sumas</th>
-                                <th id="sumapa" class="col-sm-1 text-right">0</th>
-                                <th id="sumper" class="col-sm-1 text-right">0</th>
-                                <th id="sumsin" class="col-sm-1 text-right">0</th>
-                                <th id="sumcon" class="col-sm-1 text-right">0</th>
-                                <th id="sumurb" class="col-sm-2 text-right">0%</th>
-                                <th id="sum200" class="col-sm-2 text-right">0%</th>
-                                <th id="sum100" class="col-sm-2 text-right">0%</th>
+                                <th class="text-left"><input type="hidden" id="oculto" name="oculto" value="N"><button class="btn btn-default btn-sm btn-block" onclick="if($('#oculto').val() === 'N'){ $('#oculto').val('S'); $('#datosvot').hide(); $('#caret').removeClass('oi-caret-top').addClass('oi-caret-bottom');  } else { $('#oculto').val('N'); $('#datosvot').show(); $('#caret').removeClass('oi-caret-bottom').addClass('oi-caret-top'); }; js_redimensionar();" title="Mostrar/Ocultar cabecera"><span id="caret" class="oi oi-caret-top"></span></button></th>
+                                <th class="text-right">Sumas</th>
+                                <th id="sumapa" class="text-right">0</th>
+                                <th id="sumper" class="text-right">0</th>
+                                <th id="sumsin" class="text-right">0</th>
+                                <th id="sumcon" class="text-right">0</th>
+                                <th id="sumurb" class="text-right">0%</th>
+                                <th id="sum200" class="text-right">0%</th>
+                                <th id="sum100" class="text-right">0%</th>
                             </tr>
                         </table>
                     </div>

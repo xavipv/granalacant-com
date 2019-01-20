@@ -40,20 +40,20 @@ if(!$fec) {
                 <div id="contenido"  class="col-sm-11">
                     <div id="divcabecera">
                         <div id="btnfechair"></div>
-                        <table class="table table-sm" style="border-bottom: 1px solid lightgray; margin: 0; padding: 0">
+                        <table class="table table-sm" style="width:100%; border-bottom: 1px solid lightgray; margin: 0; padding: 0">
                             <tr>
-                                <td class="col-sm-2 align-middle text-center">
+                                <td class="align-middle text-center" style="width: 25%">
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" onchange="js_ocultarNoDeudores($(this).prop('checked'));" value="" id="vernodeudores">
                                         <input type="hidden" id="ultimofoco" value="">
                                         <label class="form-check-label" for="vernodeudores">Ver solo deudores</label>
                                     </div>
                                 </td>
-                                <th class="col-sm-2 text-right align-middle">Deudores</th>
-                                <th class="col-sm-2 text-right align-middle">Ordinaria</th>
-                                <th class="col-sm-2 text-right align-middle">Extraordinaria</th>
-                                <th class="col-sm-2 text-right align-middle">Total</th>
-                                <th class="col-sm-2 text-right align-middle">Porcentaje</th>
+                                <th class="text-right align-middle" style="width: 15%">Deudores</th>
+                                <th class="text-right align-middle" style="width: 15%">Ordinaria</th>
+                                <th class="text-right align-middle" style="width: 15%">Extraordinaria</th>
+                                <th class="text-right align-middle" style="width: 15%">Total</th>
+                                <th class="text-right align-middle" style="width: 15%">Porcentaje</th>
                             </tr>
                             <tr>
                                 <th class="text-right align-middle">Sumas:</th>

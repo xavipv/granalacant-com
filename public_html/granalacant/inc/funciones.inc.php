@@ -775,7 +775,7 @@ function f_grabarCoeficientes($cod, $met, $ter, $cou, $cof, $cob) {
 function f_getPropietarios($cod) { 
     $oPro = new Propiedad($cod);
     $aPro = $oPro->getPopietarios();
-    $tabla = "<table class=\"table table-sm col-sm-12\"><tr><th class=\"col-sm-1\">&nbsp;</th><th class=\"col-sm-6\">Nombre del propietario</th><th class=\"col-sm-1\">Orden</th><th class=\"col-sm-2\">Fecha baja</th><th class=\"col-sm-1\">&nbsp;</th><th class=\"col-sm-1\">&nbsp;</th></tr>";
+    $tabla = "<table class=\"table table-sm\" style=\"width:100%\"><tr><th>&nbsp;</th><th>Nombre del propietario</th><th>Orden</th><th>Fecha baja</th><th>&nbsp;</th><th>&nbsp;</th></tr>";
     foreach ($aPro as $per => $aDat) {
         $nom = $aDat[0];
         $dat = $aDat[1];
@@ -814,12 +814,12 @@ function f_getPropietario($cod, $per, $nom, $dat, $fec, $ord) {
     $on = "$('#boton$per').prop('disabled',false)";
     $gr = f_getPropietarioBoton($cod, $per);
     
-    return "<tr><td class=\"col-sm-1 align-middle\" title=\"Ver persona $per\"><a class=\"btn $verpe\" href=\"personas.php?persona=$per\" role=\"button\"><span class=\"oi oi-eye\"></span></a></td>
-            <td class=\"col-sm-6 align-middle $clase\">$nom</td>
-            <td class=\"col-sm-1 align-middle\">" . f_getSelectSimple(array(0,1,2,3,4,5,6,7,8,9), "orden$per", $ord, "form-control $clase", $on) . "</td>
-            <td class=\"col-sm-2 align-middle\"><input type=\"text\" id=\"fecha$per\" name=\"fecha$per\" class=\"form-control text-center calendario $clase\" style=\"background-color:transparent\" readonly=\"readonly\" value=\"$fec\"></td>
-            <td class=\"col-sm-1 align-middle text-right\"><button type=\"button\" id=\"boton$per\" onclick=\"$gr\" class=\"btn $boton\" title=\"Grabar\" disabled=\"disabled\"><span class=\"oi oi-hard-drive\"></span></button></td>
-            <td class=\"col-sm-1 align-middle\"><button type=\"button\" id=\"borra$per\" onclick=\"xajax_eliminarPropietarioPregunta($cod, $per)\" class=\"btn btn-danger\" title=\"Eliminar\"><span class=\"oi oi-trash\"></span></button></td></tr>";
+    return "<tr><td class=\" align-middle\" style=\"width:5%\" title=\"Ver persona $per\"><a class=\"btn $verpe\" href=\"personas.php?persona=$per\" role=\"button\"><span class=\"oi oi-eye\"></span></a></td>
+            <td class=\"align-middle $clase\" style=\"width:60%\">$nom</td>
+            <td class=\"align-middle\" style=\"width:10%\">" . f_getSelectSimple(array(0,1,2,3,4,5,6,7,8,9), "orden$per", $ord, "form-control $clase", $on) . "</td>
+            <td class=\"align-middle\" style=\"width:15%\"><input type=\"text\" id=\"fecha$per\" name=\"fecha$per\" class=\"form-control text-center calendario $clase\" style=\"background-color:transparent\" readonly=\"readonly\" value=\"$fec\"></td>
+            <td class=\"align-middle text-right\" style=\"width:5%\"><button type=\"button\" id=\"boton$per\" onclick=\"$gr\" class=\"btn $boton\" title=\"Grabar\" disabled=\"disabled\"><span class=\"oi oi-hard-drive\"></span></button></td>
+            <td class=\"align-middle\" style=\"width:5%\"><button type=\"button\" id=\"borra$per\" onclick=\"xajax_eliminarPropietarioPregunta($cod, $per)\" class=\"btn btn-danger\" title=\"Eliminar\"><span class=\"oi oi-trash\"></span></button></td></tr>";
 }
 
 /**
@@ -838,13 +838,13 @@ function f_getPropietarioNuevo($aPro, $apa) {
     $on = "if($('#nombre0').val() == '') { $('#boton0').prop('disabled',true); } else { $('#boton0').prop('disabled',false); }";
     $gr = f_getPropietarioBoton($apa, 0);
     
-    return "<tr><th class=\"col-sm-1\">&nbsp;</th><th class=\"col-sm-7\">Nuevo propietario</th><th class=\"col-sm-1\">Orden</th><th class=\"col-sm-3\">Fecha baja</th><th class=\"col-sm-1\">&nbsp;</th><th class=\"col-sm-1\">&nbsp;</th></tr>
-            <tr><td class=\"col-sm-1 align-middle\" title=\"Nuevo propietario\"><div class=\"btn btn-outline-success\"><span class=\"oi oi-person\"></span></div></td>
-            <td class=\"col-sm-6 align-middle\">" . f_getSelect($aPers, "nombre0", "", "form-control", $on, TRUE) . "</td>
-            <td class=\"col-sm-1 align-middle\">" . f_getSelectSimple(array(0,1,2,3,4,5,6,7,8,9), "orden0", 0, "form-control", $on) . "</td>
-            <td class=\"col-sm-2 align-middle\"><input type=\"text\" id=\"fecha0\" name=\"fecha0\" class=\"form-control text-center calendario\" style=\"background-color:transparent\" readonly=\"readonly\" value=\"\"></td>
-            <td class=\"col-sm-1 align-middle text-right\"><button type=\"button\" id=\"boton0\" onclick=\"$gr\" class=\"btn btn-outline-success\" title=\"Grabar\" disabled=\"disabled\"><span class=\"oi oi-hard-drive\"></span></button></td>
-            <td class=\"col-sm-1 align-middle\">&nbsp;</td></tr>";
+    return "<tr><th>&nbsp;</th><th>Nuevo propietario</th><th>Orden</th><th>Fecha baja</th><th>&nbsp;</th><th>&nbsp;</th></tr>
+            <tr><td class=\"align-middle\" title=\"Nuevo propietario\"><div class=\"btn btn-outline-success\"><span class=\"oi oi-person\"></span></div></td>
+            <td class=\"align-middle\">" . f_getSelect($aPers, "nombre0", "", "form-control", $on, TRUE) . "</td>
+            <td class=\"align-middle\">" . f_getSelectSimple(array(0,1,2,3,4,5,6,7,8,9), "orden0", 0, "form-control", $on) . "</td>
+            <td class=\"align-middle\"><input type=\"text\" id=\"fecha0\" name=\"fecha0\" class=\"form-control text-center calendario\" style=\"background-color:transparent\" readonly=\"readonly\" value=\"\"></td>
+            <td class=\"align-middle text-right\"><button type=\"button\" id=\"boton0\" onclick=\"$gr\" class=\"btn btn-outline-success\" title=\"Grabar\" disabled=\"disabled\"><span class=\"oi oi-hard-drive\"></span></button></td>
+            <td class=\"align-middle\">&nbsp;</td></tr>";
 }
 
 /**
@@ -951,7 +951,7 @@ function f_getPropietariosClase($num, $alt, $baj) {
 function f_getPropiedades($per) { 
     global $oProps;
     $aPro = $oProps->getPropiedadesPersona($per);
-    $tabla = "<table class=\"table table-sm col-sm-12\"><tr><th class=\"col-sm-1\">&nbsp;</th><th class=\"col-sm-6\">Propiedad</th><th class=\"col-sm-1\">Orden</th><th class=\"col-sm-2\">Fecha baja</th><th class=\"col-sm-1\">&nbsp;</th><th class=\"col-sm-1\">&nbsp;</th></tr>";
+    $tabla = "<table class=\"table table-sm\" width=\"100%\"><tr><th>&nbsp;</th><th>Propiedad</th><th>Orden</th><th>Fecha baja</th><th>&nbsp;</th><th>&nbsp;</th></tr>";
     foreach ($aPro as $apa => $aDat) {
         $nom = $aDat[0];
         $dat = $aDat[1];
@@ -990,12 +990,12 @@ function f_getPropiedad($per, $apa, $nom, $dat, $fec, $ord) {
     $on = "$('#boton$apa').prop('disabled',false)";
     $gr = f_getPropiedadBoton($per, $apa);
     
-    return "<tr><td class=\"col-sm-1 align-middle\" title=\"Ver apartamento $apa\"><a class=\"btn $verpe\" href=\"apartamentos.php?apartamento=$apa\" role=\"button\"><span class=\"oi oi-eye\"></span></a></td>
-            <td class=\"col-sm-6 align-middle $clase\">$nom</td>
-            <td class=\"col-sm-1 align-middle\">" . f_getSelectSimple(array(0,1,2,3,4,5,6,7,8,9), "orden$apa", $ord, "form-control $clase", $on) . "</td>
-            <td class=\"col-sm-2 align-middle\"><input type=\"text\" id=\"fecha$apa\" name=\"fecha$apa\" class=\"form-control text-center calendario $clase\" style=\"background-color:transparent\" readonly=\"readonly\" value=\"$fec\"></td>
-            <td class=\"col-sm-1 align-middle text-right\"><button type=\"button\" id=\"boton$apa\" onclick=\"$gr\" class=\"btn $boton\" title=\"Grabar\" disabled=\"disabled\"><span class=\"oi oi-hard-drive\"></span></button></td>
-            <td class=\"col-sm-1 align-middle\"><button type=\"button\" id=\"borra$apa\" onclick=\"xajax_eliminarPropiedadPregunta($per, $apa)\" class=\"btn btn-danger\" title=\"Eliminar\"><span class=\"oi oi-trash\"></span></button></td></tr>";
+    return "<tr><td class=\"align-middle\" width=\"5%\" title=\"Ver apartamento $apa\"><a class=\"btn $verpe\" href=\"apartamentos.php?apartamento=$apa\" role=\"button\"><span class=\"oi oi-eye\"></span></a></td>
+            <td class=\"align-middle $clase\" width=\"60%\">$nom</td>
+            <td class=\"align-middle\" width=\"10%\">" . f_getSelectSimple(array(0,1,2,3,4,5,6,7,8,9), "orden$apa", $ord, "form-control $clase", $on) . "</td>
+            <td class=\"align-middle\" width=\"15%\"><input type=\"text\" id=\"fecha$apa\" name=\"fecha$apa\" class=\"form-control text-center calendario $clase\" style=\"background-color:transparent\" readonly=\"readonly\" value=\"$fec\"></td>
+            <td class=\"align-middle text-right\" width=\"5%\"><button type=\"button\" id=\"boton$apa\" onclick=\"$gr\" class=\"btn $boton\" title=\"Grabar\" disabled=\"disabled\"><span class=\"oi oi-hard-drive\"></span></button></td>
+            <td class=\"align-middle\" width=\"5%\"><button type=\"button\" id=\"borra$apa\" onclick=\"xajax_eliminarPropiedadPregunta($per, $apa)\" class=\"btn btn-danger\" title=\"Eliminar\"><span class=\"oi oi-trash\"></span></button></td></tr>";
 }
 
 /**
@@ -1011,13 +1011,13 @@ function f_getPropiedadNueva($aPro, $per) {
     $on = "if($('#nombre0').val() == '') { $('#boton0').prop('disabled',true); } else { $('#boton0').prop('disabled',false); }";
     $gr = f_getPropiedadBoton($per, 0);
     
-    return "<tr><th class=\"col-sm-1\">&nbsp;</th><th class=\"col-sm-7\">Nueva propiedad</th><th class=\"col-sm-1\">Orden</th><th class=\"col-sm-3\">Fecha baja</th><th class=\"col-sm-1\">&nbsp;</th><th class=\"col-sm-1\">&nbsp;</th></tr>
-            <tr><td class=\"col-sm-1 align-middle\" title=\"Nueva propiedad\"><div class=\"btn btn-outline-success\"><span class=\"oi oi-home\"></span></div></td>
-            <td class=\"col-sm-6 align-middle\">" . f_getSelectAgrupado($aApar, "nombre0", "", "form-control", $on, TRUE) . "</td>
-            <td class=\"col-sm-1 align-middle\">" . f_getSelectSimple(array(0,1,2,3,4,5,6,7,8,9), "orden0", 0, "form-control", $on) . "</td>
-            <td class=\"col-sm-2 align-middle\"><input type=\"text\" id=\"fecha0\" name=\"fecha0\" class=\"form-control text-center calendario\" style=\"background-color:transparent\" readonly=\"readonly\" value=\"\"></td>
-            <td class=\"col-sm-1 align-middle text-right\"><button type=\"button\" id=\"boton0\" onclick=\"$gr\" class=\"btn btn-outline-success\" title=\"Grabar\" disabled=\"disabled\"><span class=\"oi oi-hard-drive\"></span></button></td>
-            <td class=\"col-sm-1 align-middle\">&nbsp;</td></tr>";
+    return "<tr><th>&nbsp;</th><th>Nueva propiedad</th><th>Orden</th><th>Fecha baja</th><th>&nbsp;</th><th>&nbsp;</th></tr>
+            <tr><td class=\"align-middle\" title=\"Nueva propiedad\"><div class=\"btn btn-outline-success\"><span class=\"oi oi-home\"></span></div></td>
+            <td class=\"align-middle\">" . f_getSelectAgrupado($aApar, "nombre0", "", "form-control", $on, TRUE) . "</td>
+            <td class=\"align-middle\">" . f_getSelectSimple(array(0,1,2,3,4,5,6,7,8,9), "orden0", 0, "form-control", $on) . "</td>
+            <td class=\"align-middle\"><input type=\"text\" id=\"fecha0\" name=\"fecha0\" class=\"form-control text-center calendario\" style=\"background-color:transparent\" readonly=\"readonly\" value=\"\"></td>
+            <td class=\"align-middle text-right\"><button type=\"button\" id=\"boton0\" onclick=\"$gr\" class=\"btn btn-outline-success\" title=\"Grabar\" disabled=\"disabled\"><span class=\"oi oi-hard-drive\"></span></button></td>
+            <td class=\"align-middle\">&nbsp;</td></tr>";
 }
 
 /**
@@ -1312,7 +1312,7 @@ function f_getAsistentes($fecha) {
     $flechaF = "<a href=\"#final\"><span class=\"oi oi-data-transfer-download\"></span></a>";
     $flecha1 = "<a href=\"#ini2\"><span class=\"oi oi-arrow-thick-bottom\" role=\"button\"></span></a>";
     $flecha2 = "<a href=\"#ini1\"><span class=\"oi oi-arrow-thick-top\" role=\"button\"></span></a>";
-    $tabla  = "<table class=\"table table-sm\"><tr style=\"background-color:#F5F5F5\"><th class=\"align-middle\">&nbsp;<a name=\"ini$portal\">Portal $portal</a></th><th class=\"align-middle\">Voto</th><th class=\"align-middle\">Repr.</th><th class=\"align-middle\">Asistente a la Junta General</th><th class=\"align-middle text-center\">$flecha1&nbsp;&nbsp;$flecha2</th><th class=\"align-middle text-center\">$flechaF&nbsp;&nbsp;$flechaI</th></tr>";
+    $tabla  = "<table class=\"table table-sm\" style=\"width:100%\"><tr style=\"background-color:#F5F5F5\"><th class=\"align-middle\">&nbsp;<a name=\"ini$portal\">Portal $portal</a></th><th class=\"align-middle\">Voto</th><th class=\"align-middle\">Repr.</th><th class=\"align-middle\">Asistente a la Junta General</th><th class=\"align-middle text-center\">$flecha1&nbsp;&nbsp;$flecha2</th><th class=\"align-middle text-center\">$flechaF&nbsp;&nbsp;$flechaI</th></tr>";
     
     foreach ($aApars as $apa => $aApartamento) {
         if ($portal != $aApartamento[0]) {
@@ -1339,12 +1339,12 @@ function f_getAsistentes($fecha) {
         $onCh = "xajax_setAsistenteMulti('$fecha', '$apa', $('#nombre$apa').val(), $('#voto$apa').prop('checked'), $('#repr$apa').prop('checked'), $('#multiples').prop('checked'));";
         $onCl = "if(this.checked){ xajax_getRepresentantes('$fecha',$apa); } else { xajax_getPropietarios('$fecha', $apa); }";
         $sele = f_getPropietariosRepresentantes($apa, $fecha, $asis, $repr, $onCh);
-        $tabla .= "<tr><td class=\"align-middle col-sm-1\"><div id=\"apartamento$apa\">&nbsp;" . $aApartamento[0] . "-" . $aApartamento[1] . $aApartamento[2] . "</div></td>
-                   <td class=\"align-middle col-sm-1\"><input type=\"checkbox\" id=\"voto$apa\" name=\"voto$apa\" $chk1 onchange=\"$onCh\"></td>
-                   <td class=\"align-middle col-sm-1\"><input type=\"checkbox\" id=\"repr$apa\" name=\"repr$apa\" $chk2 onchange=\"$onCh $onCl\" onclick=\"\"></td>
-                   <td class=\"align-middle col-sm-7\" id=\"selec$apa\">$sele</td>
-                   <td class=\"align-middle col-sm-1 text-center\"><button class=\"btn btn-warning\" type=\"button\" onclick=\"xajax_setAsistente('$fecha','$apa')\" title=\"Deshacer\"><span class=\"oi oi-loop-circular\"></span></button></td>
-                   <td class=\"align-middle col-sm-1 text-center\"><button id=\"boton$apa\" class=\"btn btn-success\" type=\"button\" onclick=\"xajax_grabarAsistenteMulti('$fecha', '$apa', $('#nombre$apa').val(), $('#repr$apa').prop('checked'), $('#voto$apa').prop('checked'), $('#multiples').prop('checked'))\" title=\"Guardar\" disabled=\"disabled\"><span class=\"oi oi-hard-drive\"></span></button></td></tr>";
+        $tabla .= "<tr><td class=\"align-middle col-sm-1\" style=\"width:10%\"><div id=\"apartamento$apa\">&nbsp;" . $aApartamento[0] . "-" . $aApartamento[1] . $aApartamento[2] . "</div></td>
+                   <td class=\"align-middle col-sm-1\" style=\"width:5%\"><input type=\"checkbox\" id=\"voto$apa\" name=\"voto$apa\" $chk1 onchange=\"$onCh\"></td>
+                   <td class=\"align-middle col-sm-1\" style=\"width:5%\"><input type=\"checkbox\" id=\"repr$apa\" name=\"repr$apa\" $chk2 onchange=\"$onCh $onCl\" onclick=\"\"></td>
+                   <td class=\"align-middle col-sm-7\" style=\"width:70%\" id=\"selec$apa\">$sele</td>
+                   <td class=\"align-middle col-sm-1 text-center\" style=\"width:5%\"><button class=\"btn btn-warning\" type=\"button\" onclick=\"xajax_setAsistente('$fecha','$apa')\" title=\"Deshacer\"><span class=\"oi oi-loop-circular\"></span></button></td>
+                   <td class=\"align-middle col-sm-1 text-center\" style=\"width:5%\"><button id=\"boton$apa\" class=\"btn btn-success\" type=\"button\" onclick=\"xajax_grabarAsistenteMulti('$fecha', '$apa', $('#nombre$apa').val(), $('#repr$apa').prop('checked'), $('#voto$apa').prop('checked'), $('#multiples').prop('checked'))\" title=\"Guardar\" disabled=\"disabled\"><span class=\"oi oi-hard-drive\"></span></button></td></tr>";
     }
     return "$tabla</table><a name=\"final\"></a>";
 }
@@ -1515,15 +1515,15 @@ function f_nombresApartamentosMultiples($apa, $aCods) {
  */
 function f_cabeceraTablaAsistentes($portal, $opc1, $opc2, $opc3, $opc4) {
     return "<tr id=\"portal$portal\" style=\"background-color:#F5F5F5\">
-                <th class=\"align-middle col-sm-1\">&nbsp;<a name=\"ini$portal\" href=\"#ini1\">Portal $portal</a></th>
-                <th class=\"align-middle col-sm-4\">Propietario</th>
-                <th class=\"align-middle text-center col-sm-1\">Asi.</th>
-                <th class=\"align-middle text-center col-sm-1\">Vot</th>
-                <th class=\"align-middle text-center col-sm-1\">Pre</th>
-                <th id=\"titop1$portal\" class=\"align-middle text-center col-sm-1\" title=\"$opc1\">" . substr($opc1, 0, 8) . "</th>
-                <th id=\"titop2$portal\" class=\"align-middle text-center col-sm-1\" title=\"$opc2\">" . substr($opc2, 0, 8) . "</th>
-                <th id=\"titop3$portal\" class=\"align-middle text-center col-sm-1\" title=\"$opc3\">" . substr($opc3, 0, 8) . "</th>
-                <th id=\"titop4$portal\" class=\"align-middle text-center col-sm-1\" title=\"$opc4\">" . substr($opc4, 0, 8) . "</th></tr>";
+                <th class=\"align-middle\">&nbsp;<a name=\"ini$portal\" href=\"#ini1\">Portal $portal</a></th>
+                <th class=\"align-middle\">Propietario</th>
+                <th class=\"align-middle text-center\">Asi.</th>
+                <th class=\"align-middle text-center\">Vot</th>
+                <th class=\"align-middle text-center\">Pre</th>
+                <th id=\"titop1$portal\" class=\"align-middle text-center\" title=\"$opc1\">" . substr($opc1, 0, 8) . "</th>
+                <th id=\"titop2$portal\" class=\"align-middle text-center\" title=\"$opc2\">" . substr($opc2, 0, 8) . "</th>
+                <th id=\"titop3$portal\" class=\"align-middle text-center\" title=\"$opc3\">" . substr($opc3, 0, 8) . "</th>
+                <th id=\"titop4$portal\" class=\"align-middle text-center\" title=\"$opc4\">" . substr($opc4, 0, 8) . "</th></tr>";
 }
 
 /**
@@ -1547,15 +1547,15 @@ function f_cabeceraTablaAsistentes($portal, $opc1, $opc2, $opc3, $opc4) {
  * @return string Codigo HTML de la informacion sobre la votacion del apartamento.
  */
 function f_datosTablaAsistentes($apa, $aApartamento, $nom, $onc, $onk, $ch1, $ch2, $ch3, $bch, $sApPr, $op1, $op2, $op3, $op4, $bop) {
-    return "<tr id=\"fila$apa\"><td id=\"apartamento$apa\" class=\"align-middle\">" . $aApartamento[0] . "-" . $aApartamento[1] . $aApartamento[2] . "</td>
-                <td class=\"align-middle\">$nom</td>
-                <td class=\"align-middle text-center\"><input type=\"checkbox\" id=\"asis$apa\" name=\"asis[$apa]\" onclick=\"$onc $onk\" $ch1></td>
-                <td class=\"align-middle text-center\"><input type=\"checkbox\" id=\"vota$apa\" name=\"vota[$apa]\" onclick=\"$onc\" $ch2 $bch></td>    
-                <td class=\"align-middle text-center\"><input type=\"checkbox\" id=\"pres$apa\" name=\"pres[$apa]\" onclick=\"$onc\" $ch3 $bch></td>
-                <td class=\"align-middle text-center\"><input type=\"radio\" id=\"res1$apa\" name=\"opciones[$apa]\" onclick=\"js_sincronizar($sApPr,1)\" value=\"1\" $op1 $bop></td>
-                <td class=\"align-middle text-center\"><input type=\"radio\" id=\"res2$apa\" name=\"opciones[$apa]\" onclick=\"js_sincronizar($sApPr,2)\" value=\"2\" $op2 $bop></td>
-                <td class=\"align-middle text-center\"><input type=\"radio\" id=\"res3$apa\" name=\"opciones[$apa]\" onclick=\"js_sincronizar($sApPr,3)\" value=\"3\" $op3 $bop></td>
-                <td class=\"align-middle text-center\"><input type=\"radio\" id=\"res4$apa\" name=\"opciones[$apa]\" onclick=\"js_sincronizar($sApPr,4)\" value=\"4\" $op4 $bop></td></tr>";
+    return "<tr id=\"fila$apa\"><td id=\"apartamento$apa\" class=\"align-middle\" style=\"width:10%\">" . $aApartamento[0] . "-" . $aApartamento[1] . $aApartamento[2] . "</td>
+                <td class=\"align-middle\" style=\"width:35%\">$nom</td>
+                <td class=\"align-middle text-center\" style=\"width:5%\"><input type=\"checkbox\" id=\"asis$apa\" name=\"asis[$apa]\" onclick=\"$onc $onk\" $ch1></td>
+                <td class=\"align-middle text-center\" style=\"width:5%\"><input type=\"checkbox\" id=\"vota$apa\" name=\"vota[$apa]\" onclick=\"$onc\" $ch2 $bch></td>    
+                <td class=\"align-middle text-center\" style=\"width:5%\"><input type=\"checkbox\" id=\"pres$apa\" name=\"pres[$apa]\" onclick=\"$onc\" $ch3 $bch></td>
+                <td class=\"align-middle text-center\" style=\"width:10%\"><input type=\"radio\" id=\"res1$apa\" name=\"opciones[$apa]\" onclick=\"js_sincronizar($sApPr,1)\" value=\"1\" $op1 $bop></td>
+                <td class=\"align-middle text-center\" style=\"width:10%\"><input type=\"radio\" id=\"res2$apa\" name=\"opciones[$apa]\" onclick=\"js_sincronizar($sApPr,2)\" value=\"2\" $op2 $bop></td>
+                <td class=\"align-middle text-center\" style=\"width:10%\"><input type=\"radio\" id=\"res3$apa\" name=\"opciones[$apa]\" onclick=\"js_sincronizar($sApPr,3)\" value=\"3\" $op3 $bop></td>
+                <td class=\"align-middle text-center\" style=\"width:10%\"><input type=\"radio\" id=\"res4$apa\" name=\"opciones[$apa]\" onclick=\"js_sincronizar($sApPr,4)\" value=\"4\" $op4 $bop></td></tr>";
 }
 
 /**
@@ -1740,12 +1740,12 @@ function f_getDeudas($fecha) {
         $papart++; $pdeuda += ($sum > 0) ? 1 : 0; $pordin += $ord; $pextra += $ext;
         $fapart++; $fdeuda += ($sum > 0) ? 1 : 0; $fordin += $ord; $fextra += $ext;
         $tapart++; $tdeuda += ($sum > 0) ? 1 : 0; $tordin += $ord; $textra += $ext;
-        $tabla .= "<tr id=\"fila$apa\"><td class=\"align-middle col-sm-1\"><div id=\"apartamento$apa\">&nbsp;" . $aApartamento[0] . "-" . $aApartamento[1] . $aApartamento[2] . "</div></td>
-                   <td class=\"align-middle col-sm-3\" colspan=\"3\">$pro</td>
-                   <td class=\"align-middle col-sm-2\">" . f_getCoeficientesInput("or$apa", $ord, "€", $on1, TRUE). "</td>
-                   <td class=\"align-middle col-sm-2\">" . f_getCoeficientesInput("ex$apa", $ext, "€", $on1, TRUE). "</td>
-                   <td class=\"align-middle col-sm-2\">" . f_getCoeficientesInput("su$apa", $sum, "€", "tabindex=\"-1\"", FALSE). "</td>
-                   <td class=\"align-middle col-sm-2 text-right\"><button class=\"btn btn-warning\" type=\"button\" onclick=\"xajax_deshacerDeuda($portal, $apa, $ord, $ext)\" title=\"Deshacer\"><span class=\"oi oi-loop-circular\"></span></button>&nbsp;
+        $tabla .= "<tr id=\"fila$apa\"><td class=\"align-middle\" style=\"width:10%\"><div id=\"apartamento$apa\">&nbsp;" . $aApartamento[0] . "-" . $aApartamento[1] . $aApartamento[2] . "</div></td>
+                   <td class=\"align-middle\" colspan=\"3\" style=\"width:35%\">$pro</td>
+                   <td class=\"align-middle\" style=\"width:15%\">" . f_getCoeficientesInput("or$apa", $ord, "€", $on1, TRUE). "</td>
+                   <td class=\"align-middle\" style=\"width:15%\">" . f_getCoeficientesInput("ex$apa", $ext, "€", $on1, TRUE). "</td>
+                   <td class=\"align-middle\" style=\"width:15%\">" . f_getCoeficientesInput("su$apa", $sum, "€", "tabindex=\"-1\"", FALSE). "</td>
+                   <td class=\"align-middle text-right\" style=\"width:10%\"><button class=\"btn btn-warning\" type=\"button\" onclick=\"xajax_deshacerDeuda($portal, $apa, $ord, $ext)\" title=\"Deshacer\"><span class=\"oi oi-loop-circular\"></span></button>&nbsp;
                    <button id=\"boton$apa\" class=\"btn btn-success\" type=\"button\" onclick=\"xajax_grabarDeuda('$fecha','$apa',$('#or$apa').val(),$('#ex$apa').val())\" title=\"Guardar\" disabled=\"disabled\"><span class=\"oi oi-hard-drive\"></span></button></td></tr>";
     }
     $tabla .= f_getDeudasSuma("portal", $portal, $papart, $pdeuda, $pordin, $pextra);
@@ -1771,14 +1771,14 @@ function f_getDeudasSuma($tipo, $valor, $apar, $deuda, $ordin, $extra) {
     $ext = number_format($extra, 2, ".", ","); 
     $sum = number_format($ordin + $extra, 2, ".", ",");
     $por = number_format($deuda * 100 / $apar, 2, ".", ",");
-    return "<tr><td class=\"align-middle col-sm-1 text-center\" id=\"${let}ap$valor\">$apar</td>
-            <td class=\"align-middle col-sm-1 text-right\">Deudores $tipo $valor:</td>
-            <td class=\"align-middle col-sm-1 text-center\" id=\"${let}de$valor\">$deuda</td>
-            <td class=\"align-middle col-sm-1\" id=\"${let}po$valor\">($por %)</td>
-            <td class=\"align-middle col-sm-2\">" . f_getCoeficientesInput("${let}or$valor", $ord, "€", "tabindex=\"-1\"", FALSE). "</td>
-            <td class=\"align-middle col-sm-2\">" . f_getCoeficientesInput("${let}ex$valor", $ext, "€", "tabindex=\"-1\"", FALSE). "</td>
-            <td class=\"align-middle col-sm-2\">" . f_getCoeficientesInput("${let}su$valor", $sum, "€", "tabindex=\"-1\"", FALSE). "</td>
-            <td class=\"align-middle col-sm-2\">&nbsp;</td></tr>";
+    return "<tr><td class=\"align-middle text-center\" id=\"${let}ap$valor\">$apar</td>
+            <td class=\"align-middle text-right\">Deudores $tipo $valor:</td>
+            <td class=\"align-middle text-center\" id=\"${let}de$valor\">$deuda</td>
+            <td class=\"align-middle\" id=\"${let}po$valor\">($por %)</td>
+            <td class=\"align-middle\">" . f_getCoeficientesInput("${let}or$valor", $ord, "€", "tabindex=\"-1\"", FALSE). "</td>
+            <td class=\"align-middle\">" . f_getCoeficientesInput("${let}ex$valor", $ext, "€", "tabindex=\"-1\"", FALSE). "</td>
+            <td class=\"align-middle\">" . f_getCoeficientesInput("${let}su$valor", $sum, "€", "tabindex=\"-1\"", FALSE). "</td>
+            <td class=\"align-middle\">&nbsp;</td></tr>";
 }
 
 //--- ACTAS VISUALIZAR -------------------------------------------------------//
