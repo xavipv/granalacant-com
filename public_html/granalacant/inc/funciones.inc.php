@@ -1898,6 +1898,19 @@ function f_getDatosActaApartados($aAps) {
     return $html;
 }
 
+/**
+ * Obtiene el nombre del archivo PDF para el acta.
+ * 
+ * @param date $fec Fecha.
+ * @return string Cadena con el nombre del archivo PDF.
+ */
+function f_getNombreActaPDF($fec) {
+    $oJunta = new Junta($fec);
+    $fecha = $oJunta->getFecha();
+    $tipo  = $oJunta->getTipo(FALSE);
+    return "Acta_$fecha${tipo}_es.pdf";
+}
+
 //--- ACTAS BUSCAR -----------------------------------------------------------//
 
 /**

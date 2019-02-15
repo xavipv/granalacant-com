@@ -1042,6 +1042,7 @@ function deshacerDeuda($por, $apa, $ord, $ext) {
  */
 function getActa($fecha='') {
     $response = new xajaxResponse();
+    $response->assign("actapdf", "href", "/actas/" . f_getNombreActaPDF($fecha));
     $response->assign("aedit", "href", "actasedit.php?fecha=$fecha");
     $response->assign("divcontenido", "innerHTML", f_getDatosActa($fecha));
     return $response;

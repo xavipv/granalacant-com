@@ -13,6 +13,9 @@ if(!$fec) {
     $oActas = new Actas();
     $fec = $oActas->getUltimaActa();
 }
+
+// Nombre del acta en PDF.
+$actaPDF = f_getNombreActaPDF($fec);
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -30,6 +33,7 @@ if(!$fec) {
                 </li>
                 <li class="nav-item text-right col-sm-2">
                     <div id="submenu3">
+                        <a id="actapdf" href="/actas/<?php echo $actaPDF; ?>" target="_blank" role="button" title="Ver en PDF" class="btn btn-outline-success"><span class="oi oi-eye"></span></a>
                         <a id="aedit" href="actasedit.php?fecha=<?php echo $fec; ?>" role="button" title="Editar" class="btn btn-outline-success"><span class="oi oi-pencil"></span></a>
                         <button type="button" onclick="" title="Imprimir" class="btn btn-outline-success"><span class="oi oi-print"></span></button>
                     </div>
