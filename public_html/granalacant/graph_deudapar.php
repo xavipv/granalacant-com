@@ -9,12 +9,6 @@ $aIncludes = array('config.inc.php', 'funciones.inc.php', 'funciones.xajax.php')
 
 (require _LIBR_ . '/phplot/phplot.php') or die("<p>Error al incluir la libreria <b>phplot.php</b></p>");
 
-// Tipo de grafico: horizontal (true) o vertical (false).
-$v = ( filter_input(INPUT_POST, 'v') ) ? filter_input(INPUT_POST, 'v') : filter_input(INPUT_GET, 'v');
-
-
-//$tipodeuda = ( filter_input(INPUT_POST, 'tipodeuda') ) ? filter_input(INPUT_POST, 'tipodeuda') : filter_input(INPUT_GET, 'tipodeuda');
-
 // 0 - Total. 1 - Ordinaria. 2 - Extraordinaria.
 $tipodeuda = (isset($_POST['tipodeuda'])) ? $_POST['tipodeuda'] : 0;
 
@@ -131,52 +125,6 @@ if(false) {
     echo "</pre>";
     exit();
 }
-
-/*
-// Inicializa a ceros los datos.
-foreach ($aDeudasPortal as $aFec) {
-    foreach ($aFec as $iApa => $aApa) {
-        $aDatos[$iApa][0] = '';
-        for($i=1; $i<=$imax; $i++){
-           $aDatos[$iApa][$i] = 0; 
-        }
-    }
-}
-
-
-
-//$aFechas = array_values($aF);       // Se queda solo con las fechas en formato ISO.
-//$imax = count($aFechas);
-
-// Inicializa a ceros los datos.
-foreach ($aDeudas as $aFec) {
-    foreach ($aFec as $iApa => $aApa) {
-        $aDatos[$iApa][0] = '';
-        for($i=1; $i<=$imax; $i++){
-           $aDatos[$iApa][$i] = 0; 
-        }
-    }
-}
-
-// Recorre los datos para crear el array de datos para el grafico.
-foreach ($aDeudas as $aFec) {
-    foreach ($aFec as $iApa => $aApa) {
-        $apa = $aApa[0] . '-' . $aApa[1] . $aApa[2];
-        $deu = $aApa[6];
-        $fec = $aApa[7];
-        $ind = array_search($fec, $aFechas) + 1;
-        $aDatos[$iApa][0] = $apa;
-        $aDatos[$iApa][$ind] = $deu;
-    }
-}
-
-ksort($aDatos);     // Ordena los datos por numero de apartamento.
-
-// Quita el indice de los arrays.
-foreach ($aDatos as $aD) {
-    $aGraph[] = $aD;
-}
-*/
 
 // Calcula el tamaño del grafico.
 $ancho = count($aGraph) * 25 * $imax;

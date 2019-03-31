@@ -225,7 +225,7 @@ function f_getScripts() {
  */
 function f_getMenuAcciones($pagina) {
     global $busqueda;
-    $activo = array('','','','','','','');
+    $activo = array('','','','','','','','');
     switch ($pagina) {
         // Personas.
         case "personas.php": $activo[1] = "active"; $busqueda = TRUE; break;
@@ -242,16 +242,19 @@ function f_getMenuAcciones($pagina) {
         case "juntas.php": $activo[4] = "active"; break;
         case "asistentes.php": $activo[4] = "active"; break;
         case "votaciones.php": $activo[4] = "active"; break;
-        case "deudas.php": $activo[4] = "active"; break;
         case "juntaslis.php": $activo[4] = "active"; break;
-        case "deudaslis.php": $activo[4] = "active"; break;
         // Actas.
         case "actas.php": $activo[5] = "active"; break;
         case "actasbuscar.php": $activo[5] = "active"; break;
         case "actasedit.php": $activo[5] = "active"; break;
+        // Deudas
+        case "deudas.php": $activo[6] = "active"; break;
+        case "deudaslis.php": $activo[6] = "active"; break;
+        case "deudapar.php": $activo[6] = "active"; break;
+        case "graph_deudaport.php": $activo[6] = "active"; break;
         // Otros.
-        case "calculos.php": $activo[6] = "active"; break;
-        case "transformar.php": $activo[6] = "active"; break;
+        case "calculos.php": $activo[7] = "active"; break;
+        case "transformar.php": $activo[7] = "active"; break;
         // Inicio.
         default: $activo[0] = "active"; break;
     }

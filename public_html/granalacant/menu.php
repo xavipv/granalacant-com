@@ -41,13 +41,12 @@ $activo = f_getMenuAcciones($pagina);
                     <a class="dropdown-item" href="juntas.php">Datos</a>
                     <a class="dropdown-item" href="asistentes.php">Asistentes</a>
                     <a class="dropdown-item" href="votaciones.php">Votaciones</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="deudas.php">Deudas</a>
+                    
+                    
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="juntaslis.php">Listado juntas</a>
-                    <a class="dropdown-item" href="deudaslis.php">Listado deudas</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="deudapar.php">Deudas apartamentos</a>
+                    
+                    
                 </div>
             </li>
             <li class="nav-item dropdown">
@@ -59,7 +58,18 @@ $activo = f_getMenuAcciones($pagina);
                 </div>
             </li>
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle <?php echo $activo[6]; ?>" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Otros</a>
+                <a class="nav-link dropdown-toggle <?php echo $activo[6]; ?>" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Deudas</a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="deudas.php">Editar</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="deudaslis.php">Listado</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="deudapar.php">Evolución deuda</a>
+                    <a class="dropdown-item" href="graph_deudport.php" target="_blank">Deuda portales &uarr;</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle <?php echo $activo[7]; ?>" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Otros</a>
                 <div class="dropdown-menu">
                     <a class="dropdown-item" href="calculos.php">C&aacute;lculos</a>
                     <div class="dropdown-divider"></div>
