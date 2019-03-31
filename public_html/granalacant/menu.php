@@ -47,8 +47,7 @@ $activo = f_getMenuAcciones($pagina);
                     <a class="dropdown-item" href="juntaslis.php">Listado juntas</a>
                     <a class="dropdown-item" href="deudaslis.php">Listado deudas</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="graph_deudapar.php?v=0">Deudas apartamentos (H)</a>
-                    <a class="dropdown-item" href="graph_deudapar.php?v=1">Deudas apartamentos (V)</a>
+                    <a class="dropdown-item" href="deudapar.php">Deudas apartamentos</a>
                 </div>
             </li>
             <li class="nav-item dropdown">

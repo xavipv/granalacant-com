@@ -187,6 +187,27 @@ class Deudas {
     }
     
     /**
+     * Obtiene la fecha mayor y la fecha menor de todas las deudas.
+     * 
+     * @return array del tipo array(0=>array('fmayorDB', 'fmayorISO), 1=>array('fmenorDB', 'fmenorISO')).
+     */
+    private function getFechaMayorMenor() {
+        $aResult = array();
+        $aFechas = $this->getFechas();
+        $aFecKey = array_keys($aFechas);
+        $fMayor = "0000-00-00";
+        $fMenor = "9999-99-99";
+        foreach ($aFecKey as $fDB) {
+            $fMayor = ($fDB > $fMayor) ? $fDB : $fMayor;
+            $fMenor = ($fDB < $fMenor) ? $fDB : $fMenor;
+        }
+        $aResult[0] = array($fMayor, $aFechas[$fMayor]);
+        $aResult[1] = array($fMenor, $aFechas[$fMenor]);
+        
+        return $aResult;
+    }
+    
+    /**
      * Convierte una fecha, si hace falta, del formato DD-MM-YYYY a YYYY-MM-DD.
      * 
      * @param date $fecha Fecha en cualquier formato, DD-MM-YYYY a YYYY-MM-DD.
@@ -350,6 +371,26 @@ class Deudas {
             $aFechas[$date] = $this->fechaBase_Iso($date);
         }
         return $aFechas;
+    }
+    
+    /**
+     * Obtiene la fecha mayor de todas las fechas de las deudas.
+     * 
+     * @return array del tipo array('fechaDB', 'fechaISO')
+     */
+    public function getFechaMayor() {
+        $aFechas = $this->getFechaMayorMenor();
+        return $aFechas[0];
+    }
+    
+    /**
+     * Obtiene la fecha menor de todas las fechas de las deudas.
+     * 
+     * @return array del tipo array('fechaDB', 'fechaISO')
+     */
+    public function getFechaMenor() {
+        $aFechas = $this->getFechaMayorMenor();
+        return $aFechas[1];
     }
     
     /**
