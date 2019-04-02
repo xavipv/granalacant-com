@@ -409,19 +409,32 @@ function js_soloNumeros() {
             event.preventDefault();
         }
         
-        if ((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 96 && event.keyCode <= 105) || event.keyCode === 8 || event.keyCode === 9 || event.keyCode === 37 || event.keyCode === 39 || event.keyCode === 46 || event.keyCode === 110 || event.keyCode === 190) {
+        // Numeros 0 a 9 normales.                          Numeros 0 a 9 numerico.                          Borrar.                Tabulador.             Flecha atras.           Flecha adelante.        Suprimir.               Punto numerico.          Punto.                   Guion numerico.          Guion.
+        if ((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 96 && event.keyCode <= 105) || event.keyCode === 8 || event.keyCode === 9 || event.keyCode === 37 || event.keyCode === 39 || event.keyCode === 46 || event.keyCode === 110 || event.keyCode === 190 || event.keyCode === 109 || event.keyCode === 173) {
  
         } else {
             event.preventDefault();
         }
         
+        // Solo permite un punto.
         if($(this).val().indexOf('.') !== -1 && (event.keyCode === 110 || event.keyCode === 190)) {
             event.preventDefault();
-        }   
+        }
+        
+        // Solo permite un menos.
+        if($(this).val().indexOf('-') !== -1 && (event.keyCode === 109 || event.keyCode === 173)) { 
+            event.preventDefault();
+        }
+        
+        // El menos solo puede estar al principio.
+        if($(this).val().length > 0 && (event.keyCode === 109 || event.keyCode === 173)) {
+            event.preventDefault();
+        } 
     });
     
     // Selecciona el contenido cuando recibe el foco.
     $(".solonumeros").focus(function () { $(this).select(); });
+
 }
 
 /**

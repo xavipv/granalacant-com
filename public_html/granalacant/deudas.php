@@ -65,9 +65,7 @@ if(!$fec) {
                             </tr>
                         </table>
                     </div>
-                    <div id="divcontenido" class="listado">
-                        
-                    </div>
+                    <div id="divcontenido" class="listado"></div>
                 </div>
             </div>    
         </div>
