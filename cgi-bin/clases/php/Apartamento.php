@@ -64,6 +64,13 @@ class Apartamento {
     private $finca;
     
     /**
+     * Numero de finca registral.
+     * 
+     * @var int Numero de finca registral.
+     */
+    private $registro;
+    
+    /**
      * Metros cuadrados de la superficie del apartamento.
      * 
      * @var int Metros cuadrados. 
@@ -162,7 +169,7 @@ class Apartamento {
     private function cargarApartamento($cod) { 
         $this->cargarApartamentoOmision();
         if($cod) {
-            $rRes = $this->ejecutarSQL("SELECT CODAPAR,PORTAL,PISO,LETRA,FASE,TIPO,FINCA,METROS,TERRAZA,COEFICIENTE,COEFICIENTEFASE,COEFICIENTEBLOQ FROM APARTAMENTOS WHERE CODAPAR='$cod'");
+            $rRes = $this->ejecutarSQL("SELECT CODAPAR,PORTAL,PISO,LETRA,FASE,TIPO,FINCA,REGISTRO,METROS,TERRAZA,COEFICIENTE,COEFICIENTEFASE,COEFICIENTEBLOQ FROM APARTAMENTOS WHERE CODAPAR='$cod'");
             while($aRow = $rRes->fetch(PDO::FETCH_ASSOC)) {
                 $this->codigo = $aRow['CODAPAR'];
                 $this->portal = $aRow['PORTAL'];
@@ -170,6 +177,7 @@ class Apartamento {
                 $this->letra = $aRow['LETRA'];
                 $this->fase = $aRow['FASE'];
                 $this->tipo = $aRow['TIPO'];
+                $this->registro = $aRow['REGISTRO'];
                 $this->finca = $aRow['FINCA'];
                 $this->metros = $aRow['METROS'];
                 $this->terraza = $aRow['TERRAZA'];
@@ -193,6 +201,7 @@ class Apartamento {
         $this->fase = '';
         $this->tipo = '';
         $this->finca = 0;
+        $this->registro = 0;
         $this->metros = 0;
         $this->terraza = 0;
         $this->coeficiente = 0;
@@ -401,6 +410,24 @@ class Apartamento {
     }
     
     /**
+     * Asigna el numero de finca registral.
+     * 
+     * @param int $num Numero de finca registral.
+     */
+    public function setRegistro($num) {
+        $this->registro = $num;
+    }
+    
+    /**
+     * Obtiene el numero de finca registral.
+     * 
+     * @return int Numero de finca registral.
+     */
+    public function getRegistro() {
+        return $this->registro;
+    }
+
+        /**
      * Asigna los metros cuadrados del apartamento.
      * 
      * @param int $num Metros cuadrados.
@@ -559,6 +586,7 @@ class Apartamento {
         $fas = $this->fase;
         $tip = $this->tipo;
         $fin = $this->finca;
+        $reg = $this->registro;
         $met = $this->metros;
         $ter = $this->terraza;
         $cou = $this->coeficiente;
@@ -567,11 +595,11 @@ class Apartamento {
         
         if($cod) {
             // UPDATE.
-            $sql = "UPDATE APARTAMENTOS SET PORTAL='$por',PISO='$pis',LETRA='$let',FASE='$fas',TIPO='$tip',FINCA='$fin',METROS='$met',TERRAZA='$ter',COEFICIENTE='$cou',COEFICIENTEFASE='$cof',COEFICIENTEBLOQ='$cob' WHERE CODAPAR='$cod'";
+            $sql = "UPDATE APARTAMENTOS SET PORTAL='$por',PISO='$pis',LETRA='$let',FASE='$fas',TIPO='$tip',FINCA='$fin',REGISTRO='$reg',METROS='$met',TERRAZA='$ter',COEFICIENTE='$cou',COEFICIENTEFASE='$cof',COEFICIENTEBLOQ='$cob' WHERE CODAPAR='$cod'";
         } else {
             // INSERT.
             $cod = $this->siguienteCodigo();
-            $sql = "INSERT INTO APARTAMENTOS (CODAPAR,PORTAL,PISO,LETRA,FASE,TIPO,FINCA,METROS,TERRAZA,COEFICIENTE,COEFICIENTEFASE,COEFICIENTEBLOQ) VALUES ('$cod','$por','$pis','$let','$fas','$tip','$fin','$met','$ter','$cou','$cof','$cob')";
+            $sql = "INSERT INTO APARTAMENTOS (CODAPAR,PORTAL,PISO,LETRA,FASE,TIPO,FINCA,REGISTRO,METROS,TERRAZA,COEFICIENTE,COEFICIENTEFASE,COEFICIENTEBLOQ) VALUES ('$cod','$por','$pis','$let','$fas','$tip','$fin','$reg','$met','$ter','$cou','$cof','$cob')";
         }
         
         if ($this->ejecutarSQL($sql)) {

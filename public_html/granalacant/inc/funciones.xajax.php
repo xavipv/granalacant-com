@@ -220,6 +220,7 @@ function setApartamentosDatosForm($cod=1) {
     $fas = $oApa->getFase();
     $tip = $oApa->getTipo();
     $fin = $oApa->getFinca();
+    $reg = number_format($oApa->getRegistro(), 0, '.', '');
     $met = number_format($oApa->getMetros(), 2, '.', '');
     $ter = number_format($oApa->getTerraza(), 2, '.', '');
     $cou = number_format($oApa->getCoeficiente(), 4, '.', '');
@@ -233,6 +234,7 @@ function setApartamentosDatosForm($cod=1) {
     $response->assign("submenu2", "innerHTML", $apa);
     $response->assign("codigo", "value", $cdi);
     $response->assign("finca", "value", $fin);
+    $response->assign("registro", "value", $reg);
     $response->assign("fase", "value", $fas);
     $response->assign("portal", "value", $por);
     $response->assign("piso", "value", $pis);

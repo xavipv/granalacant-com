@@ -725,6 +725,7 @@ function f_grabarApartamento($frm) {
     $let = $frm['letra'];
     $fas = $frm['fase'];
     $tip = $frm['tipo'];
+    $reg = $frm['registro'];
     $met = $frm['metros'];
     $ter = $frm['terraza'];
     $cou = $frm['urba'];
@@ -737,6 +738,7 @@ function f_grabarApartamento($frm) {
     $oApa->setLetra($let);
     $oApa->setFase($fas);
     $oApa->setTipo($tip);
+    $oApa->setRegistro($reg);
     $oApa->setMetros($met);
     $oApa->setTerraza($ter);
     $oApa->setCoeficiente($cou);
@@ -2248,7 +2250,7 @@ function f_getListadoApartamentos($frm) {
     $fApa = "";
     $fase = "";
     foreach ($aApars as $apa => $aApartamento) {
-        // array('0 portal','1 piso','2 letra','3 fase','4 tipo','5 finca','6 metros','7 terraza','8 coef.urb','9 coef.fase','10 coef.blo')
+        // array('0 portal','1 piso','2 letra','3 fase','4 tipo','5 finca','6 metros','7 terraza','8 coef.urb','9 coef.fase','10 coef.blo','11 garajes','12 registro')
         
         // Mira si hay cambio de portal.
         if($portal != $aApartamento[0] && $frm['sumas']) {
@@ -2271,6 +2273,7 @@ function f_getListadoApartamentos($frm) {
         $fApa .= "<tr>";
         $fApa .= (isset($frm['codigo'])) ? "<td>$apa</td>" : "";
         $fApa .= (isset($frm['finca'])) ? "<td>" . $aApartamento[5] ."</td>" : "";
+        $fApa .= (isset($frm['registro'])) ? "<td>" . $aApartamento[12] ."</td>" : "";
         $fApa .= "<td>" . $aApartamento[0] . "-" .$aApartamento[1] . $aApartamento[2] . "</td>";
         $bloApa++; $fasApa++; $sumApa++;
         
@@ -2330,14 +2333,20 @@ function f_getListadoApartamentos($frm) {
  * @return string Codigo HTML de la fila de sumas.
  */
 function f_getListadoApartamentosSumas($frm, $txt, $apa, $me2, $ter, $coe, $cof, $cor, $cob, $gar) {
-    $fTit = "<tr>";
+    
+    $nCol = 1;
+    $nCol += (isset($frm['codigo'])) ? 1 : 0;
+    $nCol += (isset($frm['finca'])) ? 1 : 0;
+    $nCol += (isset($frm['registro'])) ? 1 : 0;
+    $fTit = "<tr><th colspan=\"$nCol\">$txt$apa</th>";
+    /*
     if (isset($frm['codigo']) && isset($frm['finca'])) {
         $fTit .= "<th colspan=\"3\">$txt$apa</th>";
     } elseif (isset($frm['codigo']) || isset($frm['finca'])) {
         $fTit .= "<th colspan=\"2\">$txt$apa</th>";
     } else {
         $fTit .= "<th>$txt$apa</th>";
-    }
+    } */
     $fTit .= (isset($frm['tipo'])) ? "<th>&nbsp;</th>" : "";
     $fTit .= (isset($frm['fase'])) ? "<th>&nbsp;</th>" : "";
     $fTit .= (isset($frm['metros'])) ? "<th class=\"text-right\">" . number_format($me2,2,',','.') . "</th>" : "";
@@ -2365,6 +2374,7 @@ function f_getListadoApartamentosTitulo($frm) {
     $fila = "<tr>";
     $fila .= (isset($frm['codigo'])) ? "<th>C&oacute;digo</th>" : "";
     $fila .= (isset($frm['finca'])) ? "<th>Finca</th>" : "";
+    $fila .= (isset($frm['registro'])) ? "<th>Registro</th>" : "";
     $fila .= "<th>Apart.</th>";
     $fila .= (isset($frm['tipo'])) ? "<th>Tipo</th>" : "";
     $fila .= (isset($frm['fase'])) ? "<th>Fase</th>" : "";

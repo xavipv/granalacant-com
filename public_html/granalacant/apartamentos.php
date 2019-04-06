@@ -62,14 +62,18 @@ if(!$iApar) {
                                         <input type="text" class="form-control solonumeros readonly" id="finca" name="finca" value="" title="" placeholder="Finca" readonly="readonly" onfocus="setTimeout(function() { $('#portal').focus(); $('#portal').select(); }, 5);">
                                     </div>
                                     <div class="form-group col-sm-2">
+                                        <label for="registro">Registro</label>
+                                        <input type="text" class="form-control solonumeros" id="registro" name="registro" value="" title="" placeholder="Registro">
+                                    </div>
+                                    <div class="form-group col-sm-2">
                                         <label for="portal">Portal</label>
                                         <?php echo f_getSelectPortales(); ?>
                                     </div>
-                                    <div class="form-group col-sm-2">
+                                    <div class="form-group col-sm-1">
                                         <label for="piso">Piso</label>
                                         <?php echo f_getSelectPisos(); ?>
                                     </div>
-                                    <div class="form-group col-sm-2">
+                                    <div class="form-group col-sm-1">
                                         <label for="letra">Letra</label>
                                         <?php echo f_getSelectLetras(); ?>
                                     </div>
