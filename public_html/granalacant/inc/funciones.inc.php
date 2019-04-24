@@ -2258,6 +2258,7 @@ function f_getListadoApartamentos($frm) {
             $fSumb = f_getListadoApartamentosSumas($frm, "Portal $portal: ", $bloApa, $bloMe2, $bloTer, $bloCoe, $bloCof, $bloCor, $bloCob, $bloGar);
             $bloApa = 0; $bloMe2 = 0; $bloTer = 0; $bloCoe = 0; $bloCof = 0; $bloCor = 0; $bloCob = 0; $bloGar = 0;
             $fApa .= ($portal) ? $fSumb : "";
+            $ttt = ($portal && $portal < 26) ? $fTit : "";
             $portal = $aApartamento[0];
         }
         
@@ -2270,7 +2271,7 @@ function f_getListadoApartamentos($frm) {
             $fase = $aApartamento[3];
         } 
         
-        $fApa .= "<tr>";
+        $fApa .= "$ttt<tr>"; $ttt = "";
         $fApa .= (isset($frm['codigo'])) ? "<td>$apa</td>" : "";
         $fApa .= (isset($frm['finca'])) ? "<td>" . $aApartamento[5] ."</td>" : "";
         $fApa .= (isset($frm['registro'])) ? "<td>" . $aApartamento[12] ."</td>" : "";
@@ -2338,7 +2339,7 @@ function f_getListadoApartamentosSumas($frm, $txt, $apa, $me2, $ter, $coe, $cof,
     $nCol += (isset($frm['codigo'])) ? 1 : 0;
     $nCol += (isset($frm['finca'])) ? 1 : 0;
     $nCol += (isset($frm['registro'])) ? 1 : 0;
-    $fTit = "<tr><th colspan=\"$nCol\">$txt$apa</th>";
+    $fTit = "<tr><th colspan=\"$nCol\" class=\"clara\">$txt$apa</th>";
     /*
     if (isset($frm['codigo']) && isset($frm['finca'])) {
         $fTit .= "<th colspan=\"3\">$txt$apa</th>";
@@ -2347,20 +2348,20 @@ function f_getListadoApartamentosSumas($frm, $txt, $apa, $me2, $ter, $coe, $cof,
     } else {
         $fTit .= "<th>$txt$apa</th>";
     } */
-    $fTit .= (isset($frm['tipo'])) ? "<th>&nbsp;</th>" : "";
-    $fTit .= (isset($frm['fase'])) ? "<th>&nbsp;</th>" : "";
-    $fTit .= (isset($frm['metros'])) ? "<th class=\"text-right\">" . number_format($me2,2,',','.') . "</th>" : "";
-    $fTit .= (isset($frm['terraza'])) ? "<th class=\"text-right\">" . number_format($ter,2,',','.') . "</th>" : "";
-    $fTit .= (isset($frm['urban'])) ? "<th class=\"text-right\">" . number_format($coe,4,',','.') . "</th>" : "";
-    $fTit .= (isset($frm['fase200'])) ? "<th class=\"text-right\">" . number_format($cof,4,',','.') . "</th>" : "";
-    $fTit .= (isset($frm['fase100'])) ? "<th class=\"text-right\">" . number_format($cor,5,',','.') . "</th>" : "";
+    $fTit .= (isset($frm['tipo'])) ? "<th class=\"clara\">&nbsp;</th>" : "";
+    $fTit .= (isset($frm['fase'])) ? "<th class=\"clara\">&nbsp;</th>" : "";
+    $fTit .= (isset($frm['metros'])) ? "<th class=\"text-right clara\">" . number_format($me2,2,',','.') . "</th>" : "";
+    $fTit .= (isset($frm['terraza'])) ? "<th class=\"text-right clara\">" . number_format($ter,2,',','.') . "</th>" : "";
+    $fTit .= (isset($frm['urban'])) ? "<th class=\"text-right clara\">" . number_format($coe,4,',','.') . "</th>" : "";
+    $fTit .= (isset($frm['fase200'])) ? "<th class=\"text-right clara\">" . number_format($cof,4,',','.') . "</th>" : "";
+    $fTit .= (isset($frm['fase100'])) ? "<th class=\"text-right clara\">" . number_format($cor,5,',','.') . "</th>" : "";
     // La suma de coeficientes y cuotas de portales solo se pone en la suma de portales.
     if (substr($txt, 0, 1) == "P") {
-        $fTit .= (isset($frm['bloque'])) ? "<th class=\"text-right\">" . number_format($cob,2,',','.') . "</th>" : "";
+        $fTit .= (isset($frm['bloque'])) ? "<th class=\"text-right clara\">" . number_format($cob,2,',','.') . "</th>" : "";
     } else {
-        $fTit .= (isset($frm['bloque'])) ? "<th>&nbsp;</th>" : "";
+        $fTit .= (isset($frm['bloque'])) ? "<th class=\"clara\">&nbsp;</th>" : "";
     }
-    $fTit .= (isset($frm['garajes'])) ? "<th class=\"text-right\">$gar&nbsp;</th>" : "";
+    $fTit .= (isset($frm['garajes'])) ? "<th class=\"text-right clara\">$gar&nbsp;</th>" : "";
     return "$fTit</tr>";
 }
 

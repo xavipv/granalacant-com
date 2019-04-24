@@ -160,6 +160,12 @@
     border-bottom: 1px solid lightgrey;
 }
 
+.table-ultra th.clara {
+    background-color: #FDFDFD;
+    border-top: 1px dotted lightgrey;
+    /* border-bottom: 1px solid lightgrey; */
+}
+
 .table-ultra td.tit {
     font-weight: bold;
     border-top: 1px solid lightgrey;

@@ -25,11 +25,11 @@ $aIncludes = array('config.inc.php', 'funciones.inc.php', 'funciones.xajax.php')
                     <div id="divcabecera">
                         <div id="divformulario">
                             <!-- Formulario para los datos -->
-                            <form id="frmdatos" onsubmit="return false;">
+                            <form id="frmdatos" name="frmdatos" method="post" onsubmit="return false;">
                                 <div class="form-group row">
                                     <h2 class="col-sm-11">Listado de apartamentos</h2>
                                     <div class="col-sm-1 text-right">
-                                        <button class="btn btn-outline-success" id="imprimir" onclick=""><span class="oi oi-print"></span></button>
+                                        <button class="btn btn-outline-success" style="cursor: pointer" id="imprimir" onclick="$('#frmdatos').attr('target', '_blank'); $('#frmdatos').attr('action', 'apartamentosprint.php'); $('#frmdatos').attr('onsubmit', 'return true'); $('#frmdatos').submit();"><span class="oi oi-print"></span></button>
                                     </div>
                                 </div>
                                 <div class="form-group row" data-animation="false" data-toggle="tooltip" data-placement="right" data-trigger="hover" title="Datos a filtrar">
