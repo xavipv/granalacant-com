@@ -7,6 +7,12 @@ $aIncludes = array('config.inc.php', 'funciones.inc.php', 'funciones.xajax.php')
 // Carga las constantes.
 (include(dirname(filter_input(INPUT_SERVER, 'DOCUMENT_ROOT')) . "/cgi-bin/includes/constantes.inc.php")) or die("<p>Error al incluir <b>/cgi-bin/includes/constantes.inc.php</b></p>");
 
+$fec = ( filter_input(INPUT_POST, 'fecha') ) ? filter_input(INPUT_POST, 'fecha') : filter_input(INPUT_GET, 'fecha');
+
+if(!$fec) {
+    $fec = $oJuntas->getUltimaJunta();
+}
+
 $oDeudas = new Deudas();
 ?>
 <!DOCTYPE html>
@@ -27,16 +33,17 @@ $oDeudas = new Deudas();
                     <div id="divcabecera">
                         <div id="divformulario">
                             <!-- Formulario para los datos -->
-                            <form id="frmdatos" onsubmit="return false;">
+                            <form id="frmdatos" name="frmdatos" method="post" onsubmit="return false;">
                                 <div class="form-group row">
-                                    <h2 class="col-sm-11">Listado de deudas</h2>
-                                    <div class="col-sm-1 text-right">
-                                        <button class="btn btn-outline-success" id="imprimir" onclick=""><span class="oi oi-print"></span></button>
+                                    <h2 class="col-sm-10">Listado de deudas</h2>
+                                    <div class="col-sm-2 text-right">
+                                        <button class="btn btn-outline-success" style="cursor: pointer" id="imprimir" title="Pantalla completa" onclick="$('#frmdatos').attr('target', '_blank'); $('#frmdatos').attr('action', 'deudaslismax.php'); $('#frmdatos').attr('onsubmit', 'return true'); $('#frmdatos').submit();"><span class="oi oi-fullscreen-enter"></span></button>
+                                        <button class="btn btn-outline-success" style="cursor: pointer" id="imprimir" title="Imprimir en un PDF" onclick="$('#frmdatos').attr('target', '_blank'); $('#frmdatos').attr('action', 'deudasprint.php'); $('#frmdatos').attr('onsubmit', 'return true'); $('#frmdatos').submit();"><span class="oi oi-print"></span></button>
                                     </div>
                                 </div>
                                 <div class="form-group row" data-animation="false" data-toggle="tooltip" data-placement="right" data-trigger="hover" title="Orden de los datos">
                                     <label for="tipo" class="col-sm-1 col-form-label text-right">Fecha:</label>
-                                    <div class="col-sm-2"><?php echo f_getSelectAgrupadoFechas($oDeudas->getFechas(), 'fecha', '', 'form-control', 'xajax_getListadoDeudas(xajax.getFormValues(\'frmdatos\'))', TRUE); ?></div>
+                                    <div class="col-sm-2"><?php echo f_getSelectAgrupadoFechas($oDeudas->getFechas(), 'fecha', "$fec", 'form-control', 'xajax_getListadoDeudas(xajax.getFormValues(\'frmdatos\'))', TRUE); ?></div>
                                     
                                     <div class="col-sm-2 offset-1">
                                         <div class="input-group">
@@ -82,6 +89,7 @@ $oDeudas = new Deudas();
                                     </div>
                                 </div>                                
                                 <hr /><br />
+                                <input id="datosdiv" name="datosdiv" type="hidden" value="">
                             </form>
                             
                         </div>

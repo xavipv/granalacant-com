@@ -35,7 +35,7 @@ $actaPDF = f_getNombreActaPDF($fec);
                     <div id="submenu3">
                         <a id="actapdf" href="/actas/<?php echo $actaPDF; ?>" target="_blank" role="button" title="Ver en PDF" class="btn btn-outline-success"><span class="oi oi-eye"></span></a>
                         <a id="aedit" href="actasedit.php?fecha=<?php echo $fec; ?>" role="button" title="Editar" class="btn btn-outline-success"><span class="oi oi-pencil"></span></a>
-                        <button type="button" onclick="" title="Imprimir" class="btn btn-outline-success"><span class="oi oi-print"></span></button>
+                        <button class="btn btn-outline-success" style="cursor: pointer" id="imprimir" title="Imprimir en un PDF" onclick="$('#frmdatos').submit();"><span class="oi oi-print"></span></button>
                     </div>
                 </li>
             </ul>
@@ -50,6 +50,9 @@ $actaPDF = f_getNombreActaPDF($fec);
             </div>
         </div>
         <div id="ainicio" class=""><a href="#inicioacta" title="Ir al inicio" role="button" class="btn btn-outline-secondary"><span class="oi oi-arrow-thick-top"></span></a></div>
+        <form id="frmdatos" name="frmdatos" method="post" action="actasprint.php" target="_blank">
+            <input id="datosdiv" name="datosdiv" type="hidden" value="">
+        </form>
         <!-- JavaScript -->
         <?php echo f_getScripts(); ?>
   </body>

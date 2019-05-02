@@ -24,11 +24,12 @@ $aIncludes = array('config.inc.php', 'funciones.inc.php', 'funciones.xajax.php')
                 <div id="contenido" class="col-sm-12">
                     <div id="divcabecera">
                         <!-- Formulario para los datos -->
-                        <form id="frmdatos" onsubmit="return false;"> 
+                        <form id="frmdatos" name="frmdatos" method="post" onsubmit="return false;"> 
                             <div class="form-group row">
-                            <h2 class="col-sm-11">C&aacute;lculo de cuotas mensuales</h2>
-                            <div class="col-sm-1 text-right">
-                                    <button class="btn btn-outline-success" id="imprimir" onclick="" disabled="disabled"><span class="oi oi-print"></span></button>
+                                <h2 class="col-sm-10">C&aacute;lculo de cuotas mensuales</h2>
+                                <div class="col-sm-2 text-right">
+                                    <button class="btn btn-outline-success" style="cursor: pointer" id="imprimir" disabled="true" title="Pantalla completa" onclick="$('#frmdatos').attr('target', '_blank'); $('#frmdatos').attr('action', 'calculoslismax.php'); $('#frmdatos').attr('onsubmit', 'return true'); $('#frmdatos').submit();"><span class="oi oi-fullscreen-enter"></span></button>
+                                    <button class="btn btn-outline-success" style="cursor: pointer" id="imprimirpdf" disabled="true" title="Imprimir en un PDF" onclick="$('#frmdatos').attr('target', '_blank'); $('#frmdatos').attr('action', 'calculosprint.php'); $('#frmdatos').attr('onsubmit', 'return true'); $('#frmdatos').submit();"><span class="oi oi-print"></span></button>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -94,6 +95,7 @@ $aIncludes = array('config.inc.php', 'funciones.inc.php', 'funciones.xajax.php')
                                 </div>
                             </div>
                             <hr />
+                            <input id="datosdiv" name="datosdiv" type="hidden" value="">
                         </form>
                         <br />
                     </div>

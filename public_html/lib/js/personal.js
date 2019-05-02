@@ -941,10 +941,12 @@ function js_transformarCheck(val) {
  */
 function js_cuotasMensuales() {
     if($('#cantidad').val() > 0 && $('#meses').val() > 0) { 
-        $('#imprimir').prop('disabled',false); 
+        $('#imprimir').prop('disabled',false);
+        $('#imprimirpdf').prop('disabled',false);
         xajax_getCalculos(xajax.getFormValues('frmdatos'));
     } else { 
         $('#imprimir').prop('disabled',true);
+        $('#imprimirpdf').prop('disabled',true);
         $('#divbusqueda').html('');
     }
 }

@@ -1044,9 +1044,11 @@ function deshacerDeuda($por, $apa, $ord, $ext) {
  */
 function getActa($fecha='') {
     $response = new xajaxResponse();
+    $datos = f_getDatosActa($fecha);
     $response->assign("actapdf", "href", "/actas/" . f_getNombreActaPDF($fecha));
     $response->assign("aedit", "href", "actasedit.php?fecha=$fecha");
-    $response->assign("divcontenido", "innerHTML", f_getDatosActa($fecha));
+    $response->assign("divcontenido", "innerHTML", $datos);
+    $response->assign("datosdiv", "value", $datos);
     return $response;
 }
 
@@ -1205,7 +1207,9 @@ function eliminarActa($fecha) {
  */
 function getListadoPersonas($frm) {
     $response = new xajaxResponse();
-    $response->assign("divbusqueda", "innerHTML", f_getListadoPersonas($frm));
+    $datos = f_getListadoPersonas($frm);
+    $response->assign("divbusqueda", "innerHTML", $datos);
+    $response->assign("datosdiv", "value", $datos);
     return $response;
 }
 
@@ -1217,25 +1221,33 @@ function getListadoPersonas($frm) {
  */
 function getListadoApartamentos($frm) {
     $response = new xajaxResponse();
-    $response->assign("divbusqueda", "innerHTML", f_getListadoApartamentos($frm));
+    $datos = f_getListadoApartamentos($frm);
+    $response->assign("divbusqueda", "innerHTML", $datos);
+    $response->assign("datosdiv", "value", $datos);
     return $response;
 }
 
 function getListadoPropietarios($frm) {
     $response = new xajaxResponse();
-    $response->assign("divbusqueda", "innerHTML", f_getListadoPropietarios($frm));
+    $datos = f_getListadoPropietarios($frm);
+    $response->assign("divbusqueda", "innerHTML", $datos);
+    $response->assign("datosdiv", "value", $datos);
     return $response;
 }
 
 function getListadoJunta($frm) {
     $response = new xajaxResponse();
-    $response->assign("divbusqueda", "innerHTML", f_getListadoJunta($frm));
+    $datos = f_getListadoJunta($frm);
+    $response->assign("divbusqueda", "innerHTML", $datos);
+    $response->assign("datosdiv", "value", $datos);
     return $response;
 }
 
 function getListadoDeudas($frm) {
     $response = new xajaxResponse();
-    $response->assign("divbusqueda", "innerHTML", f_getListadoDeudas($frm));
+    $datos = f_getListadoDeudas($frm);
+    $response->assign("divbusqueda", "innerHTML", $datos);
+    $response->assign("datosdiv", "value", $datos);
     return $response;
 }
 
@@ -1247,7 +1259,9 @@ function getListadoDeudas($frm) {
  */
 function getCalculos($frm) {
     $response = new xajaxResponse();
-    $response->assign("divbusqueda", "innerHTML", f_getCalculos($frm));
+    $datos = f_getCalculos($frm);
+    $response->assign("divbusqueda", "innerHTML", $datos);
+    $response->assign("datosdiv", "value", $datos);
     return $response;
 }
 

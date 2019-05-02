@@ -19,12 +19,12 @@ $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8',
 // set document information
 $pdf->SetCreator(PDF_CREATOR);
 $pdf->SetAuthor('Xavi');
-$pdf->SetTitle('Listado de apartamentos');
-$pdf->SetSubject('Apartamentos');
-$pdf->SetKeywords('apartamentos, listado, coeficientes');
+$pdf->SetTitle('Cálculo de cuotas');
+$pdf->SetSubject('Cuotas');
+$pdf->SetKeywords('cuotas, calculo, mensual');
 
 // set default header data
-$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE . " - Listado de apartamentos (" . date("d-m-Y") . ")", PDF_HEADER_STRING);
+$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE . " - Cálculo de cuotas (" . date("d-m-Y") . ")", PDF_HEADER_STRING);
 
 // set header and footer fonts
 $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
@@ -45,7 +45,7 @@ $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
 $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
 // set font
-$pdf->SetFont('helvetica', '', 8);
+$pdf->SetFont('helvetica', '', 7);
 
 // add a page
 $pdf->AddPage();
@@ -53,4 +53,4 @@ $pdf->AddPage();
 $pdf->writeHTML($html, true, false, true, false, '');
 
 //Close and output PDF document
-$pdf->Output("listadoapartamentos.pdf", 'I');
+$pdf->Output("listadocuotas.pdf", 'I');

@@ -27,9 +27,10 @@ $aIncludes = array('config.inc.php', 'funciones.inc.php', 'funciones.xajax.php')
                             <!-- Formulario para los datos -->
                             <form id="frmdatos" name="frmdatos" method="post" onsubmit="return false;">
                                 <div class="form-group row">
-                                    <h2 class="col-sm-11">Listado de apartamentos</h2>
-                                    <div class="col-sm-1 text-right">
-                                        <button class="btn btn-outline-success" style="cursor: pointer" id="imprimir" onclick="$('#frmdatos').attr('target', '_blank'); $('#frmdatos').attr('action', 'apartamentosprint.php'); $('#frmdatos').attr('onsubmit', 'return true'); $('#frmdatos').submit();"><span class="oi oi-print"></span></button>
+                                    <h2 class="col-sm-10">Listado de apartamentos</h2>
+                                    <div class="col-sm-2 text-right">
+                                        <button class="btn btn-outline-success" style="cursor: pointer" id="imprimir" title="Pantalla completa" onclick="$('#frmdatos').attr('target', '_blank'); $('#frmdatos').attr('action', 'apartamentoslismax.php'); $('#frmdatos').attr('onsubmit', 'return true'); $('#frmdatos').submit();"><span class="oi oi-fullscreen-enter"></span></button>
+                                        <button class="btn btn-outline-success" style="cursor: pointer" id="imprimir" title="Imprimir en un PDF" onclick="$('#frmdatos').attr('target', '_blank'); $('#frmdatos').attr('action', 'apartamentosprint.php'); $('#frmdatos').attr('onsubmit', 'return true'); $('#frmdatos').submit();"><span class="oi oi-print"></span></button>
                                     </div>
                                 </div>
                                 <div class="form-group row" data-animation="false" data-toggle="tooltip" data-placement="right" data-trigger="hover" title="Datos a filtrar">
@@ -63,7 +64,7 @@ $aIncludes = array('config.inc.php', 'funciones.inc.php', 'funciones.xajax.php')
                                         <label for="finca" class="form-check-label">Finca</label>
                                     </div>
                                     <div class="col-sm-2">
-                                        <input type="checkbox" class="form-check-input" id="finca" name="registro"  onclick="xajax_getListadoApartamentos(xajax.getFormValues('frmdatos'));" checked="checked">
+                                        <input type="checkbox" class="form-check-input" id="registro" name="registro"  onclick="xajax_getListadoApartamentos(xajax.getFormValues('frmdatos'));" checked="checked">
                                         <label for="registro" class="form-check-label">Registro</label>
                                     </div>
                                     <div class="col-sm-2">
@@ -105,6 +106,7 @@ $aIncludes = array('config.inc.php', 'funciones.inc.php', 'funciones.xajax.php')
                                     
                                 </div>
                                 <hr />
+                                <input id="datosdiv" name="datosdiv" type="hidden" value="">
                             </form>
                             <br />
                         </div>

@@ -2147,12 +2147,12 @@ function f_getListadoPersonas($frm) {
  */
 function f_getListadoPersonasTitulo($frm) {
     $fila = "<tr>";
-    $fila .= (isset($frm['codigo'])) ? "<th>C&oacute;digo</th>" : "";
-    $fila .= "<th>Nombre</th>";
-    $fila .= (isset($frm['correo'])) ? "<th>Correo</th>" : "";
-    $fila .= (isset($frm['enviar'])) ? "<th>Enviar</th>" : "";
-    $fila .= (isset($frm['telefono'])) ? "<th>Tel&eacute;fono</th>" : "";
-    $fila .= (isset($frm['sexo'])) ? "<th>Sexo</th>" : "";
+    $fila .= (isset($frm['codigo'])) ? "<th style=\"width: 6%;\">C&oacute;digo</th>" : "";
+    $fila .= "<th style=\"width: 45%;\">Nombre</th>";
+    $fila .= (isset($frm['correo'])) ? "<th style=\"width: 25%;\">Correo</th>" : "";
+    $fila .= (isset($frm['enviar'])) ? "<th style=\"width: 5%;\">Enviar</th>" : "";
+    $fila .= (isset($frm['telefono'])) ? "<th style=\"width:13%;\">Tel&eacute;fono</th>" : "";
+    $fila .= (isset($frm['sexo'])) ? "<th style=\"width: 6%;\">Sexo</th>" : "";
     $fila .= "</tr>";
     return $fila;
 }
@@ -2372,6 +2372,13 @@ function f_getListadoApartamentosSumas($frm, $txt, $apa, $me2, $ter, $coe, $cof,
  * @return string Codigo HTML de la fila de titulos.
  */
 function f_getListadoApartamentosTitulo($frm) {
+    if (count($frm) > 15) {
+        $u = "U";
+        $f = "F";
+    } else {
+        $u = "Urb.";
+        $f = "Fase";
+    }
     $fila = "<tr>";
     $fila .= (isset($frm['codigo'])) ? "<th>C&oacute;digo</th>" : "";
     $fila .= (isset($frm['finca'])) ? "<th>Finca</th>" : "";
@@ -2381,9 +2388,9 @@ function f_getListadoApartamentosTitulo($frm) {
     $fila .= (isset($frm['fase'])) ? "<th>Fase</th>" : "";
     $fila .= (isset($frm['metros'])) ? "<th class=\"text-right\">Metros</th>" : "";
     $fila .= (isset($frm['terraza'])) ? "<th class=\"text-right\">Terraza</th>" : "";
-    $fila .= (isset($frm['urban'])) ? "<th class=\"text-right\">Urb. 100%</th>" : "";
-    $fila .= (isset($frm['fase200'])) ? "<th class=\"text-right\">Fase 200%</th>" : "";
-    $fila .= (isset($frm['fase100'])) ? "<th class=\"text-right\">Fase 100%</th>" : "";
+    $fila .= (isset($frm['urban'])) ? "<th class=\"text-right\">$u 100%</th>" : "";
+    $fila .= (isset($frm['fase200'])) ? "<th class=\"text-right\">$f 200%</th>" : "";
+    $fila .= (isset($frm['fase100'])) ? "<th class=\"text-right\">$f 100%</th>" : "";
     $fila .= (isset($frm['bloque'])) ? "<th class=\"text-right\">Bloque</th>" : "";
     $fila .= (isset($frm['garajes'])) ? "<th class=\"text-right\">Gara.</th>" : "";
     $fila .= "</tr>";
@@ -2480,7 +2487,7 @@ function f_getListadoPropietariosCompleto($din, $dfi, $ver, $que, $may) {
     foreach ($aPro as $aD) {
         $nomb = ($may) ? $aD[3] : f_primeraMayuscula($aD[3]);
         $dato = ($ver) ? $nomb : $aD[1];   // persona : apartamento.
-        $inic = ($ver) ? "<th>Propietarios - " . substr($aD[3], 0, 1) . "</th><th>Apartamentos</th>" : "<th>Portal " . strstr($aD[1], '-', true) . "&nbsp;</th><th>Propietarios</th>";
+        $inic = ($ver) ? "<th style=\"width:50%;\">Propietarios - " . substr($aD[3], 0, 1) . "</th><th style=\"width:50%;\">Apartamentos</th>" : "<th style=\"width:10%;\">Portal " . strstr($aD[1], '-', true) . "&nbsp;</th><th style=\"width:90%;\">Propietarios</th>";
         if ($dato != $dini) {
             $html .= ($dini) ? "<tr><td>$dini</td><td>$cuer</td></tr>" : "";
             $cuer  = ($dini) ? "" : $cuer;
@@ -2518,7 +2525,7 @@ function f_getListadoPropietariosFechas($din, $dfi, $ver, $dis, $may) {
     $html = "<table class=\"table table-hover table-condensed table-ultra\">";
     $cini = "";
     foreach ($aPro as $aP) {
-        $inic = ($ver) ? "<tr><th>Propietarios - " . substr($aP[0], 0, 1) . "</th><th>Apartamentos el $din</th><th>Apartamentos el $dfi</th></tr>" : "<tr><th>Portal " . strstr($aP[0], '-', true) . "&nbsp;</th><th>Propietarios el $din</th><th>Propietarios el $dfi</th></tr>";
+        $inic = ($ver) ? "<tr><th style=\"width:34%;\">Propietarios - " . substr($aP[0], 0, 1) . "</th><th style=\"width:33%;\">Apartamentos el $din</th><th style=\"width:33%;\">Apartamentos el $dfi</th></tr>" : "<tr><th style=\"width:10%;\">Portal " . strstr($aP[0], '-', true) . "&nbsp;</th><th style=\"width:45%;\">Propietarios el $din</th><th style=\"width:45%;\">Propietarios el $dfi</th></tr>";
         if ($inic != $cini) {
             $html .= $inic;
             $cini = $inic;
@@ -2722,12 +2729,55 @@ function f_getListadoJuntaTitulo($fec, $ord, $bur, $bf2, $bf1, $bbl, $bvo) {
         case 2 : $tit .= "nombre de los representantes."; break;
         default: $tit .= "apartamentos.</h4>"; break;
     }
-    $tit .= "<tr><th>Apartamento</th><th>Propietario</th><th>Representante</th>";
-    $tit .= ($bur) ? "<th class=\"text-right\">Urbanizaci&oacute;n</th>" : "";
-    $tit .= ($bf2) ? "<th class=\"text-right\">Fase 200%</th>" : "";
-    $tit .= ($bf1) ? "<th class=\"text-right\">Fase 100%</th>" : "";
-    $tit .= ($bbl) ? "<th class=\"text-right\">Bloque</th>" : "";
-    $tit .= ($bvo) ? "<th class=\"text-center\">Con voto</th>" : "";
+    
+    $c = 8; $p1 = 10; $p2 = 25; $p3 = 25;
+    if(!$bur) {
+        $p2 += 5;
+        $p3 += 5;
+        $c--;
+    }
+    if(!$bf2) {
+        $p2 += 5;
+        $p3 += 5;
+        $c--;
+    }
+    if(!$bf1) {
+        $p2 += 5;
+        $p3 += 5;
+        $c--;
+    }
+    if(!$bbl) {
+        $p1 += 1;
+        $p2 += 2;
+        $p3 += 2;
+        $c--;
+    }
+    if(!$bvo) {
+        $p1 += 1;
+        $p2 += 2;
+        $p3 += 2;
+        $c--;
+    }
+    if($c > 5) {
+        $t1 = "Apart.";
+        $t4 = "Urba.";
+        $t5 = "F 200%";
+        $t6 = "F 100%";
+        $t7 = "Blo.";
+    } else {
+        $t1 = "Apartamento";
+        $t4 = "Urbanizaci&oacute;n";
+        $t5 = "Fase 200%";
+        $t6 = "Fase 100%";
+        $t7 = "Bloque";
+    }
+    
+    $tit .= "<tr><th style=\"width: $p1%\">$t1</th><th style=\"width: $p2%\">Propietario</th><th style=\"width: $p3%\">Representante</th>";
+    $tit .= ($bur) ? "<th style=\"width: 10%\" class=\"text-right\">$t4</th>" : "";
+    $tit .= ($bf2) ? "<th style=\"width: 10%\" class=\"text-right\">$t5</th>" : "";
+    $tit .= ($bf1) ? "<th style=\"width: 10%\" class=\"text-right\">$t6</th>" : "";
+    $tit .= ($bbl) ? "<th style=\"width: 5%\" class=\"text-right\">$t7</th>" : "";
+    $tit .= ($bvo) ? "<th style=\"width: 5%\" class=\"text-center\">Voto</th>" : "";
     $tit .= "</tr>";
     return $tit;
 }
@@ -2756,12 +2806,12 @@ function f_getListadoJuntaTitulo($fec, $ord, $bur, $bf2, $bf1, $bbl, $bvo) {
 function f_getListadoJuntaSumas($tipo, $nom, $bur, $bf2, $bf1, $bbl, $bvo, $ap, $re, $pr, $cu, $cf, $cr, $cb, $vo, $vn) {
     $tit = "";
     if ($nom) {
-        $tit .= "<tr><th>$tipo $nom:&nbsp;$ap</th><th>$pr</th><th>$re</th>";
-        $tit .= ($bur) ? "<th class=\"text-right\">" . number_format($cu, 4, ',', '.') . "</th>" : "";
-        $tit .= ($bf2) ? "<th class=\"text-right\">" . number_format($cf, 4, ',', '.') . "</th>" : "";
-        $tit .= ($bf1) ? "<th class=\"text-right\">" . number_format($cr, 5, ',', '.') . "</th>" : "";
-        $tit .= ($bbl) ? "<th class=\"text-right\">" . number_format($cb, 2, ',', '.') . "</th>" : "";
-        $tit .= ($bvo) ? "<th class=\"text-center\">$vo&nbsp;|&nbsp;$vn</th></tr>" : "</tr>";
+        $tit .= "<tr><th class=\"clara\">$tipo $nom:&nbsp;$ap</th><th class=\"clara\">$pr</th><th class=\"clara\">$re</th>";
+        $tit .= ($bur) ? "<th class=\"clara text-right\">" . number_format($cu, 4, ',', '.') . "</th>" : "";
+        $tit .= ($bf2) ? "<th class=\"clara text-right\">" . number_format($cf, 4, ',', '.') . "</th>" : "";
+        $tit .= ($bf1) ? "<th class=\"clara text-right\">" . number_format($cr, 5, ',', '.') . "</th>" : "";
+        $tit .= ($bbl) ? "<th class=\"clara text-right\">" . number_format($cb, 2, ',', '.') . "</th>" : "";
+        $tit .= ($bvo) ? "<th class=\"clara text-center\">$vo&nbsp;|&nbsp;$vn</th></tr>" : "</tr>";
     }
     return $tit;
 }
@@ -2909,10 +2959,11 @@ function f_getListadoDeudas($frm) {
  * @return string Codigo HTML del titulo.
  */
 function f_getListadoDeudasTituloApartamentos($apart, $ordin, $extra, $total) {
-    $html .= "<tr><td class=\"tit text-left\">Portal $apart</td><td class=\"tit\">Propietario</td>";
-    $html .= ($ordin) ? "<td class=\"tit text-right\">Ordinaria</td><td class=\"tit text-right\">%</td>" : "";
-    $html .= ($extra) ? "<td class=\"tit text-right\">Extraordinaria</td><td class=\"tit text-right\">%</td>" : "";
-    $html .= ($total) ? "<td class=\"tit text-right\">Total deuda</td><td class=\"tit text-right\">%</td>" : "";
+    $p = f_getCalcularAnchos($ordin, $extra, $total);
+    $html .= "<tr><td class=\"tit text-left\" width=\"" . ($p[0] + $p[1]) . "%\">Portal $apart</td><td class=\"tit\" width=\"" . $p[2] . "%\">Propietario</td>";
+    $html .= ($ordin) ? "<td width=\"" . $p[3] . "%\" class=\"tit text-right\">Ordinaria</td><td width=\"" . $p[4] . "%\" class=\"tit text-right\">%</td>" : "";
+    $html .= ($extra) ? "<td width=\"" . $p[3] . "%\" class=\"tit text-right\">Extraordin.</td><td width=\"" . $p[4] . "%\" class=\"tit text-right\">%</td>" : "";
+    $html .= ($total) ? "<td width=\"" . $p[3] . "%\" class=\"tit text-right\">Total deuda</td><td width=\"" . $p[4] . "%\" class=\"tit text-right\">%</td>" : "";
     $html .= "</tr>";
     return $html;
 }
@@ -2928,10 +2979,11 @@ function f_getListadoDeudasTituloApartamentos($apart, $ordin, $extra, $total) {
  */
 function f_getListadoDeudasTituloPortal($portal, $ordin, $extra, $total) {
     if ($portal) {
-        $html .= "<tr><td class=\"tit text-left\">Portal $portal</td><td class=\"tit\">Fase</td><td class=\"tit\">Propietario</td>";
-        $html .= ($ordin) ? "<td class=\"tit text-right\">Ordinaria</td><td class=\"tit text-right\">%</td>" : "";
-        $html .= ($extra) ? "<td class=\"tit text-right\">Extraordinaria</td><td class=\"tit text-right\">%</td>" : "";
-        $html .= ($total) ? "<td class=\"tit text-right\">Total deuda</td><td class=\"tit text-right\">%</td>" : "";
+        $p = f_getCalcularAnchos($ordin, $extra, $total);
+        $html .= "<tr><td width=\"" . $p[0] . "%\" class=\"tit text-left\">Portal $portal</td><td width=\"" . $p[1] . "%\" class=\"tit\">Fase</td><td width=\"" . $p[2] . "%\" class=\"tit\">Propietario</td>";
+        $html .= ($ordin) ? "<td width=\"" . $p[3] . "%\" class=\"tit text-right\">Ordinaria</td><td width=\"" . $p[4] . "%\" class=\"tit text-right\">%</td>" : "";
+        $html .= ($extra) ? "<td width=\"" . $p[3] . "%\" class=\"tit text-right\">Extraordin.</td><td width=\"" . $p[4] . "%\" class=\"tit text-right\">%</td>" : "";
+        $html .= ($total) ? "<td width=\"" . $p[3] . "%\" class=\"tit text-right\">Total deuda</td><td width=\"" . $p[4] . "%\" class=\"tit text-right\">%</td>" : "";
         $html .= "</tr>";
     }
     return $html;
@@ -2946,12 +2998,29 @@ function f_getListadoDeudasTituloPortal($portal, $ordin, $extra, $total) {
  * @return string Codigo HTML del titulo.
  */
 function f_getListadoDeudasTituloDeudas($ordin, $extra, $total) {
-    $html .= "<tr><td class=\"tit text-left\">Apartamento</td><td class=\"tit\">Fase</td><td class=\"tit\">Propietario</td>";
-    $html .= ($ordin) ? "<td class=\"tit text-right\">Ordinaria</td><td class=\"tit text-right\">%</td>" : "";
-    $html .= ($extra) ? "<td class=\"tit text-right\">Extraordinaria</td><td class=\"tit text-right\">%</td>" : "";
-    $html .= ($total) ? "<td class=\"tit text-right\">Total deuda</td><td class=\"tit text-right\">%</td>" : "";
+    $p = f_getCalcularAnchos($ordin, $extra, $total);
+    $html .= "<tr><td width=\"" . $p[0] . "%\" class=\"tit text-left\">Apartamento</td><td width=\"" . $p[1] . "%\" class=\"tit\">Fase</td><td width=\"" . $p[2] . "%\" class=\"tit\">Propietario</td>";
+    $html .= ($ordin) ? "<td width=\"" . $p[3] . "%\" class=\"tit text-right\">Ordinaria</td><td width=\"" . $p[4] . "%\" class=\"tit text-right\">%</td>" : "";
+    $html .= ($extra) ? "<td width=\"" . $p[3] . "%\" class=\"tit text-right\">Extraordin.</td><td width=\"" . $p[4] . "%\" class=\"tit text-right\">%</td>" : "";
+    $html .= ($total) ? "<td width=\"" . $p[3] . "%\" class=\"tit text-right\">Total deuda</td><td width=\"" . $p[4] . "%\" class=\"tit text-right\">%</td>" : "";
     $html .= "</tr>";
     return $html;
+}
+
+/**
+ * Calcula los anchos de las columnas del listado de deudas.
+ * 
+ * @param int $ordin Deuda ordinaria.
+ * @param int $extra Deuda extraordinaria.
+ * @param int $total Deuda total.
+ * @return array con los anchos del tipo array(0 portal, 1 fase, 2 propietario, 3 valor deuda, 4 porcentaje deuda)
+ */
+function f_getCalcularAnchos($ordin, $extra, $total) {
+    $po = 14; $fa = 4; $pr = 28; $d1 = 10; $d2 = 8;
+    $pr += (!$ordin) ? 18 : 0;
+    $pr += (!$extra) ? 18 : 0;
+    $pr += (!$total) ? 18 : 0;
+    return array($po, $fa, $pr, $d1, $d2);
 }
 
 /**
@@ -3128,16 +3197,16 @@ function f_getCalculos($frm) {
  */
 function f_getCalculosTitulo($por, $frm) {
     $fTit = "<tr>";
-    $fTit .= (isset($frm['codigo'])) ? "<th colspan=\"2\">Portal $por</th>" : "<th>Portal $por</th>";
-    $fTit .= (isset($frm['fase'])) ? "<th>Fase</th>" : "";
-    $fTit .= (isset($frm['metros'])) ? "<th class=\"text-right\">Metros</th>" : "";
-    $fTit .= (isset($frm['coeur'])) ? "<th class=\"text-right\">Urbanizaci&oacute;n</th><th class=\"text-right\">Cuota</th>" : "";
-    $fTit .= (isset($frm['coef200'])) ? "<th class=\"text-right\">Fase 200</th>" : "";
-    $fTit .= (isset($frm['coef100'])) ? "<th class=\"text-right\">Fase 100</th>" : "";
-    $fTit .= (isset($frm['coef200']) || isset($frm['coef100'])) ? "<th class=\"text-right\">Cuota</th>" : "";
-    $fTit .= (isset($frm['dife'])) ? "<th class=\"text-right\">Resta</th>" : "";
-    $fTit .= (isset($frm['coeblo'])) ? "<th class=\"text-right\">Bloque</th><th class=\"text-right\">Cuota</th>" : "";
-    $fTit .= (isset($frm['coegar'])) ? "<th class=\"text-right\">Garaje</th><th class=\"text-right\">Cuota</th>" : "";
+    $fTit .= (isset($frm['codigo'])) ? "<th style=\"width: 9%\" colspan=\"2\">Portal $por</th>" : "<th style=\"width: 9%\">Portal $por</th>";
+    $fTit .= (isset($frm['fase'])) ? "<th style=\"width: 3%\">F</th>" : "";
+    $fTit .= (isset($frm['metros'])) ? "<th style=\"width: 8%\" class=\"text-right\">Metros</th>" : "";
+    $fTit .= (isset($frm['coeur'])) ? "<th style=\"width: 9%\" class=\"text-right\">Urbanizac.</th><th style=\"width: 7%\" class=\"text-right\">Cuota</th>" : "";
+    $fTit .= (isset($frm['coef200'])) ? "<th style=\"width: 8%\" class=\"text-right\">Fase 200</th>" : "";
+    $fTit .= (isset($frm['coef100'])) ? "<th style=\"width: 9%\" class=\"text-right\">Fase 100</th>" : "";
+    $fTit .= (isset($frm['coef200']) || isset($frm['coef100'])) ? "<th style=\"width: 7%\" class=\"text-right\">Cuota</th>" : "";
+    $fTit .= (isset($frm['dife'])) ? "<th style=\"width: 7%\" class=\"text-right\">Resta</th>" : "";
+    $fTit .= (isset($frm['coeblo'])) ? "<th style=\"width: 6%\" class=\"text-right\">Bloque</th><th style=\"width: 10%\" class=\"text-right\">Cuota</th>" : "";
+    $fTit .= (isset($frm['coegar'])) ? "<th style=\"width: 7%\" class=\"text-right\">Garaje</th><th style=\"width: 8%\" class=\"text-right\">Cuota</th>" : "";
     return "$fTit</tr>";    
 }
 
@@ -3169,7 +3238,7 @@ function f_getCalculosSumas($frm, $txt, $apa, $me2, $coe, $eue, $cof, $cor, $euf
     $fTit .= (isset($frm['coef200'])) ? "<td class=\"tit text-right\">" . number_format($cof,4,',','.') . " %</td>" : "";
     $fTit .= (isset($frm['coef100'])) ? "<td class=\"tit text-right\">" . number_format($cor,5,',','.') . " %</td>" : "";
     $fTit .= (isset($frm['coef200']) || isset($frm['coef100'])) ? "<td class=\"tit text-right successcolor\">" . number_format($euf,2,',','.') . " €</td>" : "";
-    $fTit .= (isset($frm['dife'])) ? "<td class=\"tit text-right dangercolor\">" . number_format($res,2,',','.') . "</td>" : "";
+    $fTit .= (isset($frm['dife'])) ? "<td class=\"tit text-right dangercolor\">" . number_format($res,2,',','.') . " €</td>" : "";
     // La suma de coeficientes y cuotas de portales solo se pone en la suma de portales.
     if (substr($txt, 0, 1) == "P") {
         $fTit .= (isset($frm['coeblo'])) ? "<td class=\"tit text-right\">" . number_format($cob,2,',','.') . " %</td><td class=\"tit text-right successcolor\">" . number_format($eub,2,',','.') . " €</td>" : "";
