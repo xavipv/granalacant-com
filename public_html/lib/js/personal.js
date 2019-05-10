@@ -816,7 +816,7 @@ function js_ocultarNoDeudores(oc) {
         opc1 = js_aFloat($("#or"+i).val());
         opc2 = js_aFloat($("#ex"+i).val());
         if (oc === true) {
-            if(opc1 > 0 || opc2 > 0) {
+            if(opc1 != 0 || opc2 != 0) {
                 fila.show();
             } else {
                 fila.hide();
