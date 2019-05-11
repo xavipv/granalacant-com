@@ -956,6 +956,10 @@ function setVotacionCabecera($fecha, $num=1) {
 function grabarVotacion($frm) {
     $response = new xajaxResponse();
     if (f_grabarVotacion($frm)) {
+        // Actualiza los datos.
+        $response->assign("submenu1", "innerHTML", f_getVotacionesAnyos());
+        $response->assign("divlistado", "innerHTML", f_getVotacionesListado());
+        $response->assign("selecvotacion", "innerHTML", f_getSelectNumVotaciones($frm['fecha'], $frm['votacion']));
         $msg = "Los datos de la votación se han guardado correctamente.";
     } else {
         $msg = "ERROR: no se han podido guardar los datos de la votación.";

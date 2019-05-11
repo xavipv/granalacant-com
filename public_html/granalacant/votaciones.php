@@ -39,8 +39,8 @@ if(!$fec) {
             <div class="row">
                 <div id="divlistado" class="col-sm-1 hidden-ms hidden-xs listado"><?php echo f_getVotacionesListado(); ?></div>
                 <div id="contenido" class="col-sm-11">
-                    <div id="divcabecera">
-                        <form id="frmvotacion" onsubmit="return false;">
+                    <form id="frmvotacion" name="frmvotacion" onsubmit="return false;">
+                        <div id="divcabecera">
                             <table class="table table-sm" style="width:100%; border-bottom: 1px solid lightgray; font-size: 0.9em; margin: 0">
                                 <tbody id="datosvot">
                                     <tr>
@@ -112,9 +112,9 @@ if(!$fec) {
                                     </tr>
                                 </tbody>
                             </table>
-                        </form>
-                    </div>
-                    <div id="divcontenido" class="listado"></div>
+                        </div>
+                        <div id="divcontenido" class="listado"></div>
+                    </form>
                 </div>
             </div>    
         </div>
