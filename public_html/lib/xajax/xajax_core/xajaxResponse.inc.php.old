@@ -1974,7 +1974,7 @@ class xajaxCustomResponse
 	protected $sCharacterEncoding;
 	protected $bOutputEntities;
 	
-	function __construct($sContentType)
+	function xajaxCustomResponse($sContentType)
 	{
 		$this->sOutput = '';
 		$this->sContentType = $sContentType;
